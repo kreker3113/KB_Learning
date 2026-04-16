@@ -1,0 +1,89 @@
+[versions]
+agp = "8.5.2"
+android-compileSdk = "34"
+android-minSdk = "24"
+android-targetSdk = "34"
+kotlin = "2.0.21"
+compose-multiplatform = "1.7.0"
+compose-test = "1.7.6"
+coil-compose = "3.0.0"
+junit = "4.13.2"
+activity-compose = "1.9.3"
+ktor = "3.0.0"
+ksp = "2.0.21-1.0.25"
+kotlin-date-time = "0.6.1"
+kotlinx-serialization = "1.7.3"
+kotlinx-coroutines-test = "1.9.0"
+androidx-lifecycle = "2.8.4"
+room = "2.7.0-alpha11"
+sqlite = "2.5.0-SNAPSHOT"
+koin = "4.0.0"
+biometry = "1.1.0"
+assertK = "0.25"
+turbine = "0.7.0"
+core-ktx = "1.7.0"
+
+[libraries]
+# Shared Libraries
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines-test" }
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test" }
+kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit" }
+test-assertk = { module = "com.willowtreeapps.assertk:assertk", version.ref = "assertK" }
+test-turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
+test-compose-ui-junit4-android = { module = "androidx.compose.ui:ui-test-junit4-android", version.ref = "compose-test" }
+test-compose-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "compose-test" }
+test-core-ktx = { module = "androidx.test:core-ktx", version.ref = "core-ktx" }
+
+# Ktor Libraries
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
+ktor-ios = { module = "io.ktor:ktor-client-ios", version.ref = "ktor" }
+
+# Other Libraries
+kotlin-date-time = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlin-date-time" }
+androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
+androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
+
+# Room Libraries
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
+
+# Koin Libraries
+koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
+koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
+koin-compose-navigation = { module = "io.insert-koin:koin-compose-viewmodel-navigation", version.ref = "koin" }
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
+
+# Coil Libraries
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil-compose" }
+coil-compose-core = { module = "io.coil-kt.coil3:coil-compose-core", version.ref = "coil-compose" }
+coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil-compose" }
+coil-core = { module = "io.coil-kt.coil3:coil", version.ref = "coil-compose" }
+coil-svg = { module = "io.coil-kt.coil3:coil-svg", version.ref = "coil-compose" }
+
+# Biometry Libraries
+biometric = { module = "androidx.biometric:biometric", version.ref = "biometry" }
+
+[plugins]
+androidApplication = { id = "com.android.application", version.ref = "agp" }
+androidLibrary = { id = "com.android.library", version.ref = "agp" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+room = { id = "androidx.room", version.ref = "room" }
+kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
+composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+
+[bundles]
+ktor = [
+    "ktor-client-content-negotiation",
+    "ktor-client-core",
+    "ktor-serialization-kotlinx-json",
+]
