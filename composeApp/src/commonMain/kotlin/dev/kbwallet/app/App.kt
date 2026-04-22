@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import dev.kbwallet.app.biometric.BiometricScreen
 import dev.kbwallet.app.coins.presentation.CoinListScreen
 import dev.kbwallet.app.core.navigation.Buy
 import dev.kbwallet.app.core.navigation.Coins

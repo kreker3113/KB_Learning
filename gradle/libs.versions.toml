@@ -18,7 +18,7 @@ androidx-lifecycle = "2.8.4"
 room = "2.7.0-alpha11"
 sqlite = "2.5.0-SNAPSHOT"
 koin = "4.0.0"
-biometry = "1.1.0"
+biometry = "1.4.0-alpha02"
 assertK = "0.25"
 turbine = "0.7.0"
 core-ktx = "1.7.0"
@@ -69,8 +69,7 @@ coil-core = { module = "io.coil-kt.coil3:coil", version.ref = "coil-compose" }
 coil-svg = { module = "io.coil-kt.coil3:coil-svg", version.ref = "coil-compose" }
 
 # Biometry Libraries
-biometric = { module = "androidx.biometric:biometric", version.ref = "biometry" }
-
+biometric = { module = "androidx.biometric:biometric-ktx", version.ref = "biometry" }
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }

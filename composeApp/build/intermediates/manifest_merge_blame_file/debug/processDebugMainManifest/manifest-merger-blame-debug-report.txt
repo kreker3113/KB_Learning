@@ -1,0 +1,170 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="dev.kbwallet.app"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="24"
+9        android:targetSdkVersion="34" />
+10
+11    <uses-permission android:name="android.permission.INTERNET" />
+11-->/home/aleksey/KB_Learning/composeApp/src/androidMain/AndroidManifest.xml:4:5-67
+11-->/home/aleksey/KB_Learning/composeApp/src/androidMain/AndroidManifest.xml:4:22-64
+12    <uses-permission android:name="android.permission.USE_BIOMETRIC" /> <!-- suppress DeprecatedClassUsageInspection -->
+12-->[androidx.biometric:biometric:1.1.0] /home/aleksey/.gradle/caches/8.9/transforms/40d42182bff26de28c3424fc31b84c44/transformed/biometric-1.1.0/AndroidManifest.xml:24:5-72
+12-->[androidx.biometric:biometric:1.1.0] /home/aleksey/.gradle/caches/8.9/transforms/40d42182bff26de28c3424fc31b84c44/transformed/biometric-1.1.0/AndroidManifest.xml:24:22-69
+13    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+13-->[androidx.biometric:biometric:1.1.0] /home/aleksey/.gradle/caches/8.9/transforms/40d42182bff26de28c3424fc31b84c44/transformed/biometric-1.1.0/AndroidManifest.xml:27:5-74
+13-->[androidx.biometric:biometric:1.1.0] /home/aleksey/.gradle/caches/8.9/transforms/40d42182bff26de28c3424fc31b84c44/transformed/biometric-1.1.0/AndroidManifest.xml:27:22-71
+14
+15    <permission
+15-->[androidx.core:core:1.13.1] /home/aleksey/.gradle/caches/8.9/transforms/54de3cc4c9e1ac7aa2b048bd1e83bf59/transformed/core-1.13.1/AndroidManifest.xml:22:5-24:47
+16        android:name="dev.kbwallet.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+16-->[androidx.core:core:1.13.1] /home/aleksey/.gradle/caches/8.9/transforms/54de3cc4c9e1ac7aa2b048bd1e83bf59/transformed/core-1.13.1/AndroidManifest.xml:23:9-81
+17        android:protectionLevel="signature" />
+17-->[androidx.core:core:1.13.1] /home/aleksey/.gradle/caches/8.9/transforms/54de3cc4c9e1ac7aa2b048bd1e83bf59/transformed/core-1.13.1/AndroidManifest.xml:24:9-44
+18
+19    <uses-permission android:name="dev.kbwallet.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+19-->[androidx.core:core:1.13.1] /home/aleksey/.gradle/caches/8.9/transforms/54de3cc4c9e1ac7aa2b048bd1e83bf59/transformed/core-1.13.1/AndroidManifest.xml:26:5-97
+19-->[androidx.core:core:1.13.1] /home/aleksey/.gradle/caches/8.9/transforms/54de3cc4c9e1ac7aa2b048bd1e83bf59/transformed/core-1.13.1/AndroidManifest.xml:26:22-94
+20
+21    <application
+21-->/home/aleksey/KB_Learning/composeApp/src/androidMain/AndroidManifest.xml:6:5-25:19
+22        android:name="dev.kbwallet.app.KBWalletApplication"
+22-->/home/aleksey/KB_Learning/composeApp/src/androidMain/AndroidManifest.xml:12:9-44
+23        android:allowBackup="true"
+23-->/home/aleksey/KB_Learning/composeApp/src/androidMain/AndroidManifest.xml:7:9-35
+24        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+24-->[androidx.core:core:1.13.1] /home/aleksey/.gradle/caches/8.9/transforms/54de3cc4c9e1ac7aa2b048bd1e83bf59/transformed/core-1.13.1/AndroidManifest.xml:28:18-86
+25        android:debuggable="true"
+26        android:extractNativeLibs="false"
+27        android:icon="@mipmap/ic_launcher"
+27-->/home/aleksey/KB_Learning/composeApp/src/androidMain/AndroidManifest.xml:8:9-43
+28        android:label="@string/app_name"
+28-->/home/aleksey/KB_Learning/composeApp/src/androidMain/AndroidManifest.xml:9:9-41
+29        android:roundIcon="@mipmap/ic_launcher_round"
+29-->/home/aleksey/KB_Learning/composeApp/src/androidMain/AndroidManifest.xml:10:9-54
+30        android:supportsRtl="true"
+30-->/home/aleksey/KB_Learning/composeApp/src/androidMain/AndroidManifest.xml:11:9-35
+31        android:testOnly="true"
+32        android:theme="@android:style/Theme.Material.Light.NoActionBar" >
+32-->/home/aleksey/KB_Learning/composeApp/src/androidMain/AndroidManifest.xml:13:9-72
+33        <activity
+33-->/home/aleksey/KB_Learning/composeApp/src/androidMain/AndroidManifest.xml:14:9-24:20
+34            android:name="dev.kbwallet.app.MainActivity"
+34-->/home/aleksey/KB_Learning/composeApp/src/androidMain/AndroidManifest.xml:18:13-41
+35            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|mnc|colorMode|density|fontScale|fontWeightAdjustment|keyboard|layoutDirection|locale|mcc|navigation|smallestScreenSize|touchscreen|uiMode"
+35-->/home/aleksey/KB_Learning/composeApp/src/androidMain/AndroidManifest.xml:17:13-225
+36            android:exported="true"
+36-->/home/aleksey/KB_Learning/composeApp/src/androidMain/AndroidManifest.xml:15:13-36
+37            android:windowSoftInputMode="adjustResize" >
+37-->/home/aleksey/KB_Learning/composeApp/src/androidMain/AndroidManifest.xml:16:13-55
+38            <intent-filter>
+38-->/home/aleksey/KB_Learning/composeApp/src/androidMain/AndroidManifest.xml:19:13-23:29
+39                <action android:name="android.intent.action.MAIN" />
+39-->/home/aleksey/KB_Learning/composeApp/src/androidMain/AndroidManifest.xml:20:17-69
+39-->/home/aleksey/KB_Learning/composeApp/src/androidMain/AndroidManifest.xml:20:25-66
+40
+41                <category android:name="android.intent.category.LAUNCHER" />
+41-->/home/aleksey/KB_Learning/composeApp/src/androidMain/AndroidManifest.xml:22:17-77
+41-->/home/aleksey/KB_Learning/composeApp/src/androidMain/AndroidManifest.xml:22:27-74
+42            </intent-filter>
+43        </activity>
+44
+45        <provider
+45-->[org.jetbrains.compose.components:components-resources-android:1.7.0] /home/aleksey/.gradle/caches/8.9/transforms/2492f3307405cf34daf938150fdfc724/transformed/library-release/AndroidManifest.xml:8:9-13:20
+46            android:name="org.jetbrains.compose.resources.AndroidContextProvider"
+46-->[org.jetbrains.compose.components:components-resources-android:1.7.0] /home/aleksey/.gradle/caches/8.9/transforms/2492f3307405cf34daf938150fdfc724/transformed/library-release/AndroidManifest.xml:9:13-82
+47            android:authorities="dev.kbwallet.app.resources.AndroidContextProvider"
+47-->[org.jetbrains.compose.components:components-resources-android:1.7.0] /home/aleksey/.gradle/caches/8.9/transforms/2492f3307405cf34daf938150fdfc724/transformed/library-release/AndroidManifest.xml:10:13-84
+48            android:enabled="true"
+48-->[org.jetbrains.compose.components:components-resources-android:1.7.0] /home/aleksey/.gradle/caches/8.9/transforms/2492f3307405cf34daf938150fdfc724/transformed/library-release/AndroidManifest.xml:11:13-35
+49            android:exported="false" >
+49-->[org.jetbrains.compose.components:components-resources-android:1.7.0] /home/aleksey/.gradle/caches/8.9/transforms/2492f3307405cf34daf938150fdfc724/transformed/library-release/AndroidManifest.xml:12:13-37
+50        </provider>
+51
+52        <activity
+52-->[androidx.compose.ui:ui-tooling-android:1.7.1] /home/aleksey/.gradle/caches/8.9/transforms/cec2e279e899543045a599b96b948409/transformed/ui-tooling-release/AndroidManifest.xml:23:9-25:39
+53            android:name="androidx.compose.ui.tooling.PreviewActivity"
+53-->[androidx.compose.ui:ui-tooling-android:1.7.1] /home/aleksey/.gradle/caches/8.9/transforms/cec2e279e899543045a599b96b948409/transformed/ui-tooling-release/AndroidManifest.xml:24:13-71
+54            android:exported="true" />
+54-->[androidx.compose.ui:ui-tooling-android:1.7.1] /home/aleksey/.gradle/caches/8.9/transforms/cec2e279e899543045a599b96b948409/transformed/ui-tooling-release/AndroidManifest.xml:25:13-36
+55
+56        <provider
+56-->[androidx.emoji2:emoji2:1.3.0] /home/aleksey/.gradle/caches/8.9/transforms/36bb2876a314ecf9d49dbd56a8005b8f/transformed/emoji2-1.3.0/AndroidManifest.xml:24:9-32:20
+57            android:name="androidx.startup.InitializationProvider"
+57-->[androidx.emoji2:emoji2:1.3.0] /home/aleksey/.gradle/caches/8.9/transforms/36bb2876a314ecf9d49dbd56a8005b8f/transformed/emoji2-1.3.0/AndroidManifest.xml:25:13-67
+58            android:authorities="dev.kbwallet.app.androidx-startup"
+58-->[androidx.emoji2:emoji2:1.3.0] /home/aleksey/.gradle/caches/8.9/transforms/36bb2876a314ecf9d49dbd56a8005b8f/transformed/emoji2-1.3.0/AndroidManifest.xml:26:13-68
+59            android:exported="false" >
+59-->[androidx.emoji2:emoji2:1.3.0] /home/aleksey/.gradle/caches/8.9/transforms/36bb2876a314ecf9d49dbd56a8005b8f/transformed/emoji2-1.3.0/AndroidManifest.xml:27:13-37
+60            <meta-data
+60-->[androidx.emoji2:emoji2:1.3.0] /home/aleksey/.gradle/caches/8.9/transforms/36bb2876a314ecf9d49dbd56a8005b8f/transformed/emoji2-1.3.0/AndroidManifest.xml:29:13-31:52
+61                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+61-->[androidx.emoji2:emoji2:1.3.0] /home/aleksey/.gradle/caches/8.9/transforms/36bb2876a314ecf9d49dbd56a8005b8f/transformed/emoji2-1.3.0/AndroidManifest.xml:30:17-75
+62                android:value="androidx.startup" />
+62-->[androidx.emoji2:emoji2:1.3.0] /home/aleksey/.gradle/caches/8.9/transforms/36bb2876a314ecf9d49dbd56a8005b8f/transformed/emoji2-1.3.0/AndroidManifest.xml:31:17-49
+63            <meta-data
+63-->[androidx.lifecycle:lifecycle-process:2.8.6] /home/aleksey/.gradle/caches/8.9/transforms/5963c8c0586fcf2e8b7f26c7687eb0af/transformed/lifecycle-process-2.8.6/AndroidManifest.xml:29:13-31:52
+64                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+64-->[androidx.lifecycle:lifecycle-process:2.8.6] /home/aleksey/.gradle/caches/8.9/transforms/5963c8c0586fcf2e8b7f26c7687eb0af/transformed/lifecycle-process-2.8.6/AndroidManifest.xml:30:17-78
+65                android:value="androidx.startup" />
+65-->[androidx.lifecycle:lifecycle-process:2.8.6] /home/aleksey/.gradle/caches/8.9/transforms/5963c8c0586fcf2e8b7f26c7687eb0af/transformed/lifecycle-process-2.8.6/AndroidManifest.xml:31:17-49
+66            <meta-data
+66-->[androidx.profileinstaller:profileinstaller:1.4.1] /home/aleksey/.gradle/caches/8.9/transforms/657a38f81c3e00dd83456cf35b17580b/transformed/profileinstaller-1.4.1/AndroidManifest.xml:29:13-31:52
+67                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+67-->[androidx.profileinstaller:profileinstaller:1.4.1] /home/aleksey/.gradle/caches/8.9/transforms/657a38f81c3e00dd83456cf35b17580b/transformed/profileinstaller-1.4.1/AndroidManifest.xml:30:17-85
+68                android:value="androidx.startup" />
+68-->[androidx.profileinstaller:profileinstaller:1.4.1] /home/aleksey/.gradle/caches/8.9/transforms/657a38f81c3e00dd83456cf35b17580b/transformed/profileinstaller-1.4.1/AndroidManifest.xml:31:17-49
+69        </provider>
+70
+71        <service
+71-->[androidx.room:room-runtime-android:2.7.0-alpha11] /home/aleksey/.gradle/caches/8.9/transforms/d6d1957d58d243a910ae76028020882c/transformed/room-runtime-release/AndroidManifest.xml:24:9-28:63
+72            android:name="androidx.room.MultiInstanceInvalidationService"
+72-->[androidx.room:room-runtime-android:2.7.0-alpha11] /home/aleksey/.gradle/caches/8.9/transforms/d6d1957d58d243a910ae76028020882c/transformed/room-runtime-release/AndroidManifest.xml:25:13-74
+73            android:directBootAware="true"
+73-->[androidx.room:room-runtime-android:2.7.0-alpha11] /home/aleksey/.gradle/caches/8.9/transforms/d6d1957d58d243a910ae76028020882c/transformed/room-runtime-release/AndroidManifest.xml:26:13-43
+74            android:exported="false" />
+74-->[androidx.room:room-runtime-android:2.7.0-alpha11] /home/aleksey/.gradle/caches/8.9/transforms/d6d1957d58d243a910ae76028020882c/transformed/room-runtime-release/AndroidManifest.xml:27:13-37
+75
+76        <receiver
+76-->[androidx.profileinstaller:profileinstaller:1.4.1] /home/aleksey/.gradle/caches/8.9/transforms/657a38f81c3e00dd83456cf35b17580b/transformed/profileinstaller-1.4.1/AndroidManifest.xml:34:9-52:20
+77            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+77-->[androidx.profileinstaller:profileinstaller:1.4.1] /home/aleksey/.gradle/caches/8.9/transforms/657a38f81c3e00dd83456cf35b17580b/transformed/profileinstaller-1.4.1/AndroidManifest.xml:35:13-76
+78            android:directBootAware="false"
+78-->[androidx.profileinstaller:profileinstaller:1.4.1] /home/aleksey/.gradle/caches/8.9/transforms/657a38f81c3e00dd83456cf35b17580b/transformed/profileinstaller-1.4.1/AndroidManifest.xml:36:13-44
+79            android:enabled="true"
+79-->[androidx.profileinstaller:profileinstaller:1.4.1] /home/aleksey/.gradle/caches/8.9/transforms/657a38f81c3e00dd83456cf35b17580b/transformed/profileinstaller-1.4.1/AndroidManifest.xml:37:13-35
+80            android:exported="true"
+80-->[androidx.profileinstaller:profileinstaller:1.4.1] /home/aleksey/.gradle/caches/8.9/transforms/657a38f81c3e00dd83456cf35b17580b/transformed/profileinstaller-1.4.1/AndroidManifest.xml:38:13-36
+81            android:permission="android.permission.DUMP" >
+81-->[androidx.profileinstaller:profileinstaller:1.4.1] /home/aleksey/.gradle/caches/8.9/transforms/657a38f81c3e00dd83456cf35b17580b/transformed/profileinstaller-1.4.1/AndroidManifest.xml:39:13-57
+82            <intent-filter>
+82-->[androidx.profileinstaller:profileinstaller:1.4.1] /home/aleksey/.gradle/caches/8.9/transforms/657a38f81c3e00dd83456cf35b17580b/transformed/profileinstaller-1.4.1/AndroidManifest.xml:40:13-42:29
+83                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+83-->[androidx.profileinstaller:profileinstaller:1.4.1] /home/aleksey/.gradle/caches/8.9/transforms/657a38f81c3e00dd83456cf35b17580b/transformed/profileinstaller-1.4.1/AndroidManifest.xml:41:17-91
+83-->[androidx.profileinstaller:profileinstaller:1.4.1] /home/aleksey/.gradle/caches/8.9/transforms/657a38f81c3e00dd83456cf35b17580b/transformed/profileinstaller-1.4.1/AndroidManifest.xml:41:25-88
+84            </intent-filter>
+85            <intent-filter>
+85-->[androidx.profileinstaller:profileinstaller:1.4.1] /home/aleksey/.gradle/caches/8.9/transforms/657a38f81c3e00dd83456cf35b17580b/transformed/profileinstaller-1.4.1/AndroidManifest.xml:43:13-45:29
+86                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+86-->[androidx.profileinstaller:profileinstaller:1.4.1] /home/aleksey/.gradle/caches/8.9/transforms/657a38f81c3e00dd83456cf35b17580b/transformed/profileinstaller-1.4.1/AndroidManifest.xml:44:17-85
+86-->[androidx.profileinstaller:profileinstaller:1.4.1] /home/aleksey/.gradle/caches/8.9/transforms/657a38f81c3e00dd83456cf35b17580b/transformed/profileinstaller-1.4.1/AndroidManifest.xml:44:25-82
+87            </intent-filter>
+88            <intent-filter>
+88-->[androidx.profileinstaller:profileinstaller:1.4.1] /home/aleksey/.gradle/caches/8.9/transforms/657a38f81c3e00dd83456cf35b17580b/transformed/profileinstaller-1.4.1/AndroidManifest.xml:46:13-48:29
+89                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+89-->[androidx.profileinstaller:profileinstaller:1.4.1] /home/aleksey/.gradle/caches/8.9/transforms/657a38f81c3e00dd83456cf35b17580b/transformed/profileinstaller-1.4.1/AndroidManifest.xml:47:17-88
+89-->[androidx.profileinstaller:profileinstaller:1.4.1] /home/aleksey/.gradle/caches/8.9/transforms/657a38f81c3e00dd83456cf35b17580b/transformed/profileinstaller-1.4.1/AndroidManifest.xml:47:25-85
+90            </intent-filter>
+91            <intent-filter>
+91-->[androidx.profileinstaller:profileinstaller:1.4.1] /home/aleksey/.gradle/caches/8.9/transforms/657a38f81c3e00dd83456cf35b17580b/transformed/profileinstaller-1.4.1/AndroidManifest.xml:49:13-51:29
+92                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+92-->[androidx.profileinstaller:profileinstaller:1.4.1] /home/aleksey/.gradle/caches/8.9/transforms/657a38f81c3e00dd83456cf35b17580b/transformed/profileinstaller-1.4.1/AndroidManifest.xml:50:17-95
+92-->[androidx.profileinstaller:profileinstaller:1.4.1] /home/aleksey/.gradle/caches/8.9/transforms/657a38f81c3e00dd83456cf35b17580b/transformed/profileinstaller-1.4.1/AndroidManifest.xml:50:25-92
+93            </intent-filter>
+94        </receiver>
+95    </application>
+96
+97</manifest>
