@@ -8,9 +8,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import dev.kbwallet.app.biometric.BiometricScreen
+import dev.kbwallet.app.core.biometric.BiometricScreen
 import dev.kbwallet.app.coins.presentation.CoinListScreen
 import dev.kbwallet.app.core.navigation.Buy
+import dev.kbwallet.app.core.navigation.Biometric
 import dev.kbwallet.app.core.navigation.Coins
 import dev.kbwallet.app.core.navigation.Portfolio
 import dev.kbwallet.app.core.navigation.Sell
@@ -27,9 +28,14 @@ fun App() {
     KBWalletTheme {
         NavHost(
             navController = navController,
-            startDestination = Portfolio,
+            startDestination = Biometric,
             modifier = Modifier.fillMaxSize()
         ) {
+            composable<Biometric>() {
+                BiometricScreen {
+                    navController.navigate(Portfolio)
+                }
+            }
             composable<Portfolio> {
                 PortfolioScreen(
                     onCoinItemClicked = { coinId ->
