@@ -3,6 +3,9 @@ package dev.kbwallet.app.core.navigation
 import kotlinx.serialization.Serializable
 
 @Serializable
+object Biometric
+
+@Serializable
 object Portfolio
 
 @Serializable

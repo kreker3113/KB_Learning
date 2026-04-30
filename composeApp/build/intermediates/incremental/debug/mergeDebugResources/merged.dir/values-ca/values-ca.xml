@@ -27,6 +27,8 @@
     <string msgid="8875138169939072951" name="abc_shareactionprovider_share_with">"Comparteix amb"</string>
     <string msgid="9055268688411532828" name="abc_shareactionprovider_share_with_application">"Comparteix amb <ns1:g id="APPLICATION_NAME">%s</ns1:g>"</string>
     <string msgid="1656852541809559762" name="abc_toolbar_collapse_description">"Replega"</string>
+    <string msgid="2102429900219199821" name="biometric_or_screen_lock_prompt_message">"Utilitza la biometria o el bloqueig de pantalla per continuar"</string>
+    <string msgid="1160635338192065472" name="biometric_prompt_message">"Utilitza la biometria per continuar"</string>
     <string msgid="881409763997275156" name="call_notification_answer_action">"Respon"</string>
     <string msgid="8793775615905189152" name="call_notification_answer_video_action">"Vídeo"</string>
     <string msgid="3229508546291798546" name="call_notification_decline_action">"Rebutja"</string>
@@ -41,13 +43,18 @@
     <string msgid="4776854077120974966" name="default_error_msg">"Error desconegut"</string>
     <string msgid="6312721426453364202" name="default_popup_window_title">"Finestra emergent"</string>
     <string msgid="1890207353314751437" name="dropdown_menu">"Menú desplegable"</string>
+    <string msgid="4562557128765735254" name="face_or_screen_lock_prompt_message">"Utilitza la cara o el bloqueig de pantalla per continuar"</string>
+    <string msgid="2282389249605674226" name="face_prompt_message">"Utilitza la cara per continuar"</string>
+    <string msgid="5462024216548165325" name="fingerprint_dialog_icon_description">"Icona d\'empremta digital"</string>
     <string msgid="1072308044213194243" name="fingerprint_dialog_touch_sensor">"Toca sensor d\'empremtes"</string>
-    <string msgid="8216738333501875566" name="fingerprint_error_hw_not_available">"El maquinari per a empremtes dactilars no està disponible."</string>
-    <string msgid="6306988885793029438" name="fingerprint_error_hw_not_present">"Aquest dispositiu no té sensor d\'empremtes dactilars"</string>
+    <string msgid="8216738333501875566" name="fingerprint_error_hw_not_available">"El maquinari d\'empremtes digitals no està disponible."</string>
+    <string msgid="6306988885793029438" name="fingerprint_error_hw_not_present">"Aquest dispositiu no té sensor d\'empremtes digitals"</string>
     <string msgid="7291787166416782245" name="fingerprint_error_lockout">"Massa intents. Torna-ho a provar més tard."</string>
     <string msgid="7520712796891883488" name="fingerprint_error_no_fingerprints">"No s\'ha registrat cap empremta digital."</string>
     <string msgid="7627716295344353987" name="fingerprint_error_user_canceled">"L\'usuari ha cancel·lat l\'operació d\'empremta digital."</string>
     <string msgid="3873359464293253009" name="fingerprint_not_recognized">"No s\'ha reconegut"</string>
+    <string msgid="8382576858490514495" name="fingerprint_or_screen_lock_prompt_message">"Utilitza l\'empremta digital o el bloqueig de pantalla per continuar"</string>
+    <string msgid="7449360011861769080" name="fingerprint_prompt_message">"Utilitza l\'empremta digital per continuar"</string>
     <string msgid="3791785319221634505" name="generic_error_no_device_credential">"No s\'ha definit cap PIN, patró o contrasenya."</string>
     <string msgid="1807436368654974044" name="generic_error_no_keyguard">"Aquest dispositiu no admet utilitzar cap PIN, patró ni contrasenya."</string>
     <string msgid="7309881387583143581" name="generic_error_user_canceled">"L\'usuari ha cancel·lat l\'autenticació."</string>
@@ -114,6 +121,7 @@
     <string msgid="6610465462668679431" name="not_selected">"No seleccionat"</string>
     <string msgid="5941395253238309765" name="range_end">"Fi de l\'interval"</string>
     <string msgid="7097486360902471446" name="range_start">"Inici de l\'interval"</string>
+    <string msgid="5659570757430909869" name="screen_lock_prompt_message">"Introdueix el bloqueig de pantalla per continuar"</string>
     <string msgid="6264217191555673260" name="search_menu_title">"Cerca"</string>
     <string msgid="6043586758067023" name="selected">"Seleccionat"</string>
     <string msgid="4139871816613051306" name="state_empty">"Buit"</string>
@@ -125,4 +133,11 @@
     <string msgid="5946805113151406391" name="template_percent">"<ns1:g id="PERCENTAGE">%1$d</ns1:g> per cent"</string>
     <string msgid="3765533235322692011" name="tooltip_description">"descripció emergent"</string>
     <string msgid="3124740595719787496" name="tooltip_label">"mostra la descripció emergent"</string>
+    <string msgid="6524145989441579428" name="use_biometric_label">"Utilitza la biometria"</string>
+    <string msgid="5385448280139639016" name="use_biometric_or_screen_lock_label">"Utilitza la biometria o el bloqueig de pantalla"</string>
+    <string msgid="6533512708069459542" name="use_face_label">"Utilitza la cara"</string>
+    <string msgid="2116180187159450292" name="use_face_or_screen_lock_label">"Utilitza el desbloqueig facial o el bloqueig de pantalla"</string>
+    <string msgid="6961788485681412417" name="use_fingerprint_label">"Utilitza l\'empremta digital"</string>
+    <string msgid="7577690399303139443" name="use_fingerprint_or_screen_lock_label">"Utilitza l\'empremta digital o el bloqueig de pantalla"</string>
+    <string msgid="5459869335976243512" name="use_screen_lock_label">"Utilitza el bloqueig de pantalla"</string>
 </resources>

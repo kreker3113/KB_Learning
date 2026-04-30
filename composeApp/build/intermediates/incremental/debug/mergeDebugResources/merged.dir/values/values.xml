@@ -32,6 +32,8 @@
         <item>SCV42</item> 
         <item>SCV45</item> 
     </string-array>
+    <string-array name="keyguard_biometric_and_credential_exclude_vendors">
+    </string-array>
     <attr format="reference" name="drawerArrowStyle"/>
     <attr format="dimension" name="height"/>
     <attr format="boolean" name="isLightTheme"/>
@@ -344,6 +346,8 @@
     <string name="abc_toolbar_collapse_description">Collapse</string>
     <string name="androidx_startup" translatable="false">androidx.startup</string>
     <string name="app_name">KBWallet</string>
+    <string name="biometric_or_screen_lock_prompt_message">Use your biometric or screen lock to continue</string>
+    <string name="biometric_prompt_message">Use your biometric to continue</string>
     <string name="call_notification_answer_action">Answer</string>
     <string name="call_notification_answer_video_action">Video</string>
     <string name="call_notification_decline_action">Decline</string>
@@ -358,6 +362,9 @@
     <string name="default_error_msg">Unknown error</string>
     <string name="default_popup_window_title" ns2:ignore="ExtraTranslation">"Pop-Up Window"</string>
     <string name="dropdown_menu">"Dropdown menu"</string>
+    <string name="face_or_screen_lock_prompt_message">Use your face or screen lock to continue</string>
+    <string name="face_prompt_message">Use your face to continue</string>
+    <string name="fingerprint_dialog_icon_description">Fingerprint icon</string>
     <string name="fingerprint_dialog_touch_sensor">Touch the fingerprint sensor</string>
     <string name="fingerprint_error_hw_not_available">Fingerprint hardware not available.</string>
     <string name="fingerprint_error_hw_not_present">This device does not have a fingerprint sensor</string>
@@ -365,6 +372,8 @@
     <string name="fingerprint_error_no_fingerprints">No fingerprints enrolled.</string>
     <string name="fingerprint_error_user_canceled">Fingerprint operation canceled by user.</string>
     <string name="fingerprint_not_recognized">Not recognized</string>
+    <string name="fingerprint_or_screen_lock_prompt_message">Use your fingerprint or screen lock to continue</string>
+    <string name="fingerprint_prompt_message">Use your fingerprint to continue</string>
     <string name="generic_error_no_device_credential">No PIN, pattern, or password set.</string>
     <string name="generic_error_no_keyguard">This device does not support PIN, pattern, or password.</string>
     <string name="generic_error_user_canceled">Authentication canceled by user.</string>
@@ -435,6 +444,7 @@
     <string name="not_selected">Not selected</string>
     <string name="range_end">"Range end"</string>
     <string name="range_start">"Range start"</string>
+    <string name="screen_lock_prompt_message">Enter your screen lock to continue</string>
     <string name="search_menu_title">Search</string>
     <string name="selected">Selected</string>
     <string name="state_empty">Empty</string>
@@ -446,6 +456,13 @@
     <string name="template_percent"><ns1:g id="percentage">%1$d</ns1:g> percent.</string>
     <string name="tooltip_description">tooltip</string>
     <string name="tooltip_label">show tooltip</string>
+    <string name="use_biometric_label">Use biometrics</string>
+    <string name="use_biometric_or_screen_lock_label">Use biometrics or screen lock</string>
+    <string name="use_face_label">Use face</string>
+    <string name="use_face_or_screen_lock_label">Use face or screen lock</string>
+    <string name="use_fingerprint_label">Use fingerprint</string>
+    <string name="use_fingerprint_or_screen_lock_label">Use fingerprint or screen lock</string>
+    <string name="use_screen_lock_label">Use screen lock</string>
     <style name="AlertDialog.AppCompat" parent="Base.AlertDialog.AppCompat"/>
     <style name="AlertDialog.AppCompat.Light" parent="Base.AlertDialog.AppCompat.Light"/>
     <style name="Animation.AppCompat.Dialog" parent="Base.Animation.AppCompat.Dialog"/>

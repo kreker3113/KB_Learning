@@ -27,6 +27,8 @@
     <string msgid="8875138169939072951" name="abc_shareactionprovider_share_with">"Bagikan dengan"</string>
     <string msgid="9055268688411532828" name="abc_shareactionprovider_share_with_application">"Bagikan dengan <ns1:g id="APPLICATION_NAME">%s</ns1:g>"</string>
     <string msgid="1656852541809559762" name="abc_toolbar_collapse_description">"Ciutkan"</string>
+    <string msgid="2102429900219199821" name="biometric_or_screen_lock_prompt_message">"Gunakan biometrik atau kunci layar untuk melanjutkan"</string>
+    <string msgid="1160635338192065472" name="biometric_prompt_message">"Gunakan biometrik untuk melanjutkan"</string>
     <string msgid="881409763997275156" name="call_notification_answer_action">"Jawab"</string>
     <string msgid="8793775615905189152" name="call_notification_answer_video_action">"Video"</string>
     <string msgid="3229508546291798546" name="call_notification_decline_action">"Tolak"</string>
@@ -41,6 +43,9 @@
     <string msgid="4776854077120974966" name="default_error_msg">"Error tidak diketahui"</string>
     <string msgid="6312721426453364202" name="default_popup_window_title">"Jendela Pop-Up"</string>
     <string msgid="1890207353314751437" name="dropdown_menu">"Menu dropdown"</string>
+    <string msgid="4562557128765735254" name="face_or_screen_lock_prompt_message">"Gunakan wajah atau kunci layar untuk melanjutkan"</string>
+    <string msgid="2282389249605674226" name="face_prompt_message">"Gunakan wajah untuk melanjutkan"</string>
+    <string msgid="5462024216548165325" name="fingerprint_dialog_icon_description">"Ikon sidik jari"</string>
     <string msgid="1072308044213194243" name="fingerprint_dialog_touch_sensor">"Sentuh sensor sidik jari"</string>
     <string msgid="8216738333501875566" name="fingerprint_error_hw_not_available">"Hardware sidik jari tidak tersedia."</string>
     <string msgid="6306988885793029438" name="fingerprint_error_hw_not_present">"Perangkat ini tidak memiliki sensor sidik jari"</string>
@@ -48,6 +53,8 @@
     <string msgid="7520712796891883488" name="fingerprint_error_no_fingerprints">"Tidak ada sidik jari yang terdaftar."</string>
     <string msgid="7627716295344353987" name="fingerprint_error_user_canceled">"Operasi sidik jari dibatalkan oleh pengguna."</string>
     <string msgid="3873359464293253009" name="fingerprint_not_recognized">"Tidak dikenali"</string>
+    <string msgid="8382576858490514495" name="fingerprint_or_screen_lock_prompt_message">"Gunakan sidik jari atau kunci layar untuk melanjutkan"</string>
+    <string msgid="7449360011861769080" name="fingerprint_prompt_message">"Gunakan sidik jari untuk melanjutkan"</string>
     <string msgid="3791785319221634505" name="generic_error_no_device_credential">"Tidak ada PIN, pola, atau sandi yang disetel."</string>
     <string msgid="1807436368654974044" name="generic_error_no_keyguard">"Perangkat ini tidak mendukung PIN, pola, atau sandi."</string>
     <string msgid="7309881387583143581" name="generic_error_user_canceled">"Autentikasi dibatalkan oleh pengguna."</string>
@@ -114,6 +121,7 @@
     <string msgid="6610465462668679431" name="not_selected">"Tidak dipilih"</string>
     <string msgid="5941395253238309765" name="range_end">"Rentang akhir"</string>
     <string msgid="7097486360902471446" name="range_start">"Rentang awal"</string>
+    <string msgid="5659570757430909869" name="screen_lock_prompt_message">"Masukkan kunci layar untuk melanjutkan"</string>
     <string msgid="6264217191555673260" name="search_menu_title">"Telusuri"</string>
     <string msgid="6043586758067023" name="selected">"Dipilih"</string>
     <string msgid="4139871816613051306" name="state_empty">"Kosong"</string>
@@ -125,4 +133,11 @@
     <string msgid="5946805113151406391" name="template_percent">"<ns1:g id="PERCENTAGE">%1$d</ns1:g> persen."</string>
     <string msgid="3765533235322692011" name="tooltip_description">"tooltip"</string>
     <string msgid="3124740595719787496" name="tooltip_label">"tampilkan tooltip"</string>
+    <string msgid="6524145989441579428" name="use_biometric_label">"Gunakan biometrik"</string>
+    <string msgid="5385448280139639016" name="use_biometric_or_screen_lock_label">"Gunakan biometrik atau kunci layar"</string>
+    <string msgid="6533512708069459542" name="use_face_label">"Gunakan wajah"</string>
+    <string msgid="2116180187159450292" name="use_face_or_screen_lock_label">"Gunakan wajah atau kunci layar"</string>
+    <string msgid="6961788485681412417" name="use_fingerprint_label">"Gunakan sidik jari"</string>
+    <string msgid="7577690399303139443" name="use_fingerprint_or_screen_lock_label">"Gunakan sidik jari atau kunci layar"</string>
+    <string msgid="5459869335976243512" name="use_screen_lock_label">"Gunakan kunci layar"</string>
 </resources>

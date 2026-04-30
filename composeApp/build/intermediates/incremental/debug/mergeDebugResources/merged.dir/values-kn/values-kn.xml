@@ -27,6 +27,8 @@
     <string msgid="8875138169939072951" name="abc_shareactionprovider_share_with">"ಇವರೊಂದಿಗೆ ಹಂಚಿಕೊಳ್ಳಿ"</string>
     <string msgid="9055268688411532828" name="abc_shareactionprovider_share_with_application">"<ns1:g id="APPLICATION_NAME">%s</ns1:g> ನೊಂದಿಗೆ ಹಂಚಿಕೊಳ್ಳಿ"</string>
     <string msgid="1656852541809559762" name="abc_toolbar_collapse_description">"ಕುಗ್ಗಿಸಿ"</string>
+    <string msgid="2102429900219199821" name="biometric_or_screen_lock_prompt_message">"ಮುಂದುವರಿಸಲು ನಿಮ್ಮ ಬಯೋಮೆಟ್ರಿಕ್ ಅಥವಾ ಸ್ಕ್ರೀನ್ ಲಾಕ್ ಅನ್ನು ಬಳಸಿ"</string>
+    <string msgid="1160635338192065472" name="biometric_prompt_message">"ಮುಂದುವರಿಸಲು ನಿಮ್ಮ ಬಯೋಮೆಟ್ರಿಕ್ ಬಳಸಿ"</string>
     <string msgid="881409763997275156" name="call_notification_answer_action">"ಉತ್ತರಿಸಿ"</string>
     <string msgid="8793775615905189152" name="call_notification_answer_video_action">"ವೀಡಿಯೊ"</string>
     <string msgid="3229508546291798546" name="call_notification_decline_action">"ನಿರಾಕರಿಸಿ"</string>
@@ -41,6 +43,9 @@
     <string msgid="4776854077120974966" name="default_error_msg">"ಅಪರಿಚಿತ ದೋಷ"</string>
     <string msgid="6312721426453364202" name="default_popup_window_title">"ಪಾಪ್-ಅಪ್ ವಿಂಡೋ"</string>
     <string msgid="1890207353314751437" name="dropdown_menu">"ಡ್ರಾಪ್‌ಡೌನ್ ಮೆನು"</string>
+    <string msgid="4562557128765735254" name="face_or_screen_lock_prompt_message">"ಮುಂದುವರಿಸಲು ನಿಮ್ಮ ಮುಖ ಅಥವಾ ಸ್ಕ್ರೀನ್ ಲಾಕ್ ಅನ್ನು ಬಳಸಿ"</string>
+    <string msgid="2282389249605674226" name="face_prompt_message">"ಮುಂದುವರಿಸಲು ನಿಮ್ಮ ಮುಖವನ್ನು ಬಳಸಿ"</string>
+    <string msgid="5462024216548165325" name="fingerprint_dialog_icon_description">"ಫಿಂಗರ್‌ಪ್ರಿಂಟ್ ಐಕಾನ್"</string>
     <string msgid="1072308044213194243" name="fingerprint_dialog_touch_sensor">"ಫಿಂಗರ್‌ಪ್ರಿಂಟ್ ಸೆನ್ಸರ್‌‌ ಅನ್ನು ಸ್ಪರ್ಶಿಸಿ"</string>
     <string msgid="8216738333501875566" name="fingerprint_error_hw_not_available">"ಫಿಂಗರ್‌ಪ್ರಿಂಟ್ ಹಾರ್ಡ್‌ವೇರ್‌ ಲಭ್ಯವಿಲ್ಲ."</string>
     <string msgid="6306988885793029438" name="fingerprint_error_hw_not_present">"ಈ ಸಾಧನವು ಫಿಂಗರ್‌ಪ್ರಿಂಟ್‌ ಸೆನ್ಸರ್ ಅನ್ನು ಹೊಂದಿಲ್ಲ"</string>
@@ -48,6 +53,8 @@
     <string msgid="7520712796891883488" name="fingerprint_error_no_fingerprints">"ಯಾವುದೇ ಫಿಂಗರ್‌ಪ್ರಿಂಟ್‌ ಅನ್ನು ನೋಂದಣಿ ಮಾಡಿಲ್ಲ."</string>
     <string msgid="7627716295344353987" name="fingerprint_error_user_canceled">"ಬಳಕೆದಾರರು ಫಿಂಗರ್‌ಪ್ರಿಂಟ್ ಕಾರ್ಯಾಚರಣೆಯನ್ನು ರದ್ದುಪಡಿಸಿದ್ದಾರೆ."</string>
     <string msgid="3873359464293253009" name="fingerprint_not_recognized">"ಗುರುತಿಸಲಾಗಿಲ್ಲ"</string>
+    <string msgid="8382576858490514495" name="fingerprint_or_screen_lock_prompt_message">"ಮುಂದುವರಿಸಲು ಫಿಂಗರ್ ಪ್ರಿಂಟ್ ಅಥವಾ ಸ್ಕ್ರೀನ್ ಲಾಕ್ ಅನ್ನು ಬಳಸಿ"</string>
+    <string msgid="7449360011861769080" name="fingerprint_prompt_message">"ಮುಂದುವರಿಸಲು ನಿಮ್ಮ ಫಿಂಗರ್ ಪ್ರಿಂಟ್ ಅನ್ನು ಬಳಸಿ"</string>
     <string msgid="3791785319221634505" name="generic_error_no_device_credential">"ಯಾವುದೇ ಪಿನ್, ಪ್ಯಾಟರ್ನ್ ಅಥವಾ ಪಾಸ್‌ವರ್ಡ್ ಅನ್ನು ಹೊಂದಿಸಿಲ್ಲ."</string>
     <string msgid="1807436368654974044" name="generic_error_no_keyguard">"ಈ ಸಾಧನವು ಪಿನ್, ಪ್ಯಾಟರ್ನ್ ಅಥವಾ ಪಾಸ್‌ವರ್ಡ್ ಅನ್ನು ಬೆಂಬಲಿಸುವುದಿಲ್ಲ."</string>
     <string msgid="7309881387583143581" name="generic_error_user_canceled">"ಬಳಕೆದಾರರು ದೃಢೀಕರಣವನ್ನು ರದ್ದುಗೊಳಿಸಿದ್ದಾರೆ."</string>
@@ -114,6 +121,7 @@
     <string msgid="6610465462668679431" name="not_selected">"ಆಯ್ಕೆ ಮಾಡಿಲ್ಲ"</string>
     <string msgid="5941395253238309765" name="range_end">"ಶ್ರೇಣಿಯ ಅಂತ್ಯ"</string>
     <string msgid="7097486360902471446" name="range_start">"ಶ್ರೇಣಿಯ ಪ್ರಾರಂಭ"</string>
+    <string msgid="5659570757430909869" name="screen_lock_prompt_message">"ಮುಂದುವರಿಯಲು ನಿಮ್ಮ ಸ್ಕ್ರೀನ್ ಲಾಕ್‌ ಅನ್ನು ನಮೂದಿಸಿ"</string>
     <string msgid="6264217191555673260" name="search_menu_title">"ಹುಡುಕಿ"</string>
     <string msgid="6043586758067023" name="selected">"ಆಯ್ಕೆಮಾಡಲಾಗಿದೆ"</string>
     <string msgid="4139871816613051306" name="state_empty">"ಖಾಲಿ"</string>
@@ -125,4 +133,11 @@
     <string msgid="5946805113151406391" name="template_percent">"<ns1:g id="PERCENTAGE">%1$d</ns1:g> ಶೇಕಡಾ."</string>
     <string msgid="3765533235322692011" name="tooltip_description">"ಟೂಲ್‌ಟಿಪ್"</string>
     <string msgid="3124740595719787496" name="tooltip_label">"ಟೂಲ್‌ಟಿಪ್ ಅನ್ನು ತೋರಿಸಿ"</string>
+    <string msgid="6524145989441579428" name="use_biometric_label">"ಬಯೋಮೆಟ್ರಿಕ್ಸ್ ಬಳಸಿ"</string>
+    <string msgid="5385448280139639016" name="use_biometric_or_screen_lock_label">"ಬಯೋಮೆಟ್ರಿಕ್ಸ್ ಅಥವಾ ಸ್ಕ್ರೀನ್ ಲಾಕ್ ಅನ್ನು ಬಳಸಿ"</string>
+    <string msgid="6533512708069459542" name="use_face_label">"ಮುಖವನ್ನು ಬಳಸಿ"</string>
+    <string msgid="2116180187159450292" name="use_face_or_screen_lock_label">"ಮುಖ ಅಥವಾ ಸ್ಕ್ರೀನ್ ಲಾಕ್ ಅನ್ನು ಬಳಸಿ"</string>
+    <string msgid="6961788485681412417" name="use_fingerprint_label">"ಫಿಂಗರ್ ಪ್ರಿಂಟ್ ಬಳಸಿ"</string>
+    <string msgid="7577690399303139443" name="use_fingerprint_or_screen_lock_label">"ಫಿಂಗರ್‌ ಪ್ರಿಂಟ್ ಅಥವಾ ಸ್ಕ್ರೀನ್ ಲಾಕ್ ಅನ್ನು ಬಳಸಿ"</string>
+    <string msgid="5459869335976243512" name="use_screen_lock_label">"ಸ್ಕ್ರೀನ್ ಲಾಕ್ ಬಳಸಿ"</string>
 </resources>

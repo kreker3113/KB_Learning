@@ -27,6 +27,8 @@
     <string msgid="8875138169939072951" name="abc_shareactionprovider_share_with">"यसमार्फत सेयर गर्नुहोस्"</string>
     <string msgid="9055268688411532828" name="abc_shareactionprovider_share_with_application">"<ns1:g id="APPLICATION_NAME">%s</ns1:g> मार्फत सेयर गर्नुहोस्"</string>
     <string msgid="1656852541809559762" name="abc_toolbar_collapse_description">"संक्षिप्त गर्नुहोस्"</string>
+    <string msgid="2102429900219199821" name="biometric_or_screen_lock_prompt_message">"जारी राख्न आफ्नो बायोमेट्रिक वा स्क्रिन लक प्रयोग गरी पुष्टि गर्नुहोस्"</string>
+    <string msgid="1160635338192065472" name="biometric_prompt_message">"जारी राख्न आफ्नो बायोमेट्रिक प्रयोग गरी पुष्टि गर्नुहोस्"</string>
     <string msgid="881409763997275156" name="call_notification_answer_action">"जवाफ दिनुहोस्"</string>
     <string msgid="8793775615905189152" name="call_notification_answer_video_action">"भिडियो"</string>
     <string msgid="3229508546291798546" name="call_notification_decline_action">"काट्नुहोस्"</string>
@@ -41,15 +43,20 @@
     <string msgid="4776854077120974966" name="default_error_msg">"अज्ञात त्रुटि"</string>
     <string msgid="6312721426453364202" name="default_popup_window_title">"पपअप विन्डो"</string>
     <string msgid="1890207353314751437" name="dropdown_menu">"ड्रपडाउन मेनु"</string>
+    <string msgid="4562557128765735254" name="face_or_screen_lock_prompt_message">"जारी राख्न आफ्नो फेस वा स्क्रिन लक प्रयोग गरी पुष्टि गर्नुहोस्"</string>
+    <string msgid="2282389249605674226" name="face_prompt_message">"जारी राख्न आफ्नो फेस प्रयोग गरी पुष्टि गर्नुहोस्"</string>
+    <string msgid="5462024216548165325" name="fingerprint_dialog_icon_description">"फिंगरप्रिन्ट जनाउने आइकन"</string>
     <string msgid="1072308044213194243" name="fingerprint_dialog_touch_sensor">"फिंगरप्रिन्ट सेन्सरमा छुनुहोस्‌"</string>
     <string msgid="8216738333501875566" name="fingerprint_error_hw_not_available">"फिंगरप्रिन्ट हार्डवेयर उपलब्ध छैन।"</string>
-    <string msgid="6306988885793029438" name="fingerprint_error_hw_not_present">"यो यन्त्रमा कुनै फिंगरप्रिन्ट सेन्सर छैन"</string>
+    <string msgid="6306988885793029438" name="fingerprint_error_hw_not_present">"यो डिभाइसमा कुनै फिंगरप्रिन्ट सेन्सर छैन"</string>
     <string msgid="7291787166416782245" name="fingerprint_error_lockout">"अत्यधिक पटक प्रयासहरू गरिए। कृपया पछि फेरि प्रयास गर्नुहोस्।"</string>
     <string msgid="7520712796891883488" name="fingerprint_error_no_fingerprints">"कुनै पनि फिंगरप्रिन्ट दर्ता गरिएको छैन।"</string>
     <string msgid="7627716295344353987" name="fingerprint_error_user_canceled">"प्रयोगकर्ताले फिंगरप्रिन्टसम्बन्धी कारबाही रद्द गर्नुभयो।"</string>
     <string msgid="3873359464293253009" name="fingerprint_not_recognized">"पहिचान भएन"</string>
+    <string msgid="8382576858490514495" name="fingerprint_or_screen_lock_prompt_message">"जारी राख्न आफ्नो फिंगरप्रिन्ट वा स्क्रिन लक प्रयोग गरी पुष्टि गर्नुहोस्"</string>
+    <string msgid="7449360011861769080" name="fingerprint_prompt_message">"जारी राख्न आफ्नो फिंगरप्रिन्ट प्रयोग गरी पुष्टि गर्नुहोस्"</string>
     <string msgid="3791785319221634505" name="generic_error_no_device_credential">"कुनै पनि PIN, ढाँचा वा पासवर्ड सेट गरिएको छैन।"</string>
-    <string msgid="1807436368654974044" name="generic_error_no_keyguard">"यस यन्त्रमा PIN, ढाँचा वा पासवर्ड प्रयोग गर्न मिल्दैन।"</string>
+    <string msgid="1807436368654974044" name="generic_error_no_keyguard">"यस डिभाइसमा PIN, ढाँचा वा पासवर्ड प्रयोग गर्न मिल्दैन।"</string>
     <string msgid="7309881387583143581" name="generic_error_user_canceled">"प्रयोगकर्ताले प्रमाणीकरण सेवा रद्द गर्नुभयो।"</string>
     <string msgid="6827826412747255547" name="in_progress">"काम हुँदै छ"</string>
     <string msgid="7933458017204019916" name="indeterminate">"आंशिक रूपमा जाँच गरिएको"</string>
@@ -114,6 +121,7 @@
     <string msgid="6610465462668679431" name="not_selected">"चयन गरिएको छैन"</string>
     <string msgid="5941395253238309765" name="range_end">"दायराको अन्तिम बिन्दु"</string>
     <string msgid="7097486360902471446" name="range_start">"दायराको सुरुवात बिन्दु"</string>
+    <string msgid="5659570757430909869" name="screen_lock_prompt_message">"जारी राख्न आफ्नो स्क्रिन लक प्रयोग गरी पुष्टि गर्नुहोस्"</string>
     <string msgid="6264217191555673260" name="search_menu_title">"खोज"</string>
     <string msgid="6043586758067023" name="selected">"चयन गरिएको छ"</string>
     <string msgid="4139871816613051306" name="state_empty">"खाली"</string>
@@ -125,4 +133,11 @@
     <string msgid="5946805113151406391" name="template_percent">"<ns1:g id="PERCENTAGE">%1$d</ns1:g> प्रतिशत।"</string>
     <string msgid="3765533235322692011" name="tooltip_description">"टुलटिप"</string>
     <string msgid="3124740595719787496" name="tooltip_label">"टुलटिप देखाउनुहोस्"</string>
+    <string msgid="6524145989441579428" name="use_biometric_label">"बायोमेट्रिक्स प्रयोग गरी पुष्टि गर्नुहोस्"</string>
+    <string msgid="5385448280139639016" name="use_biometric_or_screen_lock_label">"बायोमेट्रिक्स वा स्क्रिन लक प्रयोग गरी पुष्टि गर्नुहोस्"</string>
+    <string msgid="6533512708069459542" name="use_face_label">"फेस प्रयोग गरी पुष्टि गर्नुहोस्"</string>
+    <string msgid="2116180187159450292" name="use_face_or_screen_lock_label">"फेस वा स्क्रिन लक प्रयोग गरी पुष्टि गर्नुहोस्"</string>
+    <string msgid="6961788485681412417" name="use_fingerprint_label">"फिंगरप्रिन्ट प्रयोग गरी पुष्टि गर्नुहोस्"</string>
+    <string msgid="7577690399303139443" name="use_fingerprint_or_screen_lock_label">"फिंगरप्रिन्ट वा स्क्रिन लक प्रयोग गरी पुष्टि गर्नुहोस्"</string>
+    <string msgid="5459869335976243512" name="use_screen_lock_label">"स्क्रिन लक प्रयोग गरी पुष्टि गर्नुहोस्"</string>
 </resources>

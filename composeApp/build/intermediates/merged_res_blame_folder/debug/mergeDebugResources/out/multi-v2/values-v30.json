@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "dev.kbwallet.app.composeApp-mergeDebugResources-62:/values-v30/values-v30.xml",
+            "outputFile": "dev.kbwallet.app.composeApp-mergeDebugResources-63:/values-v30/values-v30.xml",
             "map": [
                 {
-                    "source": "/home/aleksey/.gradle/caches/8.9/transforms/215304e9272b02810243d4501b1c4dc4/transformed/material3-release/res/values-v30/values-v30.xml",
+                    "source": "/home/aleksey/.gradle/caches/8.9/transforms/aea3cf173bebb8607f04570b773b928e/transformed/material3-release/res/values-v30/values-v30.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

@@ -35,6 +35,7 @@ array crypto_fingerprint_fallback_prefixes
 array crypto_fingerprint_fallback_vendors
 array delay_showing_prompt_models
 array hide_fingerprint_instantly_prefixes
+array keyguard_biometric_and_credential_exclude_vendors
 attr action
 attr actionBarDivider
 attr actionBarItemBackground
@@ -957,6 +958,8 @@ string abc_shareactionprovider_share_with_application
 string abc_toolbar_collapse_description
 string androidx_startup
 string app_name
+string biometric_or_screen_lock_prompt_message
+string biometric_prompt_message
 string call_notification_answer_action
 string call_notification_answer_video_action
 string call_notification_decline_action
@@ -971,6 +974,9 @@ string default_error_message
 string default_error_msg
 string default_popup_window_title
 string dropdown_menu
+string face_or_screen_lock_prompt_message
+string face_prompt_message
+string fingerprint_dialog_icon_description
 string fingerprint_dialog_touch_sensor
 string fingerprint_error_hw_not_available
 string fingerprint_error_hw_not_present
@@ -978,6 +984,8 @@ string fingerprint_error_lockout
 string fingerprint_error_no_fingerprints
 string fingerprint_error_user_canceled
 string fingerprint_not_recognized
+string fingerprint_or_screen_lock_prompt_message
+string fingerprint_prompt_message
 string generic_error_no_device_credential
 string generic_error_no_keyguard
 string generic_error_user_canceled
@@ -1044,6 +1052,7 @@ string navigation_menu
 string not_selected
 string range_end
 string range_start
+string screen_lock_prompt_message
 string search_menu_title
 string selected
 string state_empty
@@ -1055,6 +1064,13 @@ string tab
 string template_percent
 string tooltip_description
 string tooltip_label
+string use_biometric_label
+string use_biometric_or_screen_lock_label
+string use_face_label
+string use_face_or_screen_lock_label
+string use_fingerprint_label
+string use_fingerprint_or_screen_lock_label
+string use_screen_lock_label
 style AlertDialog_AppCompat
 style AlertDialog_AppCompat_Light
 style Animation_AppCompat_Dialog
