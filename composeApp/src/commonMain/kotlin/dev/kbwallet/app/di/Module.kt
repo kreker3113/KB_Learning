@@ -35,8 +35,8 @@ import dev.kbwallet.app.chart.di.chartModule
 import dev.kbwallet.app.trade.domain.BuyCoinUseCase
 import dev.kbwallet.app.trade.domain.SellCoinUseCase
 import dev.kbwallet.app.simulator.presentation.SimulatorViewModel
+import dev.kbwallet.app.watchlist.data.WatchlistRepositoryImpl
 import dev.kbwallet.app.watchlist.domain.WatchlistRepository
-import dev.kbwallet.app.watchlist.domain.WatchlistRepositoryImpl
 import dev.kbwallet.app.watchlist.presentation.WatchlistViewModel
 
 fun initKoin(config: KoinAppDeclaration? = null) =
