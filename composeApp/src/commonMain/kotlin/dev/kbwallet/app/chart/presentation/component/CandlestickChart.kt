@@ -85,9 +85,11 @@ fun CandlestickChart(
         val count = visEnd - visStart
         if (count == 0) return@Canvas
 
-        // Calculate candle width based on viewport
-        val candleBodyWidth = (chartWidth / count * 0.6f).coerceIn(1f, 12f)
+        // Calculate candle width based on viewport.
+        // Bounds are expressed in dp (not raw canvas px) so bodies stay a visible
+        // rectangle instead of collapsing to a sliver on high-density screens.
         val candleSpacing = chartWidth / count
+        val candleBodyWidth = (candleSpacing * 0.7f).coerceIn(2.dp.toPx(), 10.dp.toPx())
 
         // Draw visible candles
         for (i in visStart until visEnd) {
@@ -115,7 +117,7 @@ fun CandlestickChart(
 
             // Body
             val bodyHeight = (bodyBottom - bodyTop).coerceAtLeast(0f)
-            if (bodyHeight < 0.5f) {
+            if (bodyHeight < 1.dp.toPx()) {
                 // Flat candle — just draw a horizontal line
                 drawLine(
                     color = bodyColor,
