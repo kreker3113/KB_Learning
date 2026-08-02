@@ -26,7 +26,7 @@ import org.koin.dsl.module
 import androidx.room.RoomDatabase
 import dev.kbwallet.app.core.database.portfolio.PortfolioDatabase
 import dev.kbwallet.app.core.database.portfolio.getPortfolioDatabase
-import dev.kbwallet.app.core.simulator.MarketSimulator
+import dev.kbwallet.app.simulator.domain.MarketSimulator
 import dev.kbwallet.app.dashboard.presentation.DashboardViewModel
 import dev.kbwallet.app.history.presentation.HistoryViewModel
 import dev.kbwallet.app.portfolio.presentation.PortfolioViewModel

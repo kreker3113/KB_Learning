@@ -1,4 +1,4 @@
-package dev.kbwallet.app.core.simulator
+package dev.kbwallet.app.simulator.domain
 
 import dev.kbwallet.app.coins.domain.api.CoinsRemoteDataSource
 import dev.kbwallet.app.core.domain.Result
