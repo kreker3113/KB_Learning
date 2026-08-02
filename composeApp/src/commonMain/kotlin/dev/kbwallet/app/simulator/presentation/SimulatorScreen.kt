@@ -7,7 +7,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -236,33 +235,23 @@ fun SimulatorScreen(
                                     )
                                 }
                             }
-                            Spacer(Modifier.height(8.dp))
-                            // Amount
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Text("Amount: $", modifier = Modifier.width(70.dp), color = SubtextGray, fontSize = 13.sp)
-                                BasicTextField(
+                            Spacer(Modifier.height(12.dp))
+                            // Amount + Leverage
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                                modifier = Modifier.fillMaxWidth(),
+                            ) {
+                                OrderField(
+                                    label = "Amount ($)",
                                     value = state.orderAmount,
                                     onValueChange = { viewModel.onOrderAmountChanged(it) },
-                                    modifier = Modifier.weight(1f).height(40.dp)
-                                        .background(MaterialTheme.colorScheme.background, RoundedCornerShape(8.dp))
-                                        .padding(horizontal = 8.dp),
-                                    textStyle = TextStyle(color = MaterialTheme.colorScheme.onBackground, fontSize = 14.sp),
-                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                                    decorationBox = { it() },
+                                    modifier = Modifier.weight(1f),
                                 )
-                            }
-                            // Leverage
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Text("Leverage:", modifier = Modifier.width(70.dp), color = SubtextGray, fontSize = 13.sp)
-                                BasicTextField(
+                                OrderField(
+                                    label = "Leverage (x)",
                                     value = state.orderLeverage,
                                     onValueChange = { viewModel.onOrderLeverageChanged(it) },
-                                    modifier = Modifier.weight(1f).height(40.dp)
-                                        .background(MaterialTheme.colorScheme.background, RoundedCornerShape(8.dp))
-                                        .padding(horizontal = 8.dp),
-                                    textStyle = TextStyle(color = MaterialTheme.colorScheme.onBackground, fontSize = 14.sp),
-                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                                    decorationBox = { it() },
+                                    modifier = Modifier.weight(1f),
                                 )
                             }
                             // Liquidation price preview — leverage means a much smaller
@@ -273,42 +262,45 @@ fun SimulatorScreen(
                                 val move = previewEntry / previewLeverage
                                 val liqPreview = if (state.orderSide == OrderSideInput.LONG)
                                     (previewEntry - move).coerceAtLeast(0.0) else previewEntry + move
-                                Text(
-                                    text = "⚠ Liquidation at ~$${formatFiat(liqPreview)} (${"%.1f".format(100.0 / previewLeverage)}% adverse move)",
-                                    color = DarkLossRedColor,
-                                    fontSize = 11.sp,
-                                    modifier = Modifier.padding(top = 4.dp),
-                                )
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier
+                                        .padding(top = 8.dp)
+                                        .fillMaxWidth()
+                                        .background(DarkLossRedColor.copy(alpha = 0.1f), RoundedCornerShape(8.dp))
+                                        .padding(horizontal = 10.dp, vertical = 6.dp),
+                                ) {
+                                    Icon(Icons.Default.Warning, null, tint = DarkLossRedColor, modifier = Modifier.size(14.dp))
+                                    Spacer(Modifier.width(6.dp))
+                                    Text(
+                                        text = "Liquidates at ~$${formatFiat(liqPreview)} (${"%.1f".format(100.0 / previewLeverage)}% adverse move)",
+                                        color = DarkLossRedColor,
+                                        fontSize = 11.sp,
+                                    )
+                                }
                             }
-                            // Stop Loss
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Text("SL: $", modifier = Modifier.width(70.dp), color = DarkLossRedColor, fontSize = 13.sp)
-                                BasicTextField(
+                            Spacer(Modifier.height(10.dp))
+                            // Stop-Loss + Take-Profit
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                                modifier = Modifier.fillMaxWidth(),
+                            ) {
+                                OrderField(
+                                    label = "Stop-Loss ($)",
                                     value = state.orderStopLoss,
                                     onValueChange = { viewModel.onOrderSLChanged(it) },
-                                    modifier = Modifier.weight(1f).height(40.dp)
-                                        .background(MaterialTheme.colorScheme.background, RoundedCornerShape(8.dp))
-                                        .padding(horizontal = 8.dp),
-                                    textStyle = TextStyle(color = MaterialTheme.colorScheme.onBackground, fontSize = 14.sp),
-                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                                    decorationBox = { it() },
+                                    accentColor = DarkLossRedColor,
+                                    modifier = Modifier.weight(1f),
                                 )
-                            }
-                            // Take Profit
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Text("TP: $", modifier = Modifier.width(70.dp), color = DarkProfitGreenColor, fontSize = 13.sp)
-                                BasicTextField(
+                                OrderField(
+                                    label = "Take-Profit ($)",
                                     value = state.orderTakeProfit,
                                     onValueChange = { viewModel.onOrderTPChanged(it) },
-                                    modifier = Modifier.weight(1f).height(40.dp)
-                                        .background(MaterialTheme.colorScheme.background, RoundedCornerShape(8.dp))
-                                        .padding(horizontal = 8.dp),
-                                    textStyle = TextStyle(color = MaterialTheme.colorScheme.onBackground, fontSize = 14.sp),
-                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                                    decorationBox = { it() },
+                                    accentColor = DarkProfitGreenColor,
+                                    modifier = Modifier.weight(1f),
                                 )
                             }
-                            Spacer(Modifier.height(8.dp))
+                            Spacer(Modifier.height(14.dp))
                             Button(
                                 onClick = { viewModel.openPosition() },
                                 modifier = Modifier.fillMaxWidth(),
@@ -405,9 +397,9 @@ private fun PositionCard(pos: SimPosition, onClose: () -> Unit) {
             }
             Spacer(Modifier.height(4.dp))
             Row {
-                Text("Entry: $$pos.entryPrice", fontSize = 12.sp, color = SubtextGray)
+                Text("Entry: ${formatFiat(pos.entryPrice)}", fontSize = 12.sp, color = SubtextGray)
                 Spacer(Modifier.width(12.dp))
-                Text("Now: $$pos.currentPrice", fontSize = 12.sp, color = SubtextGray)
+                Text("Now: ${formatFiat(pos.currentPrice)}", fontSize = 12.sp, color = SubtextGray)
                 Spacer(Modifier.weight(1f))
                 Text("P&L: ${"%.0f".format(pos.pnl)} (${"%.1f".format(pos.pnlPercent)}%)",
                     fontSize = 13.sp, fontWeight = FontWeight.Bold, color = pnlColor)
@@ -415,9 +407,9 @@ private fun PositionCard(pos: SimPosition, onClose: () -> Unit) {
             if (pos.stopLoss != null || pos.takeProfit != null) {
                 Spacer(Modifier.height(2.dp))
                 Row {
-                    if (pos.stopLoss != null) Text("SL: $$pos.stopLoss", fontSize = 11.sp, color = DarkLossRedColor)
+                    if (pos.stopLoss != null) Text("SL: ${formatFiat(pos.stopLoss)}", fontSize = 11.sp, color = DarkLossRedColor)
                     Spacer(Modifier.width(12.dp))
-                    if (pos.takeProfit != null) Text("TP: $$pos.takeProfit", fontSize = 11.sp, color = DarkProfitGreenColor)
+                    if (pos.takeProfit != null) Text("TP: ${formatFiat(pos.takeProfit)}", fontSize = 11.sp, color = DarkProfitGreenColor)
                 }
             }
             Spacer(Modifier.height(4.dp))
@@ -449,7 +441,7 @@ private fun ClosedTradeCard(trade: ClosedTrade) {
             Spacer(Modifier.width(8.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text("${trade.side.name} ${trade.coinName}", fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
-                Text("Entry: $$trade.entryPrice → Exit: $$trade.exitPrice", fontSize = 11.sp, color = SubtextGray)
+                Text("Entry: ${formatFiat(trade.entryPrice)} → Exit: ${formatFiat(trade.exitPrice)}", fontSize = 11.sp, color = SubtextGray)
             }
             Column(horizontalAlignment = Alignment.End) {
                 Text("${"%.0f".format(trade.pnl)} (${"%.1f".format(trade.pnlPercent)}%)",
@@ -458,6 +450,33 @@ private fun ClosedTradeCard(trade: ClosedTrade) {
             }
         }
     }
+}
+
+@Composable
+private fun OrderField(
+    label: String,
+    value: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    accentColor: Color? = null,
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        label = { Text(label, fontSize = 12.sp) },
+        singleLine = true,
+        shape = RoundedCornerShape(10.dp),
+        textStyle = TextStyle(fontSize = 14.sp),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        modifier = modifier.height(56.dp),
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = accentColor ?: MaterialTheme.colorScheme.primary,
+            unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+            focusedLabelColor = accentColor ?: MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = SubtextGray,
+            cursorColor = accentColor ?: MaterialTheme.colorScheme.primary,
+        ),
+    )
 }
 
 @Composable
