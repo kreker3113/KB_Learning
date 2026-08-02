@@ -42,6 +42,7 @@ fun DashboardScreen(
     onDiscoverCoinsClicked: () -> Unit,
     onCoinItemClicked: (String) -> Unit,
     onSimulatorClicked: () -> Unit = {},
+    onLibraryClicked: () -> Unit = {},
 ) {
     val viewModel = koinViewModel<DashboardViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -62,6 +63,7 @@ fun DashboardScreen(
             onDiscoverCoinsClicked = onDiscoverCoinsClicked,
             onCoinItemClicked = onCoinItemClicked,
             onSimulatorClicked = onSimulatorClicked,
+            onLibraryClicked = onLibraryClicked,
         )
     }
 }
@@ -72,6 +74,7 @@ private fun DashboardContent(
     onDiscoverCoinsClicked: () -> Unit,
     onCoinItemClicked: (String) -> Unit,
     onSimulatorClicked: () -> Unit = {},
+    onLibraryClicked: () -> Unit = {},
 ) {
     LazyColumn(
         modifier = Modifier
@@ -165,6 +168,41 @@ private fun DashboardContent(
                         lineHeight = 20.sp,
                     )
                 }
+            }
+        }
+
+        // ── Crypto Library ──
+        item {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        MaterialTheme.colorScheme.surface,
+                        RoundedCornerShape(16.dp)
+                    )
+                    .clickable(onClick = onLibraryClicked)
+                    .padding(20.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = "📚 Crypto Library",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onBackground,
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "New to crypto? Learn everything you need to know, from the basics to advanced topics.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.Gray,
+                    )
+                }
+                Text(
+                    text = "→",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.primary,
+                )
             }
         }
 

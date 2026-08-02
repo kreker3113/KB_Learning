@@ -54,3 +54,10 @@ object ActiveOrders
 
 @Serializable
 object Simulator
+
+// ── Knowledge library ──
+@Serializable
+object Library
+
+@Serializable
+data class Topic(val topicId: String)

@@ -1,0 +1,217 @@
+package dev.kbwallet.app.library.domain
+
+/**
+ * Static, bundled reference content. No network/DB layer needed —
+ * this is a fixed curriculum shipped with the app.
+ */
+object LibraryContent {
+
+    val topics: List<LibraryTopic> = listOf(
+        LibraryTopic(
+            id = "what-is-crypto",
+            title = "What is cryptocurrency?",
+            level = LibraryLevel.BEGINNER,
+            summary = "Digital money secured by cryptography instead of a bank.",
+            content = listOf(
+                "A cryptocurrency is a digital asset that lives on a blockchain — a shared, append-only ledger maintained by thousands of independent computers instead of one bank or company.",
+                "Transactions are verified by the network itself using cryptography and a consensus mechanism (like Proof of Work or Proof of Stake), which is what makes it hard for any single party to fake a balance or reverse a payment.",
+                "Bitcoin (2009) was the first and is still the most widely held. Since then thousands of other coins and tokens have launched, each with different goals — from digital cash, to programmable smart-contract platforms (like Ethereum), to tokens that represent a share in an application.",
+                "Key idea to internalize before anything else: crypto is not backed by a government or insured like a bank deposit. Its value comes purely from what other people are willing to pay for it, which is why it's far more volatile than traditional currencies.",
+            ),
+        ),
+        LibraryTopic(
+            id = "wallets-and-keys",
+            title = "Wallets, private keys & seed phrases",
+            level = LibraryLevel.BEGINNER,
+            summary = "Whoever holds the private key controls the funds — no exceptions.",
+            content = listOf(
+                "A crypto wallet doesn't actually store coins — it stores the keys that prove you control an address on the blockchain. Your public key/address is like an account number you can share; your private key is like the password that spends from it.",
+                "A seed phrase (usually 12 or 24 words) is a human-readable backup of your private key. Anyone who has your seed phrase has full, irreversible control of your funds — it should never be typed into a website, sent in a chat, or stored as a plain screenshot.",
+                "\"Not your keys, not your coins\": if you keep funds on an exchange, the exchange holds the private keys, not you. That's convenient, but it means you're trusting the exchange the same way you trust a bank.",
+                "A self-custody wallet (e.g. a mobile app or hardware device) gives you the keys directly. It removes counterparty risk from an exchange but shifts all responsibility for backups and security onto you.",
+            ),
+        ),
+        LibraryTopic(
+            id = "storing-crypto-safely",
+            title = "Storing crypto safely: hot vs. cold",
+            level = LibraryLevel.BEGINNER,
+            summary = "Hot wallets are convenient, cold wallets are secure — most people need both.",
+            content = listOf(
+                "A hot wallet is connected to the internet (a phone or browser app). It's convenient for everyday spending and trading, but that connectivity is also what makes it a target for malware and phishing.",
+                "A cold wallet (a hardware device, or keys generated and stored fully offline) never exposes the private key to an internet-connected device when signing a transaction. It's the standard for holding savings you don't touch often.",
+                "A common, practical split: keep a small amount you're actively using in a hot wallet, and move anything you'd be upset to lose into cold storage.",
+                "Write your seed phrase on paper (or metal) and store it somewhere physically safe — never digitally, never in cloud storage, never photographed. Consider a second backup copy stored in a different location.",
+            ),
+        ),
+        LibraryTopic(
+            id = "exchanges-cex-vs-dex",
+            title = "Exchanges: CEX vs. DEX",
+            level = LibraryLevel.BEGINNER,
+            summary = "Centralized exchanges are easier to use; decentralized ones don't hold your funds.",
+            content = listOf(
+                "A centralized exchange (CEX) — like Binance or Coinbase — works like a traditional brokerage: you deposit funds, the exchange holds them in its own wallets, and you trade against its order book. It's beginner-friendly and usually has the best liquidity and lowest slippage.",
+                "A decentralized exchange (DEX) — like Uniswap — lets you trade directly from your own self-custody wallet through a smart contract, with no company holding your funds. You keep control the whole time, but you're also fully responsible for using the interface correctly (there's no support line to call if you make a mistake).",
+                "CEXs require identity verification (KYC) in most jurisdictions and can freeze withdrawals; DEXs generally don't ask who you are, but every transaction costs a network fee and mistakes (like sending to the wrong contract) are irreversible.",
+                "Most beginners start on a reputable CEX to learn the basics, then explore DEXs once they're comfortable managing their own wallet.",
+            ),
+        ),
+        LibraryTopic(
+            id = "stablecoins",
+            title = "Stablecoins",
+            level = LibraryLevel.BEGINNER,
+            summary = "Tokens designed to hold a steady value, usually pegged 1:1 to a fiat currency.",
+            content = listOf(
+                "A stablecoin (e.g. USDT, USDC) is a token engineered to track the value of a fiat currency like the US dollar, giving you a way to hold value or move between trades without cashing out to a bank account.",
+                "Fiat-collateralized stablecoins are backed by reserves (cash and short-term bonds) held by the issuing company — their stability depends entirely on trusting that company holds and discloses those reserves honestly.",
+                "Other designs (crypto-collateralized or algorithmic stablecoins) try to keep the peg without a central reserve. These have historically been less reliable — several algorithmic stablecoins have lost their peg entirely and collapsed.",
+                "Stablecoins are not risk-free just because the price doesn't move much day to day — you're still trusting the issuer and the blockchain they run on.",
+            ),
+        ),
+        LibraryTopic(
+            id = "volatility-and-risk",
+            title = "Volatility & basic risk management",
+            level = LibraryLevel.BEGINNER,
+            summary = "Prices can swing 10-20% in a day. Only invest what you can afford to lose.",
+            content = listOf(
+                "Crypto markets trade 24/7 with no circuit breakers in most venues, and the total market is still small compared to traditional finance — both facts mean prices can move far more violently than stocks or bonds.",
+                "The single most important risk rule: never invest money you need for rent, bills, or an emergency fund. Treat any crypto allocation as money you could fully lose without it changing your life.",
+                "Position sizing matters more than picking the \"right\" coin — a common beginner approach is to decide in advance what percentage of your total savings you're comfortable allocating to crypto, and stick to it regardless of hype.",
+                "Emotional discipline is a skill: fear of missing out (FOMO) drives buying at tops, and panic drives selling at bottoms. Having a plan before you're emotional is what protects you when the market moves fast.",
+            ),
+        ),
+        LibraryTopic(
+            id = "order-types",
+            title = "Order types: market, limit, stop-loss",
+            level = LibraryLevel.INTERMEDIATE,
+            summary = "How you tell an exchange to buy or sell — and how to control your entry/exit price.",
+            content = listOf(
+                "A market order executes immediately at the best available price. It guarantees the trade happens now, but not the exact price — in a fast-moving or illiquid market you can get \"slippage\" and pay worse than expected.",
+                "A limit order only executes at your specified price or better. It guarantees the price but not that the trade happens at all — if the market never reaches your limit, the order just sits open.",
+                "A stop-loss order automatically sells (or buys) once the price crosses a threshold you set, which is the main tool for capping losses on a trade without having to watch the market constantly.",
+                "A take-profit order is the mirror image of a stop-loss: it automatically closes a position once your target price is reached, locking in gains without needing to react in real time.",
+            ),
+        ),
+        LibraryTopic(
+            id = "market-cap-and-volume",
+            title = "Market cap, volume & liquidity",
+            level = LibraryLevel.INTERMEDIATE,
+            summary = "The numbers that tell you how big a coin really is, and how easily you can trade it.",
+            content = listOf(
+                "Market capitalization = price × circulating supply. It's a rough measure of a coin's total size, but it's easy to manipulate for low-supply coins — a coin can have a huge market cap on paper while almost no one can actually buy or sell it at that price.",
+                "Trading volume shows how much of a coin actually changed hands in a period (usually 24h). Low volume relative to market cap is a red flag — it means the price is fragile and easy to move with a relatively small trade.",
+                "Liquidity is how easily you can buy or sell without moving the price much. Low-liquidity coins can look cheap to buy but expensive to sell, because your own sell order pushes the price down against you.",
+                "Rule of thumb for beginners: prefer coins with consistent, high volume across multiple reputable exchanges — it's harder (though never impossible) to manipulate their price.",
+            ),
+        ),
+        LibraryTopic(
+            id = "reading-candlesticks",
+            title = "Reading Japanese candlesticks",
+            level = LibraryLevel.INTERMEDIATE,
+            summary = "Each candle packs four numbers — open, high, low, close — into one shape.",
+            content = listOf(
+                "Every candlestick summarizes price action over one time period (a minute, hour, day, etc.). The thick part — the body — spans the open and close price; the thin lines above and below — the wicks — mark the highest and lowest price reached.",
+                "A bullish candle (usually green) means the close was higher than the open — buyers pushed the price up during that period. A bearish candle (usually red) means the close was lower than the open.",
+                "Long wicks tell a story: a long upper wick means buyers pushed price up but sellers pushed it back down before the period ended; a long lower wick means the opposite — sellers tried to push it down but buyers recovered it.",
+                "A single candle rarely tells you much — the value of candlestick charts comes from patterns across several candles (trends, reversals, consolidation), combined with volume and broader context.",
+            ),
+        ),
+        LibraryTopic(
+            id = "ta-indicators-basics",
+            title = "Basic indicators: SMA, EMA, RSI",
+            level = LibraryLevel.INTERMEDIATE,
+            summary = "Simple math on top of price history to help spot trends and extremes.",
+            content = listOf(
+                "A Simple Moving Average (SMA) is the average price over the last N periods, smoothing out noise so you can see the underlying trend more clearly. A price crossing above its own long-term SMA is a commonly watched (though not infallible) trend signal.",
+                "An Exponential Moving Average (EMA) does the same job but weights recent prices more heavily, so it reacts faster to new information than an SMA of the same length — useful for shorter-term trend reads.",
+                "The Relative Strength Index (RSI) measures how fast and how far price has moved recently, on a 0-100 scale. Readings above ~70 are traditionally read as \"overbought\" and below ~30 as \"oversold\" — hints that a pullback or bounce may be more likely, not guarantees.",
+                "No indicator predicts the future — they all describe the past. Treat them as one input among several (market structure, volume, news, risk management), never as a signal to follow blindly.",
+            ),
+        ),
+        LibraryTopic(
+            id = "portfolio-diversification",
+            title = "Portfolio diversification & risk management",
+            level = LibraryLevel.INTERMEDIATE,
+            summary = "Don't put everything into one coin, one exchange, or one strategy.",
+            content = listOf(
+                "Diversification means spreading risk so that no single bad outcome (one project failing, one exchange getting hacked, one coin crashing) wipes out your whole portfolio.",
+                "This applies at multiple levels: across different coins, across different types of crypto exposure (e.g. large established coins vs. small speculative ones), and even across custody (not keeping 100% of your funds on a single exchange).",
+                "Rebalancing — periodically trimming positions that have grown to dominate your portfolio and topping up ones that shrank — keeps your actual risk in line with what you originally intended, instead of letting one winning bet quietly become your entire portfolio.",
+                "Diversification reduces the damage from any one mistake, but it does not protect against the whole market falling — crypto assets are often highly correlated with each other during sharp downturns.",
+            ),
+        ),
+        LibraryTopic(
+            id = "common-scams",
+            title = "Common scams & how to avoid them",
+            level = LibraryLevel.INTERMEDIATE,
+            summary = "Most crypto losses come from scams and mistakes, not market moves.",
+            content = listOf(
+                "Phishing: fake websites, apps, or messages that look like a real exchange or wallet and trick you into typing your seed phrase or password. No legitimate service will ever ask for your seed phrase — treat any request for it as an attack.",
+                "Rug pulls: a new token or project attracts buyers, then the creators drain the liquidity or simply abandon it, leaving the token worthless. Be especially cautious of new, anonymous projects promising unusually high returns.",
+                "Fake giveaways and impersonation: scammers impersonate exchanges, celebrities, or support staff promising to \"double your crypto\" if you send coins first. If it sounds too good to be true, it is — there is no legitimate giveaway that requires you to send crypto first.",
+                "Pump-and-dump schemes: a coordinated group hypes a low-liquidity coin to attract buyers, then sells into the rally, leaving latecomers holding a crashing price. Unusual, sudden hype around an obscure token is a warning sign, not an opportunity.",
+            ),
+        ),
+        LibraryTopic(
+            id = "defi-basics",
+            title = "DeFi: staking, yield farming, liquidity pools",
+            level = LibraryLevel.ADVANCED,
+            summary = "Earning yield on crypto comes with real, often underestimated risks.",
+            content = listOf(
+                "Staking means locking up coins to help secure a Proof-of-Stake blockchain (or a protocol built on one), in exchange for rewards. Risks include price volatility during the lock-up period and, on some networks, \"slashing\" penalties if the validator you delegated to misbehaves.",
+                "A liquidity pool is a pair of tokens deposited into a smart contract so others can trade against it; liquidity providers earn a share of trading fees. The main hidden risk is impermanent loss — if the two tokens' prices diverge, the value of what you can withdraw can end up worse than just holding the tokens.",
+                "Yield farming means moving funds between DeFi protocols to chase the highest available reward rate. Very high advertised yields are usually compensation for very high risk — smart contract bugs, temporary incentives that dry up, or the underlying token itself losing value.",
+                "Every DeFi protocol you interact with is also a piece of software that can have bugs or be exploited. Unlike a bank hack, there is usually no insurance or recourse if a protocol you used gets drained.",
+            ),
+        ),
+        LibraryTopic(
+            id = "tokenomics-and-whitepapers",
+            title = "Tokenomics & reading a whitepaper",
+            level = LibraryLevel.ADVANCED,
+            summary = "The supply and incentive design behind a token often matters more than its use case.",
+            content = listOf(
+                "Tokenomics describes a token's supply mechanics: total and circulating supply, emission schedule (how fast new tokens are created), and allocation (how much went to the team, investors, and the public).",
+                "Large allocations to the team or early investors with short lock-ups are a red flag — it means insiders can sell into the same market retail buyers are buying into, often shortly after launch.",
+                "A whitepaper should explain what problem the project actually solves, why it needs its own token (rather than just using an existing one), and how demand for the token is expected to grow over time — vague or purely marketing-driven whitepapers are a warning sign.",
+                "Cross-check claims: look for the actual GitHub repository and commit activity, an independent security audit, and whether the team is public and identifiable, rather than relying on the project's own marketing.",
+            ),
+        ),
+        LibraryTopic(
+            id = "market-cycles-and-psychology",
+            title = "Market cycles & psychology",
+            level = LibraryLevel.ADVANCED,
+            summary = "Crypto moves in recognizable emotional cycles — recognizing them is a real edge.",
+            content = listOf(
+                "Markets tend to move through phases: accumulation (quiet, low interest), a markup phase (rising prices, growing attention), euphoria (mainstream hype, \"this time it's different\"), then distribution and a markdown phase (sharp declines, capitulation).",
+                "FOMO (fear of missing out) tends to peak near euphoria — exactly when risk is highest, because most of the obvious upside has often already happened and gains are pricing in optimistic future promises.",
+                "FUD (fear, uncertainty, doubt) tends to peak near capitulation — exactly when sentiment is worst, prices are often most depressed relative to fundamentals, and forced/panic selling is common.",
+                "Recognizing which phase the broader market seems to be in doesn't tell you what happens next, but it's a useful check against your own emotions — ask whether you're buying because of a plan, or because of the crowd around you.",
+            ),
+        ),
+        LibraryTopic(
+            id = "leverage-and-derivatives",
+            title = "Leverage, margin & futures — handle with care",
+            level = LibraryLevel.ADVANCED,
+            summary = "Leverage multiplies both gains and losses, and can wipe out an account fast.",
+            content = listOf(
+                "Margin trading lets you borrow funds to open a position larger than your own capital. If the price moves against you, losses are magnified by the same multiple as your leverage — 10x leverage turns a 10% adverse move into a complete loss of your margin.",
+                "A futures contract is an agreement to buy or sell an asset at a future date/price, commonly used with leverage to speculate without holding the underlying coin. Perpetual futures (\"perps\"), common in crypto, never expire and use a periodic funding payment between longs and shorts to keep the contract price near the spot price.",
+                "Liquidation happens when losses eat through your margin — the exchange automatically closes your position, often at a worse price than you'd have chosen yourself, and you lose the margin you put up.",
+                "Leverage is a professional tool best approached only after you're fully comfortable trading spot (no leverage) and understand exactly how liquidation and funding work on the specific platform you're using.",
+            ),
+        ),
+        LibraryTopic(
+            id = "taxes-and-regulation",
+            title = "Taxes & regulation basics",
+            level = LibraryLevel.ADVANCED,
+            summary = "In most countries, trading crypto is a taxable event — keep records from day one.",
+            content = listOf(
+                "In many jurisdictions, selling, trading, or spending crypto (not just cashing out to fiat) can trigger a taxable capital gain or loss, calculated as the difference between your cost basis and the value at the time of the transaction.",
+                "Rules vary enormously by country — some tax every trade, some only tax on conversion to fiat, and some have specific rules for staking rewards or DeFi income. Regulation in this space is still evolving and changes fairly often.",
+                "Keeping accurate records (dates, amounts, cost basis, counterparties) from your very first transaction is far easier than trying to reconstruct years of trading history later.",
+                "This app does not provide tax or legal advice — for anything beyond casual learning, consult a qualified tax professional familiar with cryptocurrency rules in your jurisdiction.",
+            ),
+        ),
+    )
+
+    fun byId(id: String): LibraryTopic? = topics.find { it.id == id }
+}

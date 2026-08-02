@@ -48,8 +48,12 @@ import dev.kbwallet.app.core.navigation.Profile
 import dev.kbwallet.app.core.navigation.SecuritySettings
 import dev.kbwallet.app.core.navigation.Sell
 import dev.kbwallet.app.core.navigation.Simulator
+import dev.kbwallet.app.core.navigation.Library
+import dev.kbwallet.app.core.navigation.Topic
 
 import dev.kbwallet.app.dashboard.presentation.DashboardScreen
+import dev.kbwallet.app.library.presentation.LibraryScreen
+import dev.kbwallet.app.library.presentation.LibraryTopicScreen
 import dev.kbwallet.app.history.presentation.HistoryScreen
 import dev.kbwallet.app.portfolio.presentation.PortfolioScreen
 import dev.kbwallet.app.profile.presentation.EditProfileScreen
@@ -192,6 +196,21 @@ fun App() {
             composable<Simulator> {
                 SimulatorScreen(onBack = { navController.popBackStack() })
             }
+
+            // ── Knowledge library ──
+            composable<Library> {
+                LibraryScreen(
+                    onBack = { navController.popBackStack() },
+                    onTopicClicked = { topicId -> navController.navigate(Topic(topicId)) },
+                )
+            }
+            composable<Topic> { navBackStackEntry ->
+                val topicId: String = navBackStackEntry.toRoute<Topic>().topicId
+                LibraryTopicScreen(
+                    topicId = topicId,
+                    onBack = { navController.popBackStack() },
+                )
+            }
         }
     }
 }
@@ -271,6 +290,9 @@ private fun MainScaffold(navController: NavHostController) {
                     },
                     onSimulatorClicked = {
                         navController.navigate(Simulator)
+                    },
+                    onLibraryClicked = {
+                        navController.navigate(Library)
                     },
                 )
             }
