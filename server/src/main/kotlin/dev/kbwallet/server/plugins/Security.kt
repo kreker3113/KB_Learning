@@ -4,11 +4,13 @@ import dev.kbwallet.server.data.UserRepository
 import dev.kbwallet.server.security.PasswordHasher
 import dev.kbwallet.server.security.TokenConfig
 import dev.kbwallet.server.security.TokenService
+import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.plugins.cors.routing.*
+import io.ktor.util.AttributeKey
 
 fun Application.configureSecurity() {
     val jwtSecret = environment.config.property("jwt.secret").getString()
@@ -16,6 +18,12 @@ fun Application.configureSecurity() {
     val jwtAudience = environment.config.property("jwt.audience").getString()
     val accessTokenExpirationMs = environment.config.property("jwt.accessTokenExpirationMs").getString().toLong()
     val refreshTokenExpirationMs = environment.config.property("jwt.refreshTokenExpirationMs").getString().toLong()
+    val allowedCorsHosts = environment.config.propertyOrNull("cors.allowedHosts")
+        ?.getString()
+        ?.split(",")
+        ?.map { it.trim() }
+        ?.filter { it.isNotEmpty() }
+        .orEmpty()
 
     val tokenConfig = TokenConfig(
         secret = jwtSecret,
@@ -28,7 +36,7 @@ fun Application.configureSecurity() {
     val tokenService = TokenService(tokenConfig)
 
     // Store in application attributes for DI
-    environment.attributes.put(TokenServiceKey, tokenService)
+    attributes.put(TokenServiceKey, tokenService)
 
     install(Authentication) {
         jwt("auth-jwt") {
@@ -51,10 +59,12 @@ fun Application.configureSecurity() {
     }
 
     install(CORS) {
-        anyHost()
+        // Auth is bearer-token (Authorization header), not cookies, so credentials
+        // mode isn't needed here — and anyHost() + credentials is the exact
+        // combination browsers/Ktor warn about. Explicit host allowlist instead.
+        allowedCorsHosts.forEach { host -> allowHost(host, schemes = listOf("http", "https")) }
         allowHeader("Authorization")
         allowHeader("Content-Type")
-        allowCredentials = true
         allowMethod(io.ktor.http.HttpMethod.Post)
         allowMethod(io.ktor.http.HttpMethod.Get)
         allowMethod(io.ktor.http.HttpMethod.Put)
@@ -66,8 +76,8 @@ fun Application.configureDependencies() {
     val iterations = environment.config.property("password.iterations").getString().toInt()
     val keyLength = environment.config.property("password.keyLength").getString().toInt()
 
-    environment.attributes.put(UserRepositoryKey, UserRepository())
-    environment.attributes.put(PasswordHasherKey, PasswordHasher(iterations, keyLength))
+    attributes.put(UserRepositoryKey, UserRepository())
+    attributes.put(PasswordHasherKey, PasswordHasher(iterations, keyLength))
 }
 
 val TokenServiceKey = AttributeKey<TokenService>("TokenService")

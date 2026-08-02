@@ -8,7 +8,7 @@ group = "dev.kbwallet"
 version = "1.0.0"
 
 application {
-    mainClass.set("dev.kbwallet.server.ApplicationKt")
+    mainClass.set("io.ktor.server.netty.EngineMain")
 }
 
 kotlin {
@@ -22,6 +22,7 @@ dependencies {
     implementation("io.ktor:ktor-server-auth:3.0.0")
     implementation("io.ktor:ktor-server-auth-jwt:3.0.0")
     implementation("io.ktor:ktor-server-content-negotiation:3.0.0")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:3.0.0")
     implementation("io.ktor:ktor-server-status-pages:3.0.0")
     implementation("io.ktor:ktor-server-cors:3.0.0")
 
