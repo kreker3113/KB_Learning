@@ -78,6 +78,20 @@ Client code under `composeApp/src/commonMain/kotlin/dev/kbwallet/app/` is organi
 
 For iOS, open `iosApp/iosApp.xcodeproj` in Xcode and run — it hosts the shared Compose UI via the `ComposeApp` framework produced by the `:composeApp` module.
 
+## Configuration & secrets
+
+Nothing sensitive is committed to the repo. Local dev works out of the box with safe defaults; override them for anything beyond local testing:
+
+| Setting | Where | Default | Override |
+|---|---|---|---|
+| CoinRanking API key | `composeApp` (client) | shared demo key, code-generated at build time | `coinRanking.apiKey` in `local.properties`, or `COINRANKING_API_KEY` env var |
+| JWT signing secret | `server` | dev-only insecure placeholder | `JWT_SECRET` env var — **required** before any real deployment |
+| CORS allowed hosts | `server` | `localhost:8080,10.0.2.2:8080` | `CORS_ALLOWED_HOSTS` env var (comma-separated `host:port`) |
+
+Note the CoinRanking key is embedded in the compiled client either way (any API key shipped in a mobile app can be extracted from the binary) — keeping it out of source control is about repo hygiene, not making it a real secret. The JWT secret is a real server-side secret and must be set via env var in any environment handling real accounts.
+
+**Release signing (Android):** copy `keystore.properties.example` to `keystore.properties` (gitignored), generate your own keystore (`keytool -genkey -v -keystore release.jks -keyalg RSA -keysize 2048 -validity 10000 -alias kbwallet`), and fill in the paths/passwords. Without it, `:composeApp:assembleRelease` still builds but produces an unsigned APK.
+
 ## Learn more
 
 - [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)

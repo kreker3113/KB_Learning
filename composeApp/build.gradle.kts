@@ -2,6 +2,7 @@ import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -11,6 +12,40 @@ plugins {
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.room)
     alias(libs.plugins.ksp)
+}
+
+// CoinRanking API key: read from local.properties (gitignored, never committed) or an
+// env var, falling back to the project's existing key so a fresh clone still builds
+// out of the box. This is a client-embedded key (any mobile client key is extractable
+// from the compiled app regardless of where it's read from at build time) — the point
+// of this indirection is to stop committing it as a plaintext literal in source control,
+// not to make it a real secret. Set coinRanking.apiKey in local.properties to override.
+val localProperties = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) file.inputStream().use { load(it) }
+}
+val coinRankingApiKey: String = localProperties.getProperty("coinRanking.apiKey")
+    ?: System.getenv("COINRANKING_API_KEY")
+    ?: "coinranking9ce5a01a8185ad079a954b40e5bae7f3c81238639c547926"
+
+val generatedApiKeysDir = layout.buildDirectory.dir("generated/apiKeys/commonMain/kotlin")
+
+val generateApiKeys by tasks.registering {
+    val outputDir = generatedApiKeysDir
+    outputs.dir(outputDir)
+    doLast {
+        val packageDir = outputDir.get().asFile.resolve("dev/kbwallet/app/core/network")
+        packageDir.mkdirs()
+        packageDir.resolve("ApiKeys.kt").writeText(
+            """
+            |package dev.kbwallet.app.core.network
+            |
+            |internal object ApiKeys {
+            |    const val COIN_RANKING: String = "$coinRankingApiKey"
+            |}
+            |""".trimMargin()
+        )
+    }
 }
 
 kotlin {
@@ -41,6 +76,9 @@ kotlin {
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
             implementation(libs.biometric)
+        }
+        commonMain {
+            kotlin.srcDir(files(generatedApiKeysDir).builtBy(generateApiKeys))
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -87,6 +125,16 @@ kotlin {
 }
 
 
+// Release signing: never commit a keystore or its passwords. Copy
+// keystore.properties.example to keystore.properties (gitignored), fill in
+// your own values, and point storeFile at a .jks kept outside the repo.
+// Without keystore.properties, the release build type is simply unsigned —
+// it still builds locally, it just can't be published as-is.
+val keystorePropertiesFile = rootProject.file("keystore.properties")
+val keystoreProperties = Properties().apply {
+    if (keystorePropertiesFile.exists()) keystorePropertiesFile.inputStream().use { load(it) }
+}
+
 android {
     namespace = "dev.kbwallet.app"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
@@ -103,9 +151,22 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    if (keystorePropertiesFile.exists()) {
+        signingConfigs {
+            create("release") {
+                storeFile = file(keystoreProperties.getProperty("storeFile"))
+                storePassword = keystoreProperties.getProperty("storePassword")
+                keyAlias = keystoreProperties.getProperty("keyAlias")
+                keyPassword = keystoreProperties.getProperty("keyPassword")
+            }
+        }
+    }
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
+            if (keystorePropertiesFile.exists()) {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
     }
     compileOptions {

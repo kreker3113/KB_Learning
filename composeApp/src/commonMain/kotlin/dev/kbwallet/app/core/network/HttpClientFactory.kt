@@ -29,7 +29,7 @@ object HttpClientFactory {
             }
             install(HttpCache)
             defaultRequest {
-                headers { append("x-access-token", "coinranking9ce5a01a8185ad079a954b40e5bae7f3c81238639c547926") }
+                headers { append("x-access-token", ApiKeys.COIN_RANKING) }
                 contentType(ContentType.Application.Json)
             }
         }

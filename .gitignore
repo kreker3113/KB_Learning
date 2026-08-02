@@ -70,6 +70,7 @@ Token.txt
 *.pkcs12
 .android/debug.keystore
 .android/debug.keystore.lock
+keystore.properties
 
 # ── Java ──
 *.class
