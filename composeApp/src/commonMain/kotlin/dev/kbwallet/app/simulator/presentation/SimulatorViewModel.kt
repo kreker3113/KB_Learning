@@ -147,39 +147,58 @@ class SimulatorViewModel(
         val newIdx = s.currentCandleIndex + 1
         val candle = s.candles[newIdx]
 
-        // Check SL/TP for existing positions
+        // Check liquidation/SL/TP for existing positions
         var positions = s.positions.map { pos ->
-            val newPnL = calculatePnL(pos, candle.close)
+            val liqPrice = liquidationPrice(pos)
             var isOpen = pos.isOpen
             var exitReason: ExitReason? = null
-            // Stop Loss check
-            if (pos.stopLoss != null) {
-                val slHit = if (pos.side == PositionSide.LONG) candle.low <= pos.stopLoss
-                else candle.high >= pos.stopLoss
-                if (slHit) { isOpen = false; exitReason = ExitReason.STOP_LOSS }
+            var exitPrice = candle.close
+
+            // Adverse-side check: liquidation and stop-loss share the same axis
+            // (the direction that hurts the position). Whichever threshold is
+            // closer to the entry price is reached first as the candle moves
+            // against the trade, so it wins — matching how a real exchange
+            // force-closes a position before a farther-away resting SL order
+            // would ever get the chance to fill.
+            if (pos.side == PositionSide.LONG) {
+                val liquidationWins = pos.stopLoss == null || liqPrice >= pos.stopLoss
+                val effectiveStop = if (liquidationWins) liqPrice else pos.stopLoss!!
+                if (candle.low <= effectiveStop) {
+                    isOpen = false
+                    exitPrice = effectiveStop
+                    exitReason = if (liquidationWins) ExitReason.LIQUIDATION else ExitReason.STOP_LOSS
+                }
+            } else {
+                val liquidationWins = pos.stopLoss == null || liqPrice <= pos.stopLoss
+                val effectiveStop = if (liquidationWins) liqPrice else pos.stopLoss!!
+                if (candle.high >= effectiveStop) {
+                    isOpen = false
+                    exitPrice = effectiveStop
+                    exitReason = if (liquidationWins) ExitReason.LIQUIDATION else ExitReason.STOP_LOSS
+                }
             }
             // Take Profit check
             if (isOpen && pos.takeProfit != null) {
                 val tpHit = if (pos.side == PositionSide.LONG) candle.high >= pos.takeProfit
                 else candle.low <= pos.takeProfit
-                if (tpHit) { isOpen = false; exitReason = ExitReason.TAKE_PROFIT }
+                if (tpHit) { isOpen = false; exitPrice = pos.takeProfit; exitReason = ExitReason.TAKE_PROFIT }
             }
             if (!isOpen && exitReason != null) {
                 // Close the position at the trigger price
-                closePositionInternal(pos, when (exitReason) {
-                    ExitReason.STOP_LOSS -> pos.stopLoss!!
-                    ExitReason.TAKE_PROFIT -> pos.takeProfit!!
-                    else -> candle.close
-                }, exitReason, newIdx)
+                closePositionInternal(pos, exitPrice, exitReason, newIdx)
                 null // will be filtered out
             } else {
+                val newPnL = calculatePnL(pos, candle.close)
                 pos.copy(currentPrice = candle.close, pnl = newPnL, pnlPercent = newPnL / pos.amountInFiat * 100)
             }
         }.filterNotNull()
 
-        // Calculate equity
-        val unrealizedPnl = positions.sumOf { it.pnl }
-        val equity = s.cashBalance + unrealizedPnl
+        // Equity = free cash + (margin locked in every open position + its unrealized P&L).
+        // Margin was already deducted from cashBalance when the position was opened, so it
+        // must be added back here — otherwise equity looks like it drops by the margin the
+        // instant a trade opens, even at zero P&L.
+        val lockedValue = positions.sumOf { it.amountInFiat + it.pnl }
+        val equity = s.cashBalance + lockedValue
 
         _state.update {
             it.copy(
@@ -200,6 +219,17 @@ class SimulatorViewModel(
         } else {
             (pos.entryPrice - price) / pos.entryPrice * pos.amountInFiat * pos.leverage
         }
+    }
+
+    /**
+     * Price at which the position's loss equals 100% of its margin (amountInFiat).
+     * Beyond this point a real leveraged exchange force-closes the position rather
+     * than letting the loss exceed the margin the trader posted.
+     */
+    private fun liquidationPrice(pos: SimPosition): Double {
+        val move = pos.entryPrice / pos.leverage
+        return if (pos.side == PositionSide.LONG) (pos.entryPrice - move).coerceAtLeast(0.0)
+        else pos.entryPrice + move
     }
 
     // ── Open Position ──

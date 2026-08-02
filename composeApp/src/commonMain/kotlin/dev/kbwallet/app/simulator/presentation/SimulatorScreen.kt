@@ -265,6 +265,21 @@ fun SimulatorScreen(
                                     decorationBox = { it() },
                                 )
                             }
+                            // Liquidation price preview — leverage means a much smaller
+                            // adverse move can wipe the margin than beginners tend to expect.
+                            val previewLeverage = state.orderLeverage.toDoubleOrNull()?.coerceAtLeast(1.0) ?: 1.0
+                            val previewEntry = state.candles.getOrNull(state.currentCandleIndex)?.close
+                            if (previewLeverage > 1.0 && previewEntry != null) {
+                                val move = previewEntry / previewLeverage
+                                val liqPreview = if (state.orderSide == OrderSideInput.LONG)
+                                    (previewEntry - move).coerceAtLeast(0.0) else previewEntry + move
+                                Text(
+                                    text = "⚠ Liquidation at ~$${formatFiat(liqPreview)} (${"%.1f".format(100.0 / previewLeverage)}% adverse move)",
+                                    color = DarkLossRedColor,
+                                    fontSize = 11.sp,
+                                    modifier = Modifier.padding(top = 4.dp),
+                                )
+                            }
                             // Stop Loss
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Text("SL: $", modifier = Modifier.width(70.dp), color = DarkLossRedColor, fontSize = 13.sp)
