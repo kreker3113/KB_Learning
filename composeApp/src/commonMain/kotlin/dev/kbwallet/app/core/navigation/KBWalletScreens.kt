@@ -45,6 +45,9 @@ object SecuritySettings
 @Serializable
 object HelpSupport
 
+@Serializable
+object LanguageSettings
+
 // ── Trading Simulator additions ──
 @Serializable
 object PnLAnalytics

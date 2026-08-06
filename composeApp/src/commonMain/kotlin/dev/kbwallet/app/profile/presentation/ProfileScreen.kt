@@ -19,8 +19,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.HelpOutline
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
@@ -39,23 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import kblearning.composeapp.generated.resources.Res
-import kblearning.composeapp.generated.resources.profile_edit_button
-import kblearning.composeapp.generated.resources.profile_menu_help_subtitle
-import kblearning.composeapp.generated.resources.profile_menu_help_title
-import kblearning.composeapp.generated.resources.profile_menu_notifications_subtitle
-import kblearning.composeapp.generated.resources.profile_menu_notifications_title
-import kblearning.composeapp.generated.resources.profile_menu_personal_info_subtitle
-import kblearning.composeapp.generated.resources.profile_menu_personal_info_title
-import kblearning.composeapp.generated.resources.profile_menu_pnl_subtitle
-import kblearning.composeapp.generated.resources.profile_menu_pnl_title
-import kblearning.composeapp.generated.resources.profile_menu_security_subtitle
-import kblearning.composeapp.generated.resources.profile_menu_security_title
-import kblearning.composeapp.generated.resources.profile_stat_days_active
-import kblearning.composeapp.generated.resources.profile_stat_total_trades
-import kblearning.composeapp.generated.resources.profile_stat_win_rate
-import kblearning.composeapp.generated.resources.profile_title
-import org.jetbrains.compose.resources.stringResource
+import dev.kbwallet.app.core.i18n.appStrings
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -65,9 +49,11 @@ fun ProfileScreen(
     onNavigateToSecurity: () -> Unit,
     onNavigateToHelp: () -> Unit,
     onNavigateToPnL: () -> Unit = {},
+    onNavigateToLanguage: () -> Unit = {},
 ) {
     val viewModel = koinViewModel<ProfileViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val strings = appStrings()
 
     LazyColumn(
         modifier = Modifier
@@ -79,7 +65,7 @@ fun ProfileScreen(
         // ── Header ──
         item {
             Text(
-                text = stringResource(Res.string.profile_title),
+                text = strings.profileTitle,
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground,
@@ -127,7 +113,7 @@ fun ProfileScreen(
                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
                 ) {
                     Text(
-                        text = stringResource(Res.string.profile_edit_button),
+                        text = strings.profileEditButton,
                         color = MaterialTheme.colorScheme.primary,
                     )
                 }
@@ -141,18 +127,18 @@ fun ProfileScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 ProfileStatCard(
-                    title = stringResource(Res.string.profile_stat_total_trades),
+                    title = strings.profileStatTotalTrades,
                     value = state.totalTrades.toString(),
                     modifier = Modifier.weight(1f),
                 )
                 ProfileStatCard(
-                    title = stringResource(Res.string.profile_stat_win_rate),
+                    title = strings.profileStatWinRate,
                     value = state.winRate,
                     modifier = Modifier.weight(1f),
                     valueColor = MaterialTheme.colorScheme.primary,
                 )
                 ProfileStatCard(
-                    title = stringResource(Res.string.profile_stat_days_active),
+                    title = strings.profileStatDaysActive,
                     value = state.daysActive,
                     modifier = Modifier.weight(1f),
                 )
@@ -163,40 +149,48 @@ fun ProfileScreen(
         item {
             ProfileMenuOption(
                 icon = Icons.Default.Person,
-                title = stringResource(Res.string.profile_menu_personal_info_title),
-                subtitle = stringResource(Res.string.profile_menu_personal_info_subtitle),
+                title = strings.profileMenuPersonalInfoTitle,
+                subtitle = strings.profileMenuPersonalInfoSubtitle,
                 onClick = onNavigateToEditProfile,
             )
         }
         item {
             ProfileMenuOption(
                 icon = Icons.Default.Notifications,
-                title = stringResource(Res.string.profile_menu_notifications_title),
-                subtitle = stringResource(Res.string.profile_menu_notifications_subtitle),
+                title = strings.profileMenuNotificationsTitle,
+                subtitle = strings.profileMenuNotificationsSubtitle,
                 onClick = onNavigateToNotifications,
             )
         }
         item {
             ProfileMenuOption(
                 icon = Icons.Default.Lock,
-                title = stringResource(Res.string.profile_menu_security_title),
-                subtitle = stringResource(Res.string.profile_menu_security_subtitle),
+                title = strings.profileMenuSecurityTitle,
+                subtitle = strings.profileMenuSecuritySubtitle,
                 onClick = onNavigateToSecurity,
             )
         }
         item {
             ProfileMenuOption(
                 icon = Icons.Default.TrendingUp,
-                title = stringResource(Res.string.profile_menu_pnl_title),
-                subtitle = stringResource(Res.string.profile_menu_pnl_subtitle),
+                title = strings.profileMenuPnlTitle,
+                subtitle = strings.profileMenuPnlSubtitle,
                 onClick = onNavigateToPnL,
             )
         }
         item {
             ProfileMenuOption(
+                icon = Icons.Default.Language,
+                title = strings.profileMenuLanguageTitle,
+                subtitle = strings.profileMenuLanguageSubtitle,
+                onClick = onNavigateToLanguage,
+            )
+        }
+        item {
+            ProfileMenuOption(
                 icon = Icons.AutoMirrored.Filled.HelpOutline,
-                title = stringResource(Res.string.profile_menu_help_title),
-                subtitle = stringResource(Res.string.profile_menu_help_subtitle),
+                title = strings.profileMenuHelpTitle,
+                subtitle = strings.profileMenuHelpSubtitle,
                 onClick = onNavigateToHelp,
             )
         }

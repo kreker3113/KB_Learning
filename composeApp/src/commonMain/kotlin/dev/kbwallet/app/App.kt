@@ -41,6 +41,7 @@ import dev.kbwallet.app.core.navigation.Dashboard
 import dev.kbwallet.app.core.navigation.EditProfile
 import dev.kbwallet.app.core.navigation.HelpSupport
 import dev.kbwallet.app.core.navigation.History
+import dev.kbwallet.app.core.navigation.LanguageSettings
 import dev.kbwallet.app.core.navigation.NotificationSettings
 import dev.kbwallet.app.core.navigation.PnLAnalytics
 import dev.kbwallet.app.core.navigation.Portfolio
@@ -50,6 +51,9 @@ import dev.kbwallet.app.core.navigation.Sell
 import dev.kbwallet.app.core.navigation.Simulator
 import dev.kbwallet.app.core.navigation.Library
 import dev.kbwallet.app.core.navigation.Topic
+import dev.kbwallet.app.core.i18n.AppStrings
+import dev.kbwallet.app.core.i18n.ProvideAppLanguage
+import dev.kbwallet.app.core.i18n.appStrings
 
 import dev.kbwallet.app.dashboard.presentation.DashboardScreen
 import dev.kbwallet.app.library.presentation.LibraryScreen
@@ -58,6 +62,7 @@ import dev.kbwallet.app.history.presentation.HistoryScreen
 import dev.kbwallet.app.portfolio.presentation.PortfolioScreen
 import dev.kbwallet.app.profile.presentation.EditProfileScreen
 import dev.kbwallet.app.profile.presentation.HelpSupportScreen
+import dev.kbwallet.app.profile.presentation.LanguageSettingsScreen
 import dev.kbwallet.app.profile.presentation.NotificationSettingsScreen
 import dev.kbwallet.app.profile.presentation.ProfileScreen
 import dev.kbwallet.app.profile.presentation.SecuritySettingsScreen
@@ -71,12 +76,18 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 // ── Bottom navigation tab definition ──
 private enum class BottomTab(
     val icon: ImageVector,
-    val label: String,
 ) {
-    Dashboard(Icons.Default.Home, "Dashboard"),
-    Portfolio(Icons.Default.PieChart, "Portfolio"),
-    History(Icons.Default.History, "History"),
-    Profile(Icons.Default.Person, "Profile"),
+    Dashboard(Icons.Default.Home),
+    Portfolio(Icons.Default.PieChart),
+    History(Icons.Default.History),
+    Profile(Icons.Default.Person),
+}
+
+private fun BottomTab.label(strings: AppStrings): String = when (this) {
+    BottomTab.Dashboard -> strings.navDashboard
+    BottomTab.Portfolio -> strings.navPortfolio
+    BottomTab.History -> strings.navHistory
+    BottomTab.Profile -> strings.navProfile
 }
 
 // Routes where the bottom bar should be visible
@@ -90,6 +101,7 @@ private val bottomBarRoutes = setOf(
 @Composable
 @Preview
 fun App() {
+    ProvideAppLanguage {
     val navController: NavHostController = rememberNavController()
     KBLearningTheme {
         NavHost(
@@ -183,6 +195,11 @@ fun App() {
                     onNavigateBack = { navController.popBackStack() }
                 )
             }
+            composable<LanguageSettings> {
+                LanguageSettingsScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
 
             // ── Trading Simulator additions ──
             composable<PnLAnalytics> {
@@ -213,10 +230,12 @@ fun App() {
             }
         }
     }
+    }
 }
 
 @Composable
 private fun MainScaffold(navController: NavHostController) {
+    val strings = appStrings()
     val innerNavController = rememberNavController()
     val navBackStackEntry by innerNavController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -256,10 +275,10 @@ private fun MainScaffold(navController: NavHostController) {
                             icon = {
                                 Icon(
                                     imageVector = tab.icon,
-                                    contentDescription = tab.label,
+                                    contentDescription = tab.label(strings),
                                 )
                             },
-                            label = { Text(text = tab.label) },
+                            label = { Text(text = tab.label(strings)) },
                             colors = NavigationBarItemDefaults.colors(
                                 selectedIconColor = MaterialTheme.colorScheme.primary,
                                 selectedTextColor = MaterialTheme.colorScheme.primary,
@@ -325,6 +344,9 @@ private fun MainScaffold(navController: NavHostController) {
                     },
                     onNavigateToPnL = {
                         navController.navigate(PnLAnalytics)
+                    },
+                    onNavigateToLanguage = {
+                        navController.navigate(LanguageSettings)
                     },
                 )
             }
