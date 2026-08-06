@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import kotlin.math.roundToInt
+import dev.kbwallet.app.core.i18n.appStrings
 import dev.kbwallet.app.portfolio.presentation.component.DonutChart
 import dev.kbwallet.app.theme.LocalKBLearningColorsPalette
 import org.koin.compose.viewmodel.koinViewModel
@@ -87,6 +88,7 @@ private fun PortfolioContent(
     onDiscoverCoinsClicked: () -> Unit,
 ) {
     var searchQuery by remember { mutableStateOf("") }
+    val strings = appStrings()
 
     val filteredCoins = if (searchQuery.isBlank()) {
         state.coins
@@ -107,7 +109,7 @@ private fun PortfolioContent(
         // ── Header ──
         item {
             Text(
-                text = "Portfolio",
+                text = strings.portfolioTitle,
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground,
@@ -130,7 +132,7 @@ private fun PortfolioContent(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = "Your Portfolio Balance",
+                        text = strings.portfolioBalanceLabel,
                         color = SubtextGray,
                         fontSize = 13.sp,
                     )
@@ -150,7 +152,7 @@ private fun PortfolioContent(
                             contentColor = MaterialTheme.colorScheme.onPrimary,
                         ),
                     ) {
-                        Text(text = "Discover Coins")
+                        Text(text = strings.portfolioDiscoverCoinsButton)
                     }
                 }
             }
@@ -161,7 +163,7 @@ private fun PortfolioContent(
             OutlinedTextField(
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
-                placeholder = { Text("Search coins...") },
+                placeholder = { Text(strings.portfolioSearchPlaceholder) },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Search,
@@ -185,7 +187,7 @@ private fun PortfolioContent(
         // ── Portfolio Distribution ──
         item {
             Text(
-                text = "Portfolio Distribution",
+                text = strings.portfolioDistributionTitle,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground,
@@ -204,7 +206,7 @@ private fun PortfolioContent(
             ) {
                 if (state.coins.isEmpty()) {
                     Text(
-                        text = "Nothing to show yet. Add some coins!",
+                        text = strings.portfolioNothingToShow,
                         style = MaterialTheme.typography.bodyMedium,
                         color = SubtextGray,
                         textAlign = TextAlign.Center,
@@ -287,14 +289,14 @@ private fun PortfolioContent(
         item {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = "Your Assets",
+                    text = strings.portfolioYourAssets,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground,
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "${filteredCoins.size} coins",
+                    text = strings.portfolioCoinsCount(filteredCoins.size),
                     style = MaterialTheme.typography.bodyMedium,
                     color = SubtextGray,
                 )
@@ -304,7 +306,7 @@ private fun PortfolioContent(
         if (filteredCoins.isEmpty() && searchQuery.isNotBlank()) {
             item {
                 Text(
-                    text = "No coins match your search",
+                    text = strings.portfolioNoSearchResults,
                     style = MaterialTheme.typography.bodyMedium,
                     color = SubtextGray,
                     textAlign = TextAlign.Center,
@@ -395,6 +397,7 @@ private fun CoinListItem(
 private fun PortfolioEmptySection(
     onDiscoverCoinsClicked: () -> Unit,
 ) {
+    val strings = appStrings()
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -407,14 +410,14 @@ private fun PortfolioEmptySection(
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
-                text = "Your portfolio is empty",
+                text = strings.portfolioEmptyTitle,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.onBackground,
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Start by discovering coins to trade",
+                text = strings.portfolioEmptySubtitle,
                 style = MaterialTheme.typography.bodyMedium,
                 color = SubtextGray,
             )
@@ -427,7 +430,7 @@ private fun PortfolioEmptySection(
                     contentColor = MaterialTheme.colorScheme.onPrimary,
                 ),
             ) {
-                Text(text = "Discover Coins")
+                Text(text = strings.portfolioDiscoverCoinsButton)
             }
         }
     }

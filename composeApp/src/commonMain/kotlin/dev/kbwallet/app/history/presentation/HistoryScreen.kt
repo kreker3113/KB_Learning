@@ -33,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dev.kbwallet.app.core.i18n.appStrings
 import dev.kbwallet.app.theme.LocalKBLearningColorsPalette
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -58,6 +59,8 @@ fun HistoryScreen() {
 
 @Composable
 private fun HistoryContent(state: HistoryState) {
+    val strings = appStrings()
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -68,7 +71,7 @@ private fun HistoryContent(state: HistoryState) {
         // ── Header ──
         item {
             Text(
-                text = "Transaction History",
+                text = strings.historyTitle,
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground,
@@ -82,18 +85,18 @@ private fun HistoryContent(state: HistoryState) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 StatCard(
-                    title = "Total Trades",
+                    title = strings.historyStatTotalTrades,
                     value = state.totalTrades.toString(),
                     modifier = Modifier.weight(1f),
                 )
                 StatCard(
-                    title = "Total Buy",
+                    title = strings.historyStatTotalBuy,
                     value = state.totalBuy.toString(),
                     modifier = Modifier.weight(1f),
                     valueColor = MaterialTheme.colorScheme.primary,
                 )
                 StatCard(
-                    title = "Total Sell",
+                    title = strings.historyStatTotalSell,
                     value = state.totalSell.toString(),
                     modifier = Modifier.weight(1f),
                     valueColor = LocalKBLearningColorsPalette.current.lossRed,
@@ -104,7 +107,7 @@ private fun HistoryContent(state: HistoryState) {
         // ── Section title ──
         item {
             Text(
-                text = "Recent Transactions",
+                text = strings.historyRecentTransactions,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground,
@@ -126,14 +129,14 @@ private fun HistoryContent(state: HistoryState) {
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
-                            text = "No transactions yet",
+                            text = strings.historyEmptyTitle,
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onBackground,
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "Your buy and sell history will appear here",
+                            text = strings.historyEmptySubtitle,
                             style = MaterialTheme.typography.bodyMedium,
                             color = Color.Gray,
                         )
@@ -172,6 +175,7 @@ private fun HistoryContent(state: HistoryState) {
 
 @Composable
 private fun TransactionItem(transaction: TransactionUiModel) {
+    val strings = appStrings()
     val isBuy = transaction.type == "BUY"
     val accentColor = if (isBuy)
         LocalKBLearningColorsPalette.current.profitGreen
@@ -209,7 +213,7 @@ private fun TransactionItem(transaction: TransactionUiModel) {
                 Spacer(modifier = Modifier.width(12.dp))
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "${if (isBuy) "Buy" else "Sell"} ${transaction.coinName}",
+                        text = "${if (isBuy) strings.historyBuyLabel else strings.historySellLabel} ${transaction.coinName}",
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onBackground,
@@ -247,7 +251,7 @@ private fun TransactionItem(transaction: TransactionUiModel) {
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = "Price: ${transaction.formattedPrice}",
+                    text = strings.historyPriceLabel(transaction.formattedPrice),
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onBackground,

@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
+import dev.kbwallet.app.core.i18n.appStrings
 import dev.kbwallet.app.theme.LocalKBLearningColorsPalette
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -47,6 +48,7 @@ fun WatchlistScreen(
 ) {
     val viewModel = koinViewModel<WatchlistViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val strings = appStrings()
 
     Column(
         modifier = Modifier
@@ -59,11 +61,11 @@ fun WatchlistScreen(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             IconButton(onClick = onBack, modifier = Modifier.size(36.dp)) {
-                Icon(Icons.Default.ArrowBack, "Back", tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                Icon(Icons.Default.ArrowBack, strings.actionBack, tint = MaterialTheme.colorScheme.onSurfaceVariant)
             }
             Spacer(Modifier.width(8.dp))
             Text(
-                text = "Watchlist",
+                text = strings.watchlistTitle,
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground,
@@ -80,10 +82,10 @@ fun WatchlistScreen(
                 modifier = Modifier.fillMaxSize().padding(32.dp)
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("No items in watchlist", style = MaterialTheme.typography.titleMedium, color = Color.Gray)
+                    Text(strings.watchlistEmptyTitle, style = MaterialTheme.typography.titleMedium, color = Color.Gray)
                     Spacer(Modifier.height(4.dp))
                     Text(
-                        "Add coins from the market screen",
+                        strings.watchlistEmptySubtitle,
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.Gray,
                     )

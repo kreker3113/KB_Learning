@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
+import dev.kbwallet.app.core.i18n.appStrings
 import dev.kbwallet.app.theme.LocalKBLearningColorsPalette
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -76,6 +77,8 @@ private fun DashboardContent(
     onSimulatorClicked: () -> Unit = {},
     onLibraryClicked: () -> Unit = {},
 ) {
+    val strings = appStrings()
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -87,7 +90,7 @@ private fun DashboardContent(
         item {
             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    text = "Dashboard",
+                    text = strings.dashboardTitle,
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground,
@@ -99,7 +102,7 @@ private fun DashboardContent(
                     shape = RoundedCornerShape(12.dp),
                     contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
                 ) {
-                    Text("Simulator", fontSize = 12.sp)
+                    Text(strings.dashboardSimulatorButton, fontSize = 12.sp)
                 }
             }
         }
@@ -111,17 +114,17 @@ private fun DashboardContent(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 DashboardStatCard(
-                    title = "Portfolio Value",
+                    title = strings.dashboardStatPortfolioValue,
                     value = state.portfolioValue,
                     modifier = Modifier.weight(1f)
                 )
                 DashboardStatCard(
-                    title = "Assets",
+                    title = strings.dashboardStatAssets,
                     value = state.coinCount.toString(),
                     modifier = Modifier.weight(1f)
                 )
                 DashboardStatCard(
-                    title = "24h Change",
+                    title = strings.dashboardStat24hChange,
                     value = state.recentPerformance,
                     modifier = Modifier.weight(1f),
                     valueColor = if (state.isPerformancePositive)
@@ -135,7 +138,7 @@ private fun DashboardContent(
         // ── Market Overview ──
         item {
             Text(
-                text = "Market Overview",
+                text = strings.dashboardMarketOverview,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground,
@@ -155,14 +158,14 @@ private fun DashboardContent(
             ) {
                 Column {
                     Text(
-                        text = "📈 Trading Tip",
+                        text = strings.dashboardTradingTipTitle,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary,
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Start by exploring available coins and buying your first cryptocurrency. Diversify your portfolio to manage risk effectively.",
+                        text = strings.dashboardTradingTipBody,
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.Gray,
                         lineHeight = 20.sp,
@@ -186,14 +189,14 @@ private fun DashboardContent(
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "📚 Crypto Library",
+                        text = strings.dashboardLibraryTitle,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onBackground,
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "New to crypto? Learn everything you need to know, from the basics to advanced topics.",
+                        text = strings.dashboardLibrarySubtitle,
                         style = MaterialTheme.typography.bodySmall,
                         color = Color.Gray,
                     )
@@ -209,7 +212,7 @@ private fun DashboardContent(
         // ── Portfolio Summary ──
         item {
             Text(
-                text = "Portfolio Summary",
+                text = strings.dashboardPortfolioSummary,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground,
@@ -232,14 +235,14 @@ private fun DashboardContent(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
-                            text = "No assets yet",
+                            text = strings.dashboardNoAssetsTitle,
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onBackground,
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "Go to Portfolio → Discover Coins to start trading",
+                            text = strings.dashboardNoAssetsSubtitle,
                             style = MaterialTheme.typography.bodyMedium,
                             color = Color.Gray,
                         )
@@ -247,7 +250,7 @@ private fun DashboardContent(
                 } else {
                     Column {
                         Text(
-                            text = "${state.portfolioSummaryCoins.size} asset(s) in portfolio",
+                            text = strings.dashboardAssetsCount(state.portfolioSummaryCoins.size),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onBackground,
