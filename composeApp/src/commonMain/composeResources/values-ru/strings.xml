@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <string name="error_disk_full">Похоже, на диске закончилось место.</string>
+    <string name="error_unknown">Что-то пошло не так.</string>
+    <string name="error_request_timeout">Превышено время ожидания запроса.</string>
+    <string name="error_no_internet">Не удалось подключиться к серверу. Проверьте интернет-соединение.</string>
+    <string name="error_too_many_requests">Подождите немного и попробуйте снова!</string>
+    <string name="error_serialization">Не удалось обработать данные.</string>
+    <string name="error_insufficient_balance">Недостаточно средств!</string>
+
+    <!-- Shared -->
+    <string name="action_back">Назад</string>
+    <string name="action_confirm">Подтвердить</string>
+    <string name="action_cancel">Отмена</string>
+
+    <!-- Profile screen -->
+    <string name="profile_title">Профиль</string>
+    <string name="profile_edit_button">Редактировать профиль</string>
+    <string name="profile_stat_total_trades">Всего сделок</string>
+    <string name="profile_stat_win_rate">Процент прибыльных сделок</string>
+    <string name="profile_stat_days_active">Дней в приложении</string>
+    <string name="profile_menu_personal_info_title">Личные данные</string>
+    <string name="profile_menu_personal_info_subtitle">Изменить личные данные</string>
+    <string name="profile_menu_notifications_title">Уведомления</string>
+    <string name="profile_menu_notifications_subtitle">Настройка уведомлений</string>
+    <string name="profile_menu_security_title">Безопасность и конфиденциальность</string>
+    <string name="profile_menu_security_subtitle">Защитите свой аккаунт</string>
+    <string name="profile_menu_pnl_title">Аналитика P&amp;L</string>
+    <string name="profile_menu_pnl_subtitle">Статистика вашей торговли</string>
+    <string name="profile_menu_help_title">Помощь и поддержка</string>
+    <string name="profile_menu_help_subtitle">Получить помощь и связаться с нами</string>
+
+    <!-- Edit profile screen -->
+    <string name="edit_profile_title">Редактировать профиль</string>
+    <string name="edit_profile_display_name_label">Отображаемое имя</string>
+    <string name="edit_profile_email_label">Адрес электронной почты</string>
+    <string name="edit_profile_save_button">Сохранить изменения</string>
+    <string name="edit_profile_update_success">Профиль успешно обновлён</string>
+
+    <!-- Notification settings screen -->
+    <string name="notifications_title">Уведомления</string>
+    <string name="section_general">Основные</string>
+    <string name="notif_push_title">Push-уведомления</string>
+    <string name="notif_push_subtitle">Получать push-уведомления</string>
+    <string name="notif_email_title">Уведомления по почте</string>
+    <string name="notif_email_subtitle">Получать обновления по email</string>
+    <string name="section_trading">Торговля</string>
+    <string name="notif_price_alerts_title">Оповещения о цене</string>
+    <string name="notif_price_alerts_subtitle">Уведомлять об изменении цены</string>
+    <string name="notif_trade_confirmations_title">Подтверждение сделок</string>
+    <string name="notif_trade_confirmations_subtitle">Подтверждать каждое действие по сделке</string>
+    <string name="section_other">Другое</string>
+    <string name="notif_news_title">Новости и обновления</string>
+    <string name="notif_news_subtitle">Быть в курсе последних новостей</string>
+
+    <!-- Security settings screen -->
+    <string name="security_title">Безопасность</string>
+    <string name="section_authentication">Аутентификация</string>
+    <string name="security_biometric_title">Биометрическая аутентификация</string>
+    <string name="security_biometric_subtitle">Вход по отпечатку пальца или Face ID</string>
+    <string name="security_2fa_title">Двухфакторная аутентификация</string>
+    <string name="security_2fa_subtitle">Дополнительный уровень защиты</string>
+    <string name="section_account">Аккаунт</string>
+    <string name="security_change_password">Изменить пароль</string>
+    <string name="dialog_current_password_label">Текущий пароль</string>
+    <string name="dialog_new_password_label">Новый пароль</string>
+    <string name="dialog_confirm_password_label">Подтвердите новый пароль</string>
+
+    <!-- Help & support screen -->
+    <string name="help_title">Помощь и поддержка</string>
+    <string name="help_faq_heading">Частые вопросы</string>
+    <string name="faq_q1">Как купить криптовалюту?</string>
+    <string name="faq_a1">Перейдите на экран «Монеты» из раздела «Портфель» или «Главная», выберите монету и укажите нужную сумму на экране покупки.</string>
+    <string name="faq_q2">Как продать свои активы?</string>
+    <string name="faq_a2">Нажмите на монету в вашем портфеле или удерживайте монету в списке «Монеты» и выберите «Продать». Укажите сумму, которую хотите продать.</string>
+    <string name="faq_q3">Где посмотреть историю операций?</string>
+    <string name="faq_a3">Все операции покупки и продажи фиксируются на вкладке «История». Там видны дата, сумма и цена каждой операции.</string>
+    <string name="faq_q4">Безопасны ли мои данные?</string>
+    <string name="faq_a4">Да! KB Learning использует биометрическую аутентификацию и локальное шифрование для защиты ваших данных. Включите биометрический вход в настройках безопасности.</string>
+    <string name="faq_q5">Как определяются цены на монеты?</string>
+    <string name="faq_a5">Цены на монеты берутся из актуальных рыночных данных через API и обновляются в реальном времени.</string>
+    <string name="help_contact_heading">Связаться с нами</string>
+    <string name="help_contact_live_chat">Онлайн-чат: доступен с 9:00 до 18:00</string>
+    <string name="help_about_heading">О приложении</string>
+    <string name="help_about_version">Версия 1.0.0</string>
+    <string name="help_about_tagline">Создано на Kotlin Multiplatform</string>
+    <string name="content_desc_collapse">Свернуть</string>
+    <string name="content_desc_expand">Развернуть</string>
+</resources>
