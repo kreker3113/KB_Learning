@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import dev.kbwallet.app.core.biometric.BiometricAuthNotAvailable
 import dev.kbwallet.app.core.biometric.getBiometricAuthenticator
 import dev.kbwallet.app.core.biometric.getPlatformContext
+import dev.kbwallet.app.core.i18n.appStrings
 import dev.kbwallet.app.theme.LocalKBLearningColorsPalette
 import kotlinx.coroutines.launch
 
@@ -36,6 +37,7 @@ fun BiometricScreen(
     val biometricAuthenticator = remember { getBiometricAuthenticator(platformContext) }
     val coroutineScope = rememberCoroutineScope()
     var authError by remember { mutableStateOf<String?>(null) }
+    val strings = appStrings()
 
     Box(
         contentAlignment = Alignment.Center,
@@ -50,7 +52,7 @@ fun BiometricScreen(
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "Powered by Compose Multiplatform",
+                text = strings.biometricTagline,
                 color = MaterialTheme.colorScheme.onBackground,
             )
             Spacer(modifier = Modifier.height(64.dp))
@@ -67,14 +69,14 @@ fun BiometricScreen(
                         } catch (e: Exception) {
                             authError = e.message
                             if (e.message == BiometricAuthNotAvailable.BIOAUTH_NOT_AVAILABLE.toString()) {
-                                authError = "Biometric is not available on your device!"
+                                authError = strings.biometricNotAvailable
                             }
                         }
                     }
                 }
             ) {
                 Text(
-                    text = "Login"
+                    text = strings.biometricLoginButton
                 )
             }
             authError?.let {
@@ -87,7 +89,7 @@ fun BiometricScreen(
         }
 
         Text(
-            text = "This app is for educational purposes only and does not constitute financial advice. Cryptocurrency investments carry risk — do your own research.",
+            text = strings.biometricDisclaimer,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 11.sp,
             textAlign = TextAlign.Center,
