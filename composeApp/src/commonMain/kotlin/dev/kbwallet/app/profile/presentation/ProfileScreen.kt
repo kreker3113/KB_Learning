@@ -39,6 +39,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kblearning.composeapp.generated.resources.Res
+import kblearning.composeapp.generated.resources.profile_edit_button
+import kblearning.composeapp.generated.resources.profile_menu_help_subtitle
+import kblearning.composeapp.generated.resources.profile_menu_help_title
+import kblearning.composeapp.generated.resources.profile_menu_notifications_subtitle
+import kblearning.composeapp.generated.resources.profile_menu_notifications_title
+import kblearning.composeapp.generated.resources.profile_menu_personal_info_subtitle
+import kblearning.composeapp.generated.resources.profile_menu_personal_info_title
+import kblearning.composeapp.generated.resources.profile_menu_pnl_subtitle
+import kblearning.composeapp.generated.resources.profile_menu_pnl_title
+import kblearning.composeapp.generated.resources.profile_menu_security_subtitle
+import kblearning.composeapp.generated.resources.profile_menu_security_title
+import kblearning.composeapp.generated.resources.profile_stat_days_active
+import kblearning.composeapp.generated.resources.profile_stat_total_trades
+import kblearning.composeapp.generated.resources.profile_stat_win_rate
+import kblearning.composeapp.generated.resources.profile_title
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -62,7 +79,7 @@ fun ProfileScreen(
         // ── Header ──
         item {
             Text(
-                text = "Profile",
+                text = stringResource(Res.string.profile_title),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground,
@@ -110,7 +127,7 @@ fun ProfileScreen(
                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
                 ) {
                     Text(
-                        text = "Edit Profile",
+                        text = stringResource(Res.string.profile_edit_button),
                         color = MaterialTheme.colorScheme.primary,
                     )
                 }
@@ -124,18 +141,18 @@ fun ProfileScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 ProfileStatCard(
-                    title = "Total Trades",
+                    title = stringResource(Res.string.profile_stat_total_trades),
                     value = state.totalTrades.toString(),
                     modifier = Modifier.weight(1f),
                 )
                 ProfileStatCard(
-                    title = "Win Rate",
+                    title = stringResource(Res.string.profile_stat_win_rate),
                     value = state.winRate,
                     modifier = Modifier.weight(1f),
                     valueColor = MaterialTheme.colorScheme.primary,
                 )
                 ProfileStatCard(
-                    title = "Days Active",
+                    title = stringResource(Res.string.profile_stat_days_active),
                     value = state.daysActive,
                     modifier = Modifier.weight(1f),
                 )
@@ -146,40 +163,40 @@ fun ProfileScreen(
         item {
             ProfileMenuOption(
                 icon = Icons.Default.Person,
-                title = "Personal Information",
-                subtitle = "Edit your personal details",
+                title = stringResource(Res.string.profile_menu_personal_info_title),
+                subtitle = stringResource(Res.string.profile_menu_personal_info_subtitle),
                 onClick = onNavigateToEditProfile,
             )
         }
         item {
             ProfileMenuOption(
                 icon = Icons.Default.Notifications,
-                title = "Notifications",
-                subtitle = "Manage your notification preferences",
+                title = stringResource(Res.string.profile_menu_notifications_title),
+                subtitle = stringResource(Res.string.profile_menu_notifications_subtitle),
                 onClick = onNavigateToNotifications,
             )
         }
         item {
             ProfileMenuOption(
                 icon = Icons.Default.Lock,
-                title = "Security & Privacy",
-                subtitle = "Protect your account",
+                title = stringResource(Res.string.profile_menu_security_title),
+                subtitle = stringResource(Res.string.profile_menu_security_subtitle),
                 onClick = onNavigateToSecurity,
             )
         }
         item {
             ProfileMenuOption(
                 icon = Icons.Default.TrendingUp,
-                title = "P&L Analytics",
-                subtitle = "View your trading performance",
+                title = stringResource(Res.string.profile_menu_pnl_title),
+                subtitle = stringResource(Res.string.profile_menu_pnl_subtitle),
                 onClick = onNavigateToPnL,
             )
         }
         item {
             ProfileMenuOption(
                 icon = Icons.AutoMirrored.Filled.HelpOutline,
-                title = "Help & Support",
-                subtitle = "Get help and contact us",
+                title = stringResource(Res.string.profile_menu_help_title),
+                subtitle = stringResource(Res.string.profile_menu_help_subtitle),
                 onClick = onNavigateToHelp,
             )
         }

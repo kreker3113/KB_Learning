@@ -47,18 +47,48 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kblearning.composeapp.generated.resources.Res
+import kblearning.composeapp.generated.resources.action_back
+import kblearning.composeapp.generated.resources.content_desc_collapse
+import kblearning.composeapp.generated.resources.content_desc_expand
+import kblearning.composeapp.generated.resources.faq_a1
+import kblearning.composeapp.generated.resources.faq_a2
+import kblearning.composeapp.generated.resources.faq_a3
+import kblearning.composeapp.generated.resources.faq_a4
+import kblearning.composeapp.generated.resources.faq_a5
+import kblearning.composeapp.generated.resources.faq_q1
+import kblearning.composeapp.generated.resources.faq_q2
+import kblearning.composeapp.generated.resources.faq_q3
+import kblearning.composeapp.generated.resources.faq_q4
+import kblearning.composeapp.generated.resources.faq_q5
+import kblearning.composeapp.generated.resources.help_about_heading
+import kblearning.composeapp.generated.resources.help_about_tagline
+import kblearning.composeapp.generated.resources.help_about_version
+import kblearning.composeapp.generated.resources.help_contact_heading
+import kblearning.composeapp.generated.resources.help_contact_live_chat
+import kblearning.composeapp.generated.resources.help_faq_heading
+import kblearning.composeapp.generated.resources.help_title
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HelpSupportScreen(
     onNavigateBack: () -> Unit,
 ) {
+    val faqItems = listOf(
+        stringResource(Res.string.faq_q1) to stringResource(Res.string.faq_a1),
+        stringResource(Res.string.faq_q2) to stringResource(Res.string.faq_a2),
+        stringResource(Res.string.faq_q3) to stringResource(Res.string.faq_a3),
+        stringResource(Res.string.faq_q4) to stringResource(Res.string.faq_a4),
+        stringResource(Res.string.faq_q5) to stringResource(Res.string.faq_a5),
+    )
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = "Help & Support",
+                        text = stringResource(Res.string.help_title),
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onBackground,
                     )
@@ -67,7 +97,7 @@ fun HelpSupportScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
+                            contentDescription = stringResource(Res.string.action_back),
                             tint = MaterialTheme.colorScheme.onBackground,
                         )
                     }
@@ -89,21 +119,13 @@ fun HelpSupportScreen(
             // ── FAQ ──
             item {
                 Text(
-                    text = "FAQ",
+                    text = stringResource(Res.string.help_faq_heading),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.padding(bottom = 8.dp),
                 )
             }
-
-            val faqItems = listOf(
-                "How do I buy cryptocurrency?" to "Navigate to the Coins screen from Portfolio or Dashboard, select a coin, and use the Buy screen to enter your desired amount.",
-                "How do I sell my assets?" to "Tap on any coin in your Portfolio, or long-press a coin in the Coins list, and select Sell. Enter the amount you wish to sell.",
-                "Where can I see my transaction history?" to "All your buy and sell transactions are recorded in the History tab. You can view details like date, amount, and price there.",
-                "Is my data secure?" to "Yes! KB Learning uses biometric authentication and local encryption to keep your data safe. Enable biometric login in Security settings.",
-                "How are coin prices determined?" to "Coin prices are fetched from live market data via API. Prices update in real-time to reflect current market conditions.",
-            )
 
             faqItems.forEach { (question, answer) ->
                 item {
@@ -115,7 +137,7 @@ fun HelpSupportScreen(
             item {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Contact Us",
+                    text = stringResource(Res.string.help_contact_heading),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground,
@@ -144,7 +166,7 @@ fun HelpSupportScreen(
                             modifier = Modifier.padding(vertical = 12.dp),
                             color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f),
                         )
-                        ContactRow(icon = Icons.Default.Chat, label = "Live Chat: Available 9AM - 6PM")
+                        ContactRow(icon = Icons.Default.Chat, label = stringResource(Res.string.help_contact_live_chat))
                     }
                 }
             }
@@ -153,7 +175,7 @@ fun HelpSupportScreen(
             item {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "About",
+                    text = stringResource(Res.string.help_about_heading),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground,
@@ -181,13 +203,13 @@ fun HelpSupportScreen(
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "Version 1.0.0",
+                            text = stringResource(Res.string.help_about_version),
                             style = MaterialTheme.typography.bodyMedium,
                             color = Color.Gray,
                         )
                         Spacer(modifier = Modifier.height(2.dp))
                         Text(
-                            text = "Built with Kotlin Multiplatform",
+                            text = stringResource(Res.string.help_about_tagline),
                             style = MaterialTheme.typography.bodySmall,
                             color = Color.Gray,
                         )
@@ -234,7 +256,9 @@ private fun FaqCard(question: String, answer: String) {
                 )
                 Icon(
                     imageVector = Icons.Default.ChevronRight,
-                    contentDescription = if (expanded) "Collapse" else "Expand",
+                    contentDescription = stringResource(
+                        if (expanded) Res.string.content_desc_collapse else Res.string.content_desc_expand
+                    ),
                     tint = Color.Gray,
                     modifier = Modifier
                         .size(24.dp)

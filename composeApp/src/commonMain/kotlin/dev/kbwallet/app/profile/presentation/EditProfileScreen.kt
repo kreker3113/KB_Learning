@@ -41,7 +41,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kblearning.composeapp.generated.resources.Res
+import kblearning.composeapp.generated.resources.action_back
+import kblearning.composeapp.generated.resources.edit_profile_display_name_label
+import kblearning.composeapp.generated.resources.edit_profile_email_label
+import kblearning.composeapp.generated.resources.edit_profile_save_button
+import kblearning.composeapp.generated.resources.edit_profile_title
+import kblearning.composeapp.generated.resources.edit_profile_update_success
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,6 +66,7 @@ fun EditProfileScreen(
     var email by remember { mutableStateOf(state.email) }
 
     val isFormValid = displayName.isNotBlank() && email.isNotBlank()
+    val updateSuccessMessage = stringResource(Res.string.edit_profile_update_success)
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -65,7 +74,7 @@ fun EditProfileScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Edit Profile",
+                        text = stringResource(Res.string.edit_profile_title),
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onBackground,
                     )
@@ -74,7 +83,7 @@ fun EditProfileScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
+                            contentDescription = stringResource(Res.string.action_back),
                             tint = MaterialTheme.colorScheme.onBackground,
                         )
                     }
@@ -118,7 +127,7 @@ fun EditProfileScreen(
             OutlinedTextField(
                 value = displayName,
                 onValueChange = { displayName = it },
-                label = { Text("Display Name") },
+                label = { Text(stringResource(Res.string.edit_profile_display_name_label)) },
                 singleLine = true,
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.fillMaxWidth(),
@@ -137,7 +146,7 @@ fun EditProfileScreen(
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Email Address") },
+                label = { Text(stringResource(Res.string.edit_profile_email_label)) },
                 singleLine = true,
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.fillMaxWidth(),
@@ -158,7 +167,7 @@ fun EditProfileScreen(
                     viewModel.updateDisplayName(displayName)
                     viewModel.updateEmail(email)
                     scope.launch {
-                        snackbarHostState.showSnackbar("Profile updated successfully")
+                        snackbarHostState.showSnackbar(updateSuccessMessage)
                     }
                 },
                 enabled = isFormValid,
@@ -173,7 +182,7 @@ fun EditProfileScreen(
                 ),
             ) {
                 Text(
-                    text = "Save Changes",
+                    text = stringResource(Res.string.edit_profile_save_button),
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
                 )

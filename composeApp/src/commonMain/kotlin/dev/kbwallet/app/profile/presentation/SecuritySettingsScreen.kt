@@ -48,6 +48,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kblearning.composeapp.generated.resources.Res
+import kblearning.composeapp.generated.resources.action_back
+import kblearning.composeapp.generated.resources.action_cancel
+import kblearning.composeapp.generated.resources.action_confirm
+import kblearning.composeapp.generated.resources.dialog_confirm_password_label
+import kblearning.composeapp.generated.resources.dialog_current_password_label
+import kblearning.composeapp.generated.resources.dialog_new_password_label
+import kblearning.composeapp.generated.resources.section_account
+import kblearning.composeapp.generated.resources.section_authentication
+import kblearning.composeapp.generated.resources.security_2fa_subtitle
+import kblearning.composeapp.generated.resources.security_2fa_title
+import kblearning.composeapp.generated.resources.security_biometric_subtitle
+import kblearning.composeapp.generated.resources.security_biometric_title
+import kblearning.composeapp.generated.resources.security_change_password
+import kblearning.composeapp.generated.resources.security_title
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -64,7 +80,7 @@ fun SecuritySettingsScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Security",
+                        text = stringResource(Res.string.security_title),
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onBackground,
                     )
@@ -73,7 +89,7 @@ fun SecuritySettingsScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
+                            contentDescription = stringResource(Res.string.action_back),
                             tint = MaterialTheme.colorScheme.onBackground,
                         )
                     }
@@ -94,13 +110,13 @@ fun SecuritySettingsScreen(
         ) {
             // ── AUTHENTICATION ──
             item {
-                SectionHeader("Authentication")
+                SectionHeader(stringResource(Res.string.section_authentication))
             }
             item {
                 ToggleItem(
                     icon = Icons.Default.Fingerprint,
-                    title = "Biometric Authentication",
-                    subtitle = "Use fingerprint or face ID to login",
+                    title = stringResource(Res.string.security_biometric_title),
+                    subtitle = stringResource(Res.string.security_biometric_subtitle),
                     checked = state.biometricAuth,
                     onToggle = { viewModel.toggleBiometricAuth() },
                 )
@@ -108,8 +124,8 @@ fun SecuritySettingsScreen(
             item {
                 ToggleItem(
                     icon = Icons.Default.PhonelinkLock,
-                    title = "Two-Factor Authentication",
-                    subtitle = "Add an extra layer of security",
+                    title = stringResource(Res.string.security_2fa_title),
+                    subtitle = stringResource(Res.string.security_2fa_subtitle),
                     checked = state.twoFactorAuth,
                     onToggle = { viewModel.toggleTwoFactorAuth() },
                 )
@@ -118,7 +134,7 @@ fun SecuritySettingsScreen(
             // ── ACCOUNT ──
             item {
                 Spacer(modifier = Modifier.height(8.dp))
-                SectionHeader("Account")
+                SectionHeader(stringResource(Res.string.section_account))
             }
             item {
                 Row(
@@ -140,7 +156,7 @@ fun SecuritySettingsScreen(
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                     Text(
-                        text = "Change Password",
+                        text = stringResource(Res.string.security_change_password),
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onBackground,
@@ -177,7 +193,7 @@ private fun ChangePasswordDialog(
         onDismissRequest = onDismiss,
         title = {
             Text(
-                text = "Change Password",
+                text = stringResource(Res.string.security_change_password),
                 fontWeight = FontWeight.Bold,
             )
         },
@@ -186,7 +202,7 @@ private fun ChangePasswordDialog(
                 OutlinedTextField(
                     value = currentPassword,
                     onValueChange = { currentPassword = it },
-                    label = { Text("Current Password") },
+                    label = { Text(stringResource(Res.string.dialog_current_password_label)) },
                     singleLine = true,
                     shape = RoundedCornerShape(12.dp),
                     visualTransformation = PasswordVisualTransformation(),
@@ -195,7 +211,7 @@ private fun ChangePasswordDialog(
                 OutlinedTextField(
                     value = newPassword,
                     onValueChange = { newPassword = it },
-                    label = { Text("New Password") },
+                    label = { Text(stringResource(Res.string.dialog_new_password_label)) },
                     singleLine = true,
                     shape = RoundedCornerShape(12.dp),
                     visualTransformation = PasswordVisualTransformation(),
@@ -204,7 +220,7 @@ private fun ChangePasswordDialog(
                 OutlinedTextField(
                     value = confirmPassword,
                     onValueChange = { confirmPassword = it },
-                    label = { Text("Confirm New Password") },
+                    label = { Text(stringResource(Res.string.dialog_confirm_password_label)) },
                     singleLine = true,
                     shape = RoundedCornerShape(12.dp),
                     visualTransformation = PasswordVisualTransformation(),
@@ -222,13 +238,13 @@ private fun ChangePasswordDialog(
                     contentColor = MaterialTheme.colorScheme.onPrimary,
                 ),
             ) {
-                Text("Confirm")
+                Text(stringResource(Res.string.action_confirm))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
                 Text(
-                    text = "Cancel",
+                    text = stringResource(Res.string.action_cancel),
                     color = Color.Gray,
                 )
             }
