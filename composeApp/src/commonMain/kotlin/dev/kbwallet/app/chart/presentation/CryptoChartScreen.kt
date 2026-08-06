@@ -31,6 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dev.kbwallet.app.core.i18n.appStrings
 import dev.kbwallet.app.chart.presentation.component.CandlestickChart
 import dev.kbwallet.app.chart.presentation.component.ChartGrid
 import dev.kbwallet.app.chart.presentation.component.LineChart
@@ -50,6 +51,7 @@ fun CryptoChartScreen(
     viewModel: ChartViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val strings = appStrings()
 
     androidx.compose.runtime.LaunchedEffect(coinId) {
         viewModel.init(coinId, coinName)
@@ -69,7 +71,7 @@ fun CryptoChartScreen(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             IconButton(onClick = onBack, modifier = Modifier.size(36.dp)) {
-                Icon(Icons.Default.ArrowBack, "Back", tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                Icon(Icons.Default.ArrowBack, strings.actionBack, tint = MaterialTheme.colorScheme.onSurfaceVariant)
             }
             Spacer(Modifier.width(8.dp))
             Column(modifier = Modifier.weight(1f)) {
@@ -122,7 +124,7 @@ fun CryptoChartScreen(
                 onClick = { viewModel.toggleChartMode() },
                 label = {
                     Text(
-                        text = if (state.isCandlestickMode) "Candles" else "Line",
+                        text = if (state.isCandlestickMode) strings.chartModeCandles else strings.chartModeLine,
                         fontSize = 11.sp,
                     )
                 },

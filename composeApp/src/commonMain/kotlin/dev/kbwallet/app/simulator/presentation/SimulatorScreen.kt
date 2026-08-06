@@ -32,6 +32,7 @@ import dev.kbwallet.app.chart.presentation.component.ChartGrid
 import dev.kbwallet.app.chart.presentation.component.LineChart
 import dev.kbwallet.app.chart.presentation.component.SMAOverlay
 import dev.kbwallet.app.chart.presentation.util.ChartTransform
+import dev.kbwallet.app.core.i18n.appStrings
 import dev.kbwallet.app.core.util.formatFiat
 import dev.kbwallet.app.simulator.domain.*
 import dev.kbwallet.app.theme.DarkLossRedColor
@@ -47,6 +48,7 @@ fun SimulatorScreen(
     viewModel: SimulatorViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val strings = appStrings()
 
     LaunchedEffect(Unit) {
         viewModel.loadCoins()
@@ -63,14 +65,14 @@ fun SimulatorScreen(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             IconButton(onClick = onBack, modifier = Modifier.size(36.dp)) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back", tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, strings.actionBack, tint = MaterialTheme.colorScheme.onSurfaceVariant)
             }
             Spacer(Modifier.width(8.dp))
-            Text("Trading Simulator", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+            Text(strings.simulatorTitle, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
             Spacer(Modifier.weight(1f))
             if (state.activeHint != null) {
                 IconButton(onClick = { viewModel.nextHint() }) {
-                    Icon(Icons.Default.Info, "Hint", tint = Color(0xFFFFA500))
+                    Icon(Icons.Default.Info, strings.simulatorHintContentDesc, tint = Color(0xFFFFA500))
                 }
             }
         }
@@ -88,7 +90,7 @@ fun SimulatorScreen(
         ) {
             // ── Coin Selection ──
             if (state.selectedCoin == null) {
-                item { Text("Select a coin to simulate:", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold) }
+                item { Text(strings.simulatorSelectCoinPrompt, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold) }
                 items(state.availableCoins) { coin ->
                     FilterChip(
                         selected = false,
@@ -124,7 +126,7 @@ fun SimulatorScreen(
                                     color = MaterialTheme.colorScheme.onBackground
                                 )
                                 Text(
-                                    "Candle ${state.currentCandleIndex + 1}/${state.candles.size}",
+                                    strings.simulatorCandleCounter(state.currentCandleIndex + 1, state.candles.size),
                                     fontSize = 10.sp, color = SubtextGray,
                                 )
                             }
@@ -143,16 +145,16 @@ fun SimulatorScreen(
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             IconButton(onClick = { viewModel.stepBackward() }) {
-                                Icon(Icons.Default.SkipPrevious, "Prev")
+                                Icon(Icons.Default.SkipPrevious, strings.simulatorPrevContentDesc)
                             }
                             IconButton(onClick = { viewModel.togglePlay() }) {
                                 Icon(
                                     if (state.isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
-                                    if (state.isPlaying) "Pause" else "Play",
+                                    if (state.isPlaying) strings.simulatorPauseContentDesc else strings.simulatorPlayContentDesc,
                                 )
                             }
                             IconButton(onClick = { viewModel.stepForward() }) {
-                                Icon(Icons.Default.SkipNext, "Next")
+                                Icon(Icons.Default.SkipNext, strings.simulatorNextContentDesc)
                             }
                         }
                         Spacer(Modifier.height(4.dp))
@@ -201,10 +203,10 @@ fun SimulatorScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
                     ) {
-                        SimStatCard("Balance", formatFiat(state.cashBalance), Modifier.weight(1f))
-                        SimStatCard("Equity", formatFiat(state.equity), Modifier.weight(1f), DarkProfitGreenColor)
+                        SimStatCard(strings.simulatorStatBalance, formatFiat(state.cashBalance), Modifier.weight(1f))
+                        SimStatCard(strings.simulatorStatEquity, formatFiat(state.equity), Modifier.weight(1f), DarkProfitGreenColor)
                         val pnl = state.equity - state.initialBalance
-                        SimStatCard("P&L", formatFiat(pnl), Modifier.weight(1f), if (pnl >= 0) DarkProfitGreenColor else DarkLossRedColor)
+                        SimStatCard(strings.simulatorStatPnl, formatFiat(pnl), Modifier.weight(1f), if (pnl >= 0) DarkProfitGreenColor else DarkLossRedColor)
                     }
                 }
 
@@ -216,7 +218,7 @@ fun SimulatorScreen(
                         shape = RoundedCornerShape(16.dp),
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
-                            Text("New Position", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
+                            Text(strings.simulatorNewPositionTitle, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
                             Spacer(Modifier.height(8.dp))
                             // Side selector
                             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -242,13 +244,13 @@ fun SimulatorScreen(
                                 modifier = Modifier.fillMaxWidth(),
                             ) {
                                 OrderField(
-                                    label = "Amount ($)",
+                                    label = strings.simulatorAmountLabel,
                                     value = state.orderAmount,
                                     onValueChange = { viewModel.onOrderAmountChanged(it) },
                                     modifier = Modifier.weight(1f),
                                 )
                                 OrderField(
-                                    label = "Leverage (x)",
+                                    label = strings.simulatorLeverageLabel,
                                     value = state.orderLeverage,
                                     onValueChange = { viewModel.onOrderLeverageChanged(it) },
                                     modifier = Modifier.weight(1f),
@@ -273,7 +275,7 @@ fun SimulatorScreen(
                                     Icon(Icons.Default.Warning, null, tint = DarkLossRedColor, modifier = Modifier.size(14.dp))
                                     Spacer(Modifier.width(6.dp))
                                     Text(
-                                        text = "Liquidates at ~$${formatFiat(liqPreview)} (${"%.1f".format(100.0 / previewLeverage)}% adverse move)",
+                                        text = strings.simulatorLiquidatesAt(formatFiat(liqPreview), "%.1f".format(100.0 / previewLeverage)),
                                         color = DarkLossRedColor,
                                         fontSize = 11.sp,
                                     )
@@ -286,14 +288,14 @@ fun SimulatorScreen(
                                 modifier = Modifier.fillMaxWidth(),
                             ) {
                                 OrderField(
-                                    label = "Stop-Loss ($)",
+                                    label = strings.simulatorStopLossLabel,
                                     value = state.orderStopLoss,
                                     onValueChange = { viewModel.onOrderSLChanged(it) },
                                     accentColor = DarkLossRedColor,
                                     modifier = Modifier.weight(1f),
                                 )
                                 OrderField(
-                                    label = "Take-Profit ($)",
+                                    label = strings.simulatorTakeProfitLabel,
                                     value = state.orderTakeProfit,
                                     onValueChange = { viewModel.onOrderTPChanged(it) },
                                     accentColor = DarkProfitGreenColor,
@@ -311,7 +313,7 @@ fun SimulatorScreen(
                                 shape = RoundedCornerShape(12.dp),
                             ) {
                                 Text(
-                                    "${if (state.orderSide == OrderSideInput.LONG) "Long" else "Short"} at Market",
+                                    if (state.orderSide == OrderSideInput.LONG) strings.simulatorLongAtMarket else strings.simulatorShortAtMarket,
                                     color = Color.White,
                                 )
                             }
@@ -322,7 +324,7 @@ fun SimulatorScreen(
                 // ── Open Positions ──
                 if (state.positions.isNotEmpty()) {
                     item {
-                        Text("Open Positions (${state.positions.size})", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
+                        Text(strings.simulatorOpenPositions(state.positions.size), style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
                     }
                     items(state.positions, key = { it.id }) { pos ->
                         PositionCard(pos = pos, onClose = { viewModel.closePosition(pos.id) })
@@ -346,26 +348,26 @@ fun SimulatorScreen(
                 // ── Metrics ──
                 if (state.closedTrades.isNotEmpty()) {
                     val m = state.metrics
-                    item { Text("Metrics", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold) }
+                    item { Text(strings.simulatorMetricsTitle, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold) }
                     item {
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-                            MetricCard("Win Rate", "${"%.0f".format(m.winRate * 100)}%", Modifier.weight(1f))
-                            MetricCard("Profit Factor", "${"%.2f".format(m.profitFactor)}", Modifier.weight(1f))
-                            MetricCard("Trades", "${m.totalTrades}", Modifier.weight(1f))
+                            MetricCard(strings.simulatorMetricWinRate, "${"%.0f".format(m.winRate * 100)}%", Modifier.weight(1f))
+                            MetricCard(strings.simulatorMetricProfitFactor, "${"%.2f".format(m.profitFactor)}", Modifier.weight(1f))
+                            MetricCard(strings.simulatorMetricTrades, "${m.totalTrades}", Modifier.weight(1f))
                         }
                     }
                     item {
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-                            MetricCard("Max DD", "$${"%.0f".format(m.maxDrawdown)}", Modifier.weight(1f), DarkLossRedColor)
-                            MetricCard("Best", "$${"%.0f".format(m.bestTrade)}", Modifier.weight(1f), DarkProfitGreenColor)
-                            MetricCard("Sharpe", "${"%.2f".format(m.sharpeRatio)}", Modifier.weight(1f))
+                            MetricCard(strings.simulatorMetricMaxDD, "$${"%.0f".format(m.maxDrawdown)}", Modifier.weight(1f), DarkLossRedColor)
+                            MetricCard(strings.simulatorMetricBest, "$${"%.0f".format(m.bestTrade)}", Modifier.weight(1f), DarkProfitGreenColor)
+                            MetricCard(strings.simulatorMetricSharpe, "${"%.2f".format(m.sharpeRatio)}", Modifier.weight(1f))
                         }
                     }
                 }
 
                 // ── Closed Trades ──
                 if (state.closedTrades.isNotEmpty()) {
-                    item { Text("Trade History", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold) }
+                    item { Text(strings.simulatorTradeHistoryTitle, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold) }
                     items(state.closedTrades.reversed()) { trade ->
                         ClosedTradeCard(trade)
                     }
@@ -380,6 +382,7 @@ fun SimulatorScreen(
 
 @Composable
 private fun PositionCard(pos: SimPosition, onClose: () -> Unit) {
+    val strings = appStrings()
     val pnlColor = if (pos.pnl >= 0) DarkProfitGreenColor else DarkLossRedColor
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -397,19 +400,19 @@ private fun PositionCard(pos: SimPosition, onClose: () -> Unit) {
             }
             Spacer(Modifier.height(4.dp))
             Row {
-                Text("Entry: ${formatFiat(pos.entryPrice)}", fontSize = 12.sp, color = SubtextGray)
+                Text(strings.simulatorEntryLabel(formatFiat(pos.entryPrice)), fontSize = 12.sp, color = SubtextGray)
                 Spacer(Modifier.width(12.dp))
-                Text("Now: ${formatFiat(pos.currentPrice)}", fontSize = 12.sp, color = SubtextGray)
+                Text(strings.simulatorNowLabel(formatFiat(pos.currentPrice)), fontSize = 12.sp, color = SubtextGray)
                 Spacer(Modifier.weight(1f))
-                Text("P&L: ${"%.0f".format(pos.pnl)} (${"%.1f".format(pos.pnlPercent)}%)",
+                Text(strings.simulatorPnlLine("%.0f".format(pos.pnl), "%.1f".format(pos.pnlPercent)),
                     fontSize = 13.sp, fontWeight = FontWeight.Bold, color = pnlColor)
             }
             if (pos.stopLoss != null || pos.takeProfit != null) {
                 Spacer(Modifier.height(2.dp))
                 Row {
-                    if (pos.stopLoss != null) Text("SL: ${formatFiat(pos.stopLoss)}", fontSize = 11.sp, color = DarkLossRedColor)
+                    if (pos.stopLoss != null) Text(strings.simulatorSlLabel(formatFiat(pos.stopLoss)), fontSize = 11.sp, color = DarkLossRedColor)
                     Spacer(Modifier.width(12.dp))
-                    if (pos.takeProfit != null) Text("TP: ${formatFiat(pos.takeProfit)}", fontSize = 11.sp, color = DarkProfitGreenColor)
+                    if (pos.takeProfit != null) Text(strings.simulatorTpLabel(formatFiat(pos.takeProfit)), fontSize = 11.sp, color = DarkProfitGreenColor)
                 }
             }
             Spacer(Modifier.height(4.dp))
@@ -419,7 +422,7 @@ private fun PositionCard(pos: SimPosition, onClose: () -> Unit) {
                 contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
                 modifier = Modifier.align(Alignment.End),
             ) {
-                Text("Close", fontSize = 12.sp, color = pnlColor)
+                Text(strings.simulatorCloseButton, fontSize = 12.sp, color = pnlColor)
             }
         }
     }
@@ -427,6 +430,7 @@ private fun PositionCard(pos: SimPosition, onClose: () -> Unit) {
 
 @Composable
 private fun ClosedTradeCard(trade: ClosedTrade) {
+    val strings = appStrings()
     val pnlColor = if (trade.pnl >= 0) DarkProfitGreenColor else DarkLossRedColor
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -441,7 +445,7 @@ private fun ClosedTradeCard(trade: ClosedTrade) {
             Spacer(Modifier.width(8.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text("${trade.side.name} ${trade.coinName}", fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
-                Text("Entry: ${formatFiat(trade.entryPrice)} → Exit: ${formatFiat(trade.exitPrice)}", fontSize = 11.sp, color = SubtextGray)
+                Text(strings.simulatorEntryExitLabel(formatFiat(trade.entryPrice), formatFiat(trade.exitPrice)), fontSize = 11.sp, color = SubtextGray)
             }
             Column(horizontalAlignment = Alignment.End) {
                 Text("${"%.0f".format(trade.pnl)} (${"%.1f".format(trade.pnlPercent)}%)",

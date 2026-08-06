@@ -30,6 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dev.kbwallet.app.core.i18n.appStrings
 import dev.kbwallet.app.theme.LocalKBLearningColorsPalette
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -37,6 +38,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun PnLScreen(onBack: () -> Unit) {
     val viewModel = koinViewModel<PnLViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val strings = appStrings()
 
     Column(
         modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)
@@ -47,10 +49,10 @@ fun PnLScreen(onBack: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically,
         ) {
             IconButton(onClick = onBack, modifier = Modifier.size(36.dp)) {
-                Icon(Icons.Default.ArrowBack, "Back", tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                Icon(Icons.Default.ArrowBack, strings.actionBack, tint = MaterialTheme.colorScheme.onSurfaceVariant)
             }
             Spacer(Modifier.width(8.dp))
-            Text("P&L Analytics", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
+            Text(strings.pnlTitle, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
         }
 
         if (state.isLoading) {
@@ -65,9 +67,9 @@ fun PnLScreen(onBack: () -> Unit) {
                 // Summary Cards
                 item {
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth()) {
-                        PnLStatCard("Total Trades", state.totalTrades.toString(), Modifier.weight(1f))
-                        PnLStatCard("Win Rate", state.winRate, Modifier.weight(1f), MaterialTheme.colorScheme.primary)
-                        PnLStatCard("Active Orders", state.activeLimitOrders.toString(), Modifier.weight(1f))
+                        PnLStatCard(strings.pnlStatTotalTrades, state.totalTrades.toString(), Modifier.weight(1f))
+                        PnLStatCard(strings.pnlStatWinRate, state.winRate, Modifier.weight(1f), MaterialTheme.colorScheme.primary)
+                        PnLStatCard(strings.pnlStatActiveOrders, state.activeLimitOrders.toString(), Modifier.weight(1f))
                     }
                 }
 
@@ -84,7 +86,7 @@ fun PnLScreen(onBack: () -> Unit) {
                             .padding(24.dp)
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
-                            Text("Realized P&L", color = Color.Gray, fontSize = 13.sp)
+                            Text(strings.pnlRealized, color = Color.Gray, fontSize = 13.sp)
                             Spacer(Modifier.height(8.dp))
                             Text(
                                 state.realizedPnL,
@@ -99,18 +101,18 @@ fun PnLScreen(onBack: () -> Unit) {
 
                 // Detailed stats
                 item {
-                    Text("Detailed Statistics", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+                    Text(strings.pnlDetailedStats, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
                 }
 
                 item {
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        PnLRow("Total Invested", state.totalInvested)
-                        PnLRow("Total Realized", state.totalRealized)
-                        PnLRow("Best Trade", state.bestTrade, LocalKBLearningColorsPalette.current.profitGreen)
-                        PnLRow("Worst Trade", state.worstTrade, LocalKBLearningColorsPalette.current.lossRed)
-                        PnLRow("Avg Profit/Trade", state.avgProfitPerTrade)
-                        PnLRow("Buy Orders", state.totalBuy.toString())
-                        PnLRow("Sell Orders", state.totalSell.toString())
+                        PnLRow(strings.pnlRowTotalInvested, state.totalInvested)
+                        PnLRow(strings.pnlRowTotalRealized, state.totalRealized)
+                        PnLRow(strings.pnlRowBestTrade, state.bestTrade, LocalKBLearningColorsPalette.current.profitGreen)
+                        PnLRow(strings.pnlRowWorstTrade, state.worstTrade, LocalKBLearningColorsPalette.current.lossRed)
+                        PnLRow(strings.pnlRowAvgProfitPerTrade, state.avgProfitPerTrade)
+                        PnLRow(strings.pnlRowBuyOrders, state.totalBuy.toString())
+                        PnLRow(strings.pnlRowSellOrders, state.totalSell.toString())
                     }
                 }
             }

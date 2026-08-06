@@ -45,6 +45,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import dev.kbwallet.app.core.i18n.appStrings
 import dev.kbwallet.app.theme.LocalKBLearningColorsPalette
 import dev.kbwallet.app.trade.presentation.common.component.rememberCurrencyVisualTransformation
 import org.jetbrains.compose.resources.stringResource
@@ -57,6 +58,7 @@ fun TradeScreen(
     onSubmitClicked: () -> Unit,
     onToggleMode: () -> Unit,
 ) {
+    val strings = appStrings()
     val accentColor = when (tradeType) {
         TradeType.BUY -> MaterialTheme.colorScheme.primary
         TradeType.SELL -> LocalKBLearningColorsPalette.current.lossRed
@@ -128,7 +130,7 @@ fun TradeScreen(
                     modifier = Modifier.padding(horizontal = 8.dp),
                 )
                 Text(
-                    text = state.coin?.symbol ?: "Coin",
+                    text = state.coin?.symbol ?: strings.tradeCoinFallback,
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = if (state.isAmountInUnits) FontWeight.Bold else FontWeight.Normal,
                     color = if (state.isAmountInUnits) MaterialTheme.colorScheme.primary
@@ -141,8 +143,8 @@ fun TradeScreen(
             // ── Title ──
             Text(
                 text = when (tradeType) {
-                    TradeType.BUY -> if (state.isAmountInUnits) "Coin Amount" else "Buy Amount"
-                    TradeType.SELL -> if (state.isAmountInUnits) "Coin Amount" else "Sell Amount"
+                    TradeType.BUY -> if (state.isAmountInUnits) strings.tradeCoinAmountLabel else strings.tradeBuyAmountLabel
+                    TradeType.SELL -> if (state.isAmountInUnits) strings.tradeCoinAmountLabel else strings.tradeSellAmountLabel
                 },
                 style = MaterialTheme.typography.bodyMedium,
                 color = Color.Gray,
@@ -199,8 +201,8 @@ fun TradeScreen(
         ) {
             Text(
                 text = when (tradeType) {
-                    TradeType.BUY -> "Buy"
-                    TradeType.SELL -> "Sell"
+                    TradeType.BUY -> strings.tradeBuyButton
+                    TradeType.SELL -> strings.tradeSellButton
                 },
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold,

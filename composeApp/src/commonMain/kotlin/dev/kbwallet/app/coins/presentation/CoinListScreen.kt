@@ -31,6 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
+import dev.kbwallet.app.core.i18n.appStrings
 import dev.kbwallet.app.theme.LocalKBLearningColorsPalette
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -41,6 +42,7 @@ fun CoinListScreen(
 ) {
     val coinsListViewModel = koinViewModel<CoinsListViewModel>()
     val state by coinsListViewModel.state.collectAsStateWithLifecycle()
+    val strings = appStrings()
 
     LazyColumn(
         modifier = Modifier
@@ -52,7 +54,7 @@ fun CoinListScreen(
         // ── Header ──
         item {
             Text(
-                text = "Popular Coins",
+                text = strings.coinsListTitle,
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground,
