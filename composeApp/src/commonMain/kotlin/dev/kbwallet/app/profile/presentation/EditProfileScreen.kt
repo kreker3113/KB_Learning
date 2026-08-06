@@ -41,15 +41,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import kblearning.composeapp.generated.resources.Res
-import kblearning.composeapp.generated.resources.action_back
-import kblearning.composeapp.generated.resources.edit_profile_display_name_label
-import kblearning.composeapp.generated.resources.edit_profile_email_label
-import kblearning.composeapp.generated.resources.edit_profile_save_button
-import kblearning.composeapp.generated.resources.edit_profile_title
-import kblearning.composeapp.generated.resources.edit_profile_update_success
+import dev.kbwallet.app.core.i18n.appStrings
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,12 +54,12 @@ fun EditProfileScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    val strings = appStrings()
 
     var displayName by remember { mutableStateOf(state.displayName) }
     var email by remember { mutableStateOf(state.email) }
 
     val isFormValid = displayName.isNotBlank() && email.isNotBlank()
-    val updateSuccessMessage = stringResource(Res.string.edit_profile_update_success)
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -74,7 +67,7 @@ fun EditProfileScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = stringResource(Res.string.edit_profile_title),
+                        text = strings.editProfileTitle,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onBackground,
                     )
@@ -83,7 +76,7 @@ fun EditProfileScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(Res.string.action_back),
+                            contentDescription = strings.actionBack,
                             tint = MaterialTheme.colorScheme.onBackground,
                         )
                     }
@@ -127,7 +120,7 @@ fun EditProfileScreen(
             OutlinedTextField(
                 value = displayName,
                 onValueChange = { displayName = it },
-                label = { Text(stringResource(Res.string.edit_profile_display_name_label)) },
+                label = { Text(strings.editProfileDisplayNameLabel) },
                 singleLine = true,
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.fillMaxWidth(),
@@ -146,7 +139,7 @@ fun EditProfileScreen(
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text(stringResource(Res.string.edit_profile_email_label)) },
+                label = { Text(strings.editProfileEmailLabel) },
                 singleLine = true,
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.fillMaxWidth(),
@@ -167,7 +160,7 @@ fun EditProfileScreen(
                     viewModel.updateDisplayName(displayName)
                     viewModel.updateEmail(email)
                     scope.launch {
-                        snackbarHostState.showSnackbar(updateSuccessMessage)
+                        snackbarHostState.showSnackbar(strings.editProfileUpdateSuccess)
                     }
                 },
                 enabled = isFormValid,
@@ -182,7 +175,7 @@ fun EditProfileScreen(
                 ),
             ) {
                 Text(
-                    text = stringResource(Res.string.edit_profile_save_button),
+                    text = strings.editProfileSaveButton,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
                 )

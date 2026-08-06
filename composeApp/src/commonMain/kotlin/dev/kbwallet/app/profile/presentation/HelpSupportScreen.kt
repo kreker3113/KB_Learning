@@ -44,43 +44,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kblearning.composeapp.generated.resources.Res
-import kblearning.composeapp.generated.resources.action_back
-import kblearning.composeapp.generated.resources.content_desc_collapse
-import kblearning.composeapp.generated.resources.content_desc_expand
-import kblearning.composeapp.generated.resources.faq_a1
-import kblearning.composeapp.generated.resources.faq_a2
-import kblearning.composeapp.generated.resources.faq_a3
-import kblearning.composeapp.generated.resources.faq_a4
-import kblearning.composeapp.generated.resources.faq_a5
-import kblearning.composeapp.generated.resources.faq_q1
-import kblearning.composeapp.generated.resources.faq_q2
-import kblearning.composeapp.generated.resources.faq_q3
-import kblearning.composeapp.generated.resources.faq_q4
-import kblearning.composeapp.generated.resources.faq_q5
-import kblearning.composeapp.generated.resources.help_about_heading
-import kblearning.composeapp.generated.resources.help_about_tagline
-import kblearning.composeapp.generated.resources.help_about_version
-import kblearning.composeapp.generated.resources.help_contact_heading
-import kblearning.composeapp.generated.resources.help_contact_live_chat
-import kblearning.composeapp.generated.resources.help_faq_heading
-import kblearning.composeapp.generated.resources.help_title
-import org.jetbrains.compose.resources.stringResource
+import dev.kbwallet.app.core.i18n.appStrings
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HelpSupportScreen(
     onNavigateBack: () -> Unit,
 ) {
+    val strings = appStrings()
     val faqItems = listOf(
-        stringResource(Res.string.faq_q1) to stringResource(Res.string.faq_a1),
-        stringResource(Res.string.faq_q2) to stringResource(Res.string.faq_a2),
-        stringResource(Res.string.faq_q3) to stringResource(Res.string.faq_a3),
-        stringResource(Res.string.faq_q4) to stringResource(Res.string.faq_a4),
-        stringResource(Res.string.faq_q5) to stringResource(Res.string.faq_a5),
+        strings.faqQ1 to strings.faqA1,
+        strings.faqQ2 to strings.faqA2,
+        strings.faqQ3 to strings.faqA3,
+        strings.faqQ4 to strings.faqA4,
+        strings.faqQ5 to strings.faqA5,
     )
 
     Scaffold(
@@ -88,7 +67,7 @@ fun HelpSupportScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = stringResource(Res.string.help_title),
+                        text = strings.helpTitle,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onBackground,
                     )
@@ -97,7 +76,7 @@ fun HelpSupportScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(Res.string.action_back),
+                            contentDescription = strings.actionBack,
                             tint = MaterialTheme.colorScheme.onBackground,
                         )
                     }
@@ -119,7 +98,7 @@ fun HelpSupportScreen(
             // ── FAQ ──
             item {
                 Text(
-                    text = stringResource(Res.string.help_faq_heading),
+                    text = strings.helpFaqHeading,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground,
@@ -129,7 +108,12 @@ fun HelpSupportScreen(
 
             faqItems.forEach { (question, answer) ->
                 item {
-                    FaqCard(question = question, answer = answer)
+                    FaqCard(
+                        question = question,
+                        answer = answer,
+                        collapseLabel = strings.contentDescCollapse,
+                        expandLabel = strings.contentDescExpand,
+                    )
                 }
             }
 
@@ -137,7 +121,7 @@ fun HelpSupportScreen(
             item {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = stringResource(Res.string.help_contact_heading),
+                    text = strings.helpContactHeading,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground,
@@ -166,7 +150,7 @@ fun HelpSupportScreen(
                             modifier = Modifier.padding(vertical = 12.dp),
                             color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f),
                         )
-                        ContactRow(icon = Icons.Default.Chat, label = stringResource(Res.string.help_contact_live_chat))
+                        ContactRow(icon = Icons.Default.Chat, label = strings.helpContactLiveChat)
                     }
                 }
             }
@@ -175,7 +159,7 @@ fun HelpSupportScreen(
             item {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = stringResource(Res.string.help_about_heading),
+                    text = strings.helpAboutHeading,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground,
@@ -203,13 +187,13 @@ fun HelpSupportScreen(
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = stringResource(Res.string.help_about_version),
+                            text = strings.helpAboutVersion,
                             style = MaterialTheme.typography.bodyMedium,
                             color = Color.Gray,
                         )
                         Spacer(modifier = Modifier.height(2.dp))
                         Text(
-                            text = stringResource(Res.string.help_about_tagline),
+                            text = strings.helpAboutTagline,
                             style = MaterialTheme.typography.bodySmall,
                             color = Color.Gray,
                         )
@@ -221,7 +205,7 @@ fun HelpSupportScreen(
 }
 
 @Composable
-private fun FaqCard(question: String, answer: String) {
+private fun FaqCard(question: String, answer: String, collapseLabel: String, expandLabel: String) {
     var expanded by remember { mutableStateOf(false) }
 
     Box(
@@ -256,9 +240,7 @@ private fun FaqCard(question: String, answer: String) {
                 )
                 Icon(
                     imageVector = Icons.Default.ChevronRight,
-                    contentDescription = stringResource(
-                        if (expanded) Res.string.content_desc_collapse else Res.string.content_desc_expand
-                    ),
+                    contentDescription = if (expanded) collapseLabel else expandLabel,
                     tint = Color.Gray,
                     modifier = Modifier
                         .size(24.dp)

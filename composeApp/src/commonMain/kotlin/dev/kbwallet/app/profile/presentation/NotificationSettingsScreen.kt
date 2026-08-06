@@ -39,23 +39,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import kblearning.composeapp.generated.resources.Res
-import kblearning.composeapp.generated.resources.action_back
-import kblearning.composeapp.generated.resources.notif_email_subtitle
-import kblearning.composeapp.generated.resources.notif_email_title
-import kblearning.composeapp.generated.resources.notif_news_subtitle
-import kblearning.composeapp.generated.resources.notif_news_title
-import kblearning.composeapp.generated.resources.notif_price_alerts_subtitle
-import kblearning.composeapp.generated.resources.notif_price_alerts_title
-import kblearning.composeapp.generated.resources.notif_push_subtitle
-import kblearning.composeapp.generated.resources.notif_push_title
-import kblearning.composeapp.generated.resources.notif_trade_confirmations_subtitle
-import kblearning.composeapp.generated.resources.notif_trade_confirmations_title
-import kblearning.composeapp.generated.resources.notifications_title
-import kblearning.composeapp.generated.resources.section_general
-import kblearning.composeapp.generated.resources.section_other
-import kblearning.composeapp.generated.resources.section_trading
-import org.jetbrains.compose.resources.stringResource
+import dev.kbwallet.app.core.i18n.appStrings
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,13 +49,14 @@ fun NotificationSettingsScreen(
 ) {
     val viewModel = koinViewModel<ProfileViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val strings = appStrings()
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = stringResource(Res.string.notifications_title),
+                        text = strings.notificationsTitle,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onBackground,
                     )
@@ -80,7 +65,7 @@ fun NotificationSettingsScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(Res.string.action_back),
+                            contentDescription = strings.actionBack,
                             tint = MaterialTheme.colorScheme.onBackground,
                         )
                     }
@@ -101,13 +86,13 @@ fun NotificationSettingsScreen(
         ) {
             // ── GENERAL ──
             item {
-                SectionHeader(stringResource(Res.string.section_general))
+                SectionHeader(strings.sectionGeneral)
             }
             item {
                 ToggleItem(
                     icon = Icons.Default.Notifications,
-                    title = stringResource(Res.string.notif_push_title),
-                    subtitle = stringResource(Res.string.notif_push_subtitle),
+                    title = strings.notifPushTitle,
+                    subtitle = strings.notifPushSubtitle,
                     checked = state.pushNotifications,
                     onToggle = { viewModel.togglePushNotifications() },
                 )
@@ -115,8 +100,8 @@ fun NotificationSettingsScreen(
             item {
                 ToggleItem(
                     icon = Icons.Default.Email,
-                    title = stringResource(Res.string.notif_email_title),
-                    subtitle = stringResource(Res.string.notif_email_subtitle),
+                    title = strings.notifEmailTitle,
+                    subtitle = strings.notifEmailSubtitle,
                     checked = state.emailNotifications,
                     onToggle = { viewModel.toggleEmailNotifications() },
                 )
@@ -125,13 +110,13 @@ fun NotificationSettingsScreen(
             // ── TRADING ──
             item {
                 Spacer(modifier = Modifier.height(8.dp))
-                SectionHeader(stringResource(Res.string.section_trading))
+                SectionHeader(strings.sectionTrading)
             }
             item {
                 ToggleItem(
                     icon = Icons.Default.TrendingUp,
-                    title = stringResource(Res.string.notif_price_alerts_title),
-                    subtitle = stringResource(Res.string.notif_price_alerts_subtitle),
+                    title = strings.notifPriceAlertsTitle,
+                    subtitle = strings.notifPriceAlertsSubtitle,
                     checked = state.priceAlerts,
                     onToggle = { viewModel.togglePriceAlerts() },
                 )
@@ -139,8 +124,8 @@ fun NotificationSettingsScreen(
             item {
                 ToggleItem(
                     icon = Icons.Default.Receipt,
-                    title = stringResource(Res.string.notif_trade_confirmations_title),
-                    subtitle = stringResource(Res.string.notif_trade_confirmations_subtitle),
+                    title = strings.notifTradeConfirmationsTitle,
+                    subtitle = strings.notifTradeConfirmationsSubtitle,
                     checked = state.tradeConfirmations,
                     onToggle = { viewModel.toggleTradeConfirmations() },
                 )
@@ -149,13 +134,13 @@ fun NotificationSettingsScreen(
             // ── OTHER ──
             item {
                 Spacer(modifier = Modifier.height(8.dp))
-                SectionHeader(stringResource(Res.string.section_other))
+                SectionHeader(strings.sectionOther)
             }
             item {
                 ToggleItem(
                     icon = Icons.Default.Newspaper,
-                    title = stringResource(Res.string.notif_news_title),
-                    subtitle = stringResource(Res.string.notif_news_subtitle),
+                    title = strings.notifNewsTitle,
+                    subtitle = strings.notifNewsSubtitle,
                     checked = state.newsUpdates,
                     onToggle = { viewModel.toggleNewsUpdates() },
                 )
