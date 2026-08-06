@@ -1,9 +1,17 @@
 package dev.kbwallet.app.library.domain
 
-enum class LibraryLevel(val label: String) {
-    BEGINNER("Beginner"),
-    INTERMEDIATE("Intermediate"),
-    ADVANCED("Advanced"),
+import dev.kbwallet.app.core.i18n.AppStrings
+
+enum class LibraryLevel {
+    BEGINNER,
+    INTERMEDIATE,
+    ADVANCED,
+}
+
+fun LibraryLevel.label(strings: AppStrings): String = when (this) {
+    LibraryLevel.BEGINNER -> strings.libraryLevelBeginner
+    LibraryLevel.INTERMEDIATE -> strings.libraryLevelIntermediate
+    LibraryLevel.ADVANCED -> strings.libraryLevelAdvanced
 }
 
 data class LibraryTopic(

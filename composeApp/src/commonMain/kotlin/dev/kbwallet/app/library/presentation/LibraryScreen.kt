@@ -27,9 +27,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.kbwallet.app.core.i18n.appStrings
 import dev.kbwallet.app.library.domain.LibraryLevel
 import dev.kbwallet.app.library.domain.LibraryContent
 import dev.kbwallet.app.library.domain.LibraryTopic
+import dev.kbwallet.app.library.domain.label
 
 @Composable
 fun LibraryScreen(
@@ -37,6 +39,7 @@ fun LibraryScreen(
     onTopicClicked: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val strings = appStrings()
     val topicsByLevel = LibraryContent.topics.groupBy { it.level }
 
     Column(
@@ -51,20 +54,20 @@ fun LibraryScreen(
             IconButton(onClick = onBack, modifier = Modifier.size(36.dp)) {
                 Icon(
                     Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back",
+                    contentDescription = strings.actionBack,
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
             Spacer(Modifier.width(8.dp))
             Column {
                 Text(
-                    text = "Crypto Library",
+                    text = strings.libraryTitle,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground,
                 )
                 Text(
-                    text = "Everything a beginner should know, start to finish",
+                    text = strings.librarySubtitle,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -80,7 +83,7 @@ fun LibraryScreen(
                 if (topics.isNotEmpty()) {
                     item {
                         Text(
-                            text = level.label,
+                            text = level.label(strings),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.primary,

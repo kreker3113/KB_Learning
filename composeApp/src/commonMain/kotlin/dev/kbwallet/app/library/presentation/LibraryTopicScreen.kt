@@ -24,7 +24,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.kbwallet.app.core.i18n.appStrings
 import dev.kbwallet.app.library.domain.LibraryContent
+import dev.kbwallet.app.library.domain.label
 
 @Composable
 fun LibraryTopicScreen(
@@ -32,6 +34,7 @@ fun LibraryTopicScreen(
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val strings = appStrings()
     val topic = LibraryContent.byId(topicId)
 
     Column(
@@ -46,7 +49,7 @@ fun LibraryTopicScreen(
             IconButton(onClick = onBack, modifier = Modifier.size(36.dp)) {
                 Icon(
                     Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back",
+                    contentDescription = strings.actionBack,
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
@@ -54,7 +57,7 @@ fun LibraryTopicScreen(
 
         if (topic == null) {
             Text(
-                text = "Topic not found",
+                text = strings.libraryTopicNotFound,
                 modifier = Modifier.padding(16.dp),
                 color = MaterialTheme.colorScheme.onBackground,
             )
@@ -66,7 +69,7 @@ fun LibraryTopicScreen(
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
             item {
-                LevelChip(label = topic.level.label)
+                LevelChip(label = topic.level.label(strings))
                 Spacer(Modifier.size(8.dp))
                 Text(
                     text = topic.title,
