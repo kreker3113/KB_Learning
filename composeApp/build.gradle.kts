@@ -67,6 +67,13 @@ kotlin {
         }
     }
 
+    jvm("desktop") {
+        @OptIn(ExperimentalKotlinGradlePluginApi::class)
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_11)
+        }
+    }
+
     sourceSets {
 
         androidMain.dependencies {
@@ -110,6 +117,16 @@ kotlin {
         }
         iosMain.dependencies {
             implementation(libs.ktor.ios)
+        }
+
+        val desktopMain by getting
+        desktopMain.dependencies {
+            implementation(compose.desktop.currentOs)
+            implementation(libs.ktor.cio)
+            // Supplies Dispatchers.Main for Compose Desktop (AWT/Swing event loop) —
+            // Android gets this from kotlinx-coroutines-android, iOS from the native
+            // main dispatcher; the JVM target needs it declared explicitly.
+            implementation(libs.kotlinx.coroutines.swing)
         }
 
         commonTest.dependencies {
@@ -177,6 +194,20 @@ android {
 
 room {
     schemaDirectory("$projectDir/schemas")
+}
+
+compose.desktop {
+    application {
+        mainClass = "dev.kbwallet.app.MainKt"
+
+        nativeDistributions {
+            targetFormats(TargetFormat.Deb, TargetFormat.Rpm, TargetFormat.Dmg, TargetFormat.Msi)
+            packageName = "KB Wallet"
+            packageVersion = "1.0.0"
+            description = "KB Wallet — crypto portfolio & trading simulator"
+            vendor = "KB Wallet"
+        }
+    }
 }
 
 dependencies {

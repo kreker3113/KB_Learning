@@ -6,7 +6,7 @@
 
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.0-7F52FF?logo=kotlin&logoColor=white)](https://kotlinlang.org)
 [![Compose Multiplatform](https://img.shields.io/badge/Compose-Multiplatform-4285F4?logo=jetpackcompose&logoColor=white)](https://www.jetbrains.com/lp/compose-multiplatform/)
-[![Platform](https://img.shields.io/badge/platform-Android%20%7C%20iOS-lightgrey)]()
+[![Platform](https://img.shields.io/badge/platform-Android%20%7C%20iOS%20%7C%20Desktop-lightgrey)]()
 [![Ktor](https://img.shields.io/badge/backend-Ktor-orange?logo=ktor&logoColor=white)](https://ktor.io)
 
 </div>
@@ -15,7 +15,7 @@
 
 ## What it is
 
-KB Wallet is a Compose Multiplatform app (Android + iOS from one Kotlin codebase) for tracking a crypto portfolio, practicing trades in a simulated market, and learning the fundamentals of crypto — from "what is a blockchain" to reading candlestick charts.
+KB Wallet is a Compose Multiplatform app (Android, iOS, and Desktop from one Kotlin codebase) for tracking a crypto portfolio, practicing trades in a simulated market, and learning the fundamentals of crypto — from "what is a blockchain" to reading candlestick charts.
 
 ## Features
 
@@ -33,7 +33,7 @@ KB Wallet is a Compose Multiplatform app (Android + iOS from one Kotlin codebase
 | Layer | Choice |
 |---|---|
 | UI | Compose Multiplatform (Material 3) |
-| Language | Kotlin Multiplatform (Android + iOS) |
+| Language | Kotlin Multiplatform (Android + iOS + Desktop) |
 | DI | Koin |
 | Networking | Ktor Client |
 | Persistence | Room (KMP) |
@@ -49,7 +49,8 @@ KB_Learning/
 │   └── src/
 │       ├── commonMain/    # Shared UI + business logic (feature packages under app/)
 │       ├── androidMain/   # Android-specific implementations
-│       └── iosMain/       # iOS-specific implementations
+│       ├── iosMain/       # iOS-specific implementations
+│       └── desktopMain/   # Desktop (JVM) specific implementations
 ├── iosApp/                # iOS app entry point (SwiftUI shell hosting Compose)
 └── server/                # Ktor backend: auth, user accounts, token issuing
 ```
@@ -62,6 +63,7 @@ Client code under `composeApp/src/commonMain/kotlin/dev/kbwallet/app/` is organi
 - JDK 21
 - Android Studio (latest stable) for Android
 - Xcode + a Mac for the iOS target (Kotlin/Native's iOS targets can't be built on Linux/Windows)
+- Desktop has no extra prerequisite beyond JDK 21 — it builds and runs on Linux, macOS, and Windows alike, from any of those OSes
 
 **Build & run**
 
@@ -77,6 +79,32 @@ Client code under `composeApp/src/commonMain/kotlin/dev/kbwallet/app/` is organi
 ```
 
 For iOS, open `iosApp/iosApp.xcodeproj` in Xcode and run — it hosts the shared Compose UI via the `ComposeApp` framework produced by the `:composeApp` module.
+
+### Desktop
+
+Run it straight from Gradle, no packaging needed:
+
+```bash
+./gradlew :composeApp:run
+```
+
+To produce a redistributable native app, build the installer for your OS (each must be built on that OS — Compose's `jpackage`-based packaging doesn't cross-compile):
+
+| OS | Command | Output |
+|---|---|---|
+| Linux (Debian/Ubuntu/Mint) | `./gradlew :composeApp:packageDeb` | `composeApp/build/compose/binaries/main/deb/*.deb` — install with `sudo apt install ./kb-wallet_*.deb` |
+| Linux (Fedora/RHEL) | `./gradlew :composeApp:packageRpm` | `composeApp/build/compose/binaries/main/rpm/*.rpm` (needs `rpmbuild` installed) |
+| macOS | `./gradlew :composeApp:packageDmg` | `composeApp/build/compose/binaries/main/dmg/*.dmg` |
+| Windows | `./gradlew :composeApp:packageMsi` | `composeApp/build/compose/binaries/main/msi/*.msi` (needs the [WiX Toolset](https://wixtoolset.org/) installed) |
+
+Or skip installing altogether and just unpack a portable app image:
+
+```bash
+./gradlew :composeApp:createDistributable
+# → composeApp/build/compose/binaries/main/app/KB Wallet/
+```
+
+All native distributions bundle their own JRE, so end users don't need Java installed. Every format is declared in `composeApp/build.gradle.kts` under `compose.desktop.application.nativeDistributions`.
 
 ## Configuration & secrets
 
