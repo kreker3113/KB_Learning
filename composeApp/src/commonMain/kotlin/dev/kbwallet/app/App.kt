@@ -141,6 +141,7 @@ fun App() {
                     onChartRequested = { coinId, coinName ->
                         navController.navigate(CryptoChart(coinId, coinName))
                     },
+                    onBack = { navController.popBackStack() },
                 )
             }
             composable<Buy> { navBackStackEntry ->
@@ -151,7 +152,8 @@ fun App() {
                         navController.navigate(Portfolio) {
                             popUpTo(Portfolio) { inclusive = true }
                         }
-                    }
+                    },
+                    onBack = { navController.popBackStack() },
                 )
             }
             composable<Sell> { navBackStackEntry ->
@@ -162,7 +164,8 @@ fun App() {
                         navController.navigate(Portfolio) {
                             popUpTo(Portfolio) { inclusive = true }
                         }
-                    }
+                    },
+                    onBack = { navController.popBackStack() },
                 )
             }
             composable<CryptoChart> { navBackStackEntry ->

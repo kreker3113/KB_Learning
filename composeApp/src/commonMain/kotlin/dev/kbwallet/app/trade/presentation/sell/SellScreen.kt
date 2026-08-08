@@ -17,6 +17,7 @@ import androidx.lifecycle.repeatOnLifecycle
 fun SellScreen(
     coinId: String,
     navigateToPortfolio: () -> Unit,
+    onBack: () -> Unit = {},
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val viewModel = koinViewModel<SellViewModel>(
@@ -42,5 +43,6 @@ fun SellScreen(
         onAmountChange = viewModel::onAmountChanged,
         onSubmitClicked = viewModel::onSellClicked,
         onToggleMode = viewModel::onToggleMode,
+        onBack = onBack,
     )
 }
