@@ -32,6 +32,11 @@ val generatedApiKeysDir = layout.buildDirectory.dir("generated/apiKeys/commonMai
 
 val generateApiKeys by tasks.registering {
     val outputDir = generatedApiKeysDir
+    // Without this, Gradle has no idea the generated file depends on
+    // local.properties/the env var, so it happily serves a stale, cached
+    // ApiKeys.kt after either one changes — which is exactly how an updated
+    // key silently kept building against the old (dead) one.
+    inputs.property("coinRankingApiKey", coinRankingApiKey)
     outputs.dir(outputDir)
     doLast {
         val packageDir = outputDir.get().asFile.resolve("dev/kbwallet/app/core/network")
