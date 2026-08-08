@@ -10,7 +10,6 @@ import dev.kbwallet.app.portfolio.domain.PortfolioRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -20,11 +19,17 @@ class DashboardViewModel(
     private val getCoinsListUseCase: GetCoinsListUseCase,
 ) : ViewModel() {
 
+    // isLoading starts true (below) and the collectors in init{} below flip it to
+    // false once, permanently, when their first real value arrives — there used
+    // to be an onStart { isLoading = true } here too, resetting it back to true
+    // on every resubscribe (i.e. every time you left this tab for 5+ seconds and
+    // came back, per WhileSubscribed(5000)). Nothing in that resubscribe path
+    // ever set it back to false again — the data collectors below only run once,
+    // for the ViewModel's whole lifetime — so the spinner got stuck forever the
+    // moment you revisited Dashboard after being away. That's what "namertvo
+    // zavis" actually was.
     private val _state = MutableStateFlow(DashboardState(isLoading = true))
     val state: StateFlow<DashboardState> = _state
-        .onStart {
-            _state.update { it.copy(isLoading = true) }
-        }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),

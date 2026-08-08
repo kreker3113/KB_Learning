@@ -1,9 +1,10 @@
 package dev.kbwallet.app.theme.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -14,6 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -25,8 +28,16 @@ import androidx.compose.ui.unit.sp
  * screen) that had each drifted to slightly different padding/corner-radius/
  * font-size values, which is why the cards didn't line up visually between
  * screens (and sometimes even within the same row, since nothing forced a
- * shared height). One definition, one fixed height per size, used
- * everywhere instead.
+ * shared height).
+ *
+ * The height itself is intentionally NOT a fixed dp constant — an earlier
+ * version of this component pinned a guessed height, which clipped the
+ * bottom of the value text once real font metrics (line height, not just
+ * the nominal sp size) were taken into account. Instead this fills the
+ * height of its parent, and callers put their Row in
+ * `Modifier.height(IntrinsicSize.Max)` so every card in the row stretches to
+ * match whichever one actually needs the most room — correct regardless of
+ * font/locale/DPI instead of a magic number that happens to fit today.
  */
 @Composable
 fun StatCard(
@@ -39,11 +50,11 @@ fun StatCard(
 ) {
     Box(
         modifier = modifier
-            .height(size.height)
+            .fillMaxHeight()
             .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(size.cornerRadius))
             .padding(size.padding)
     ) {
-        Column {
+        Column(verticalArrangement = Arrangement.spacedBy(size.titleValueGap)) {
             Text(
                 text = title,
                 color = Color.Gray,
@@ -65,15 +76,15 @@ fun StatCard(
 }
 
 enum class StatCardSize(
-    val height: androidx.compose.ui.unit.Dp,
-    val padding: androidx.compose.ui.unit.Dp,
-    val cornerRadius: androidx.compose.ui.unit.Dp,
-    val titleFontSize: androidx.compose.ui.unit.TextUnit,
-    val valueFontSize: androidx.compose.ui.unit.TextUnit,
+    val padding: Dp,
+    val cornerRadius: Dp,
+    val titleValueGap: Dp,
+    val titleFontSize: TextUnit,
+    val valueFontSize: TextUnit,
 ) {
     /** Dashboard, History, Profile, P&L — three cards per row. */
-    Regular(height = 72.dp, padding = 16.dp, cornerRadius = 16.dp, titleFontSize = 12.sp, valueFontSize = 18.sp),
+    Regular(padding = 16.dp, cornerRadius = 16.dp, titleValueGap = 4.dp, titleFontSize = 12.sp, valueFontSize = 18.sp),
 
     /** Simulator's denser grids (up to six cards across two rows). */
-    Compact(height = 56.dp, padding = 10.dp, cornerRadius = 12.dp, titleFontSize = 11.sp, valueFontSize = 15.sp),
+    Compact(padding = 10.dp, cornerRadius = 12.dp, titleValueGap = 2.dp, titleFontSize = 11.sp, valueFontSize = 15.sp),
 }

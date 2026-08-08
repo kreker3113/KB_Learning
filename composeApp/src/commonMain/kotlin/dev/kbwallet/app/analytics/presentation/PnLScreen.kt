@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -67,7 +68,7 @@ fun PnLScreen(onBack: () -> Unit) {
             ) {
                 // Summary Cards
                 item {
-                    Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth()) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Max)) {
                         StatCard(strings.pnlStatTotalTrades, state.totalTrades.toString(), Modifier.weight(1f))
                         StatCard(strings.pnlStatWinRate, state.winRate, Modifier.weight(1f), MaterialTheme.colorScheme.primary)
                         StatCard(strings.pnlStatActiveOrders, state.activeLimitOrders.toString(), Modifier.weight(1f))
