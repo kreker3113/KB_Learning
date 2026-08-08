@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.kbwallet.app.core.i18n.appStrings
 import dev.kbwallet.app.theme.LocalKBLearningColorsPalette
+import dev.kbwallet.app.theme.component.StatCard
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -67,9 +68,9 @@ fun PnLScreen(onBack: () -> Unit) {
                 // Summary Cards
                 item {
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth()) {
-                        PnLStatCard(strings.pnlStatTotalTrades, state.totalTrades.toString(), Modifier.weight(1f))
-                        PnLStatCard(strings.pnlStatWinRate, state.winRate, Modifier.weight(1f), MaterialTheme.colorScheme.primary)
-                        PnLStatCard(strings.pnlStatActiveOrders, state.activeLimitOrders.toString(), Modifier.weight(1f))
+                        StatCard(strings.pnlStatTotalTrades, state.totalTrades.toString(), Modifier.weight(1f))
+                        StatCard(strings.pnlStatWinRate, state.winRate, Modifier.weight(1f), MaterialTheme.colorScheme.primary)
+                        StatCard(strings.pnlStatActiveOrders, state.activeLimitOrders.toString(), Modifier.weight(1f))
                     }
                 }
 
@@ -116,26 +117,6 @@ fun PnLScreen(onBack: () -> Unit) {
                     }
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun PnLStatCard(
-    title: String,
-    value: String,
-    modifier: Modifier = Modifier,
-    valueColor: Color = MaterialTheme.colorScheme.onBackground,
-) {
-    Box(
-        modifier = modifier
-            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(16.dp))
-            .padding(16.dp)
-    ) {
-        Column {
-            Text(title, color = Color.Gray, fontSize = 12.sp)
-            Spacer(Modifier.height(4.dp))
-            Text(value, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = valueColor)
         }
     }
 }

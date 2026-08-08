@@ -22,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -268,11 +269,25 @@ private fun MainScaffold(navController: NavHostController) {
                         NavigationBarItem(
                             selected = selected,
                             onClick = {
-                                when (tab) {
-                                    BottomTab.Dashboard -> innerNavController.navigate(Dashboard)
-                                    BottomTab.Portfolio -> innerNavController.navigate(Portfolio)
-                                    BottomTab.History -> innerNavController.navigate(History)
-                                    BottomTab.Profile -> innerNavController.navigate(Profile)
+                                val destination = when (tab) {
+                                    BottomTab.Dashboard -> Dashboard
+                                    BottomTab.Portfolio -> Portfolio
+                                    BottomTab.History -> History
+                                    BottomTab.Profile -> Profile
+                                }
+                                innerNavController.navigate(destination) {
+                                    // Standard bottom-nav pattern: reuse the single instance of
+                                    // each tab instead of stacking a fresh one (and a fresh
+                                    // ViewModel with its own live DB/network collectors) on
+                                    // every tap — without this the back stack grew unbounded
+                                    // and old, off-screen DashboardViewModels kept polling
+                                    // forever, which is what made the Dashboard "hang" more
+                                    // often the longer the app had been open.
+                                    popUpTo(innerNavController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
                                 }
                             },
                             icon = {

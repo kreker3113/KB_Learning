@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.kbwallet.app.core.i18n.appStrings
+import dev.kbwallet.app.theme.component.StatCard
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -126,18 +127,18 @@ fun ProfileScreen(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                ProfileStatCard(
+                StatCard(
                     title = strings.profileStatTotalTrades,
                     value = state.totalTrades.toString(),
                     modifier = Modifier.weight(1f),
                 )
-                ProfileStatCard(
+                StatCard(
                     title = strings.profileStatWinRate,
                     value = state.winRate,
                     modifier = Modifier.weight(1f),
                     valueColor = MaterialTheme.colorScheme.primary,
                 )
-                ProfileStatCard(
+                StatCard(
                     title = strings.profileStatDaysActive,
                     value = state.daysActive,
                     modifier = Modifier.weight(1f),
@@ -192,38 +193,6 @@ fun ProfileScreen(
                 title = strings.profileMenuHelpTitle,
                 subtitle = strings.profileMenuHelpSubtitle,
                 onClick = onNavigateToHelp,
-            )
-        }
-    }
-}
-
-@Composable
-private fun ProfileStatCard(
-    title: String,
-    value: String,
-    modifier: Modifier = Modifier,
-    valueColor: Color = MaterialTheme.colorScheme.onBackground,
-) {
-    Box(
-        modifier = modifier
-            .background(
-                MaterialTheme.colorScheme.surface,
-                RoundedCornerShape(16.dp)
-            )
-            .padding(16.dp)
-    ) {
-        Column {
-            Text(
-                text = title,
-                color = Color.Gray,
-                fontSize = 12.sp,
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = value,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = valueColor,
             )
         }
     }

@@ -36,6 +36,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import dev.kbwallet.app.core.i18n.appStrings
 import dev.kbwallet.app.theme.LocalKBLearningColorsPalette
+import dev.kbwallet.app.theme.component.StatCard
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -113,17 +114,17 @@ private fun DashboardContent(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                DashboardStatCard(
+                StatCard(
                     title = strings.dashboardStatPortfolioValue,
                     value = state.portfolioValue,
                     modifier = Modifier.weight(1f)
                 )
-                DashboardStatCard(
+                StatCard(
                     title = strings.dashboardStatAssets,
                     value = state.coinCount.toString(),
                     modifier = Modifier.weight(1f)
                 )
-                DashboardStatCard(
+                StatCard(
                     title = strings.dashboardStat24hChange,
                     value = state.recentPerformance,
                     modifier = Modifier.weight(1f),
@@ -290,38 +291,6 @@ private fun DashboardContent(
                     }
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun DashboardStatCard(
-    title: String,
-    value: String,
-    modifier: Modifier = Modifier,
-    valueColor: Color = MaterialTheme.colorScheme.onBackground,
-) {
-    Box(
-        modifier = modifier
-            .background(
-                MaterialTheme.colorScheme.surface,
-                RoundedCornerShape(16.dp)
-            )
-            .padding(16.dp)
-    ) {
-        Column {
-            Text(
-                text = title,
-                color = Color.Gray,
-                fontSize = 12.sp,
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = value,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = valueColor,
-            )
         }
     }
 }

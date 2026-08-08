@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.kbwallet.app.core.i18n.appStrings
 import dev.kbwallet.app.theme.LocalKBLearningColorsPalette
+import dev.kbwallet.app.theme.component.StatCard
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -272,38 +273,6 @@ private fun TransactionItem(transaction: TransactionUiModel) {
                     )
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun StatCard(
-    title: String,
-    value: String,
-    modifier: Modifier = Modifier,
-    valueColor: Color = MaterialTheme.colorScheme.onBackground,
-) {
-    Box(
-        modifier = modifier
-            .background(
-                MaterialTheme.colorScheme.surface,
-                RoundedCornerShape(16.dp)
-            )
-            .padding(16.dp)
-    ) {
-        Column {
-            Text(
-                text = title,
-                color = Color.Gray,
-                fontSize = 12.sp,
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = value,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = valueColor,
-            )
         }
     }
 }
