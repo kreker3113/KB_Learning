@@ -26,7 +26,13 @@ class ProfileViewModel(
 
     private fun loadSettings() {
         viewModelScope.launch {
-            _state.value = userRepository.getProfileState()
+            // Fetch initial state if empty (or to populate the flow)
+            userRepository.getProfileState()
+            
+            // Collect updates from the flow
+            userRepository.profileState.collect { newState ->
+                _state.value = newState
+            }
         }
     }
 

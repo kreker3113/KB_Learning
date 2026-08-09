@@ -4,6 +4,11 @@ import dev.kbwallet.app.core.security.SecureTokenStorage
 import dev.kbwallet.app.profile.domain.UserRepository
 import dev.kbwallet.app.profile.presentation.ProfileState
 
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filterNotNull
+
 class UserRepositoryImpl(
     private val secureStorage: SecureTokenStorage
 ) : UserRepository {
@@ -18,7 +23,13 @@ class UserRepositoryImpl(
     private val KEY_BIOMETRIC_AUTH = "user_biometric"
     private val KEY_TWO_FACTOR_AUTH = "user_two_factor"
 
+    private val _profileStateFlow = MutableStateFlow<ProfileState?>(null)
+    override val profileState: Flow<ProfileState> = _profileStateFlow.asStateFlow().filterNotNull()
+
     override suspend fun getProfileState(): ProfileState {
+        val cached = _profileStateFlow.value
+        if (cached != null) return cached
+
         val displayName = secureStorage.get(KEY_DISPLAY_NAME) ?: "Crypto Enthusiast"
         val email = secureStorage.get(KEY_EMAIL) ?: "crypto@example.com"
         val pushNotif = secureStorage.get(KEY_PUSH_NOTIFICATIONS)?.toBooleanStrictOrNull() ?: true
@@ -29,7 +40,7 @@ class UserRepositoryImpl(
         val biometric = secureStorage.get(KEY_BIOMETRIC_AUTH)?.toBooleanStrictOrNull() ?: false
         val twoFactor = secureStorage.get(KEY_TWO_FACTOR_AUTH)?.toBooleanStrictOrNull() ?: false
 
-        return ProfileState(
+        val state = ProfileState(
             displayName = displayName,
             email = email,
             avatarInitial = displayName.firstOrNull()?.uppercase() ?: "C",
@@ -41,9 +52,12 @@ class UserRepositoryImpl(
             biometricAuth = biometric,
             twoFactorAuth = twoFactor
         )
+        _profileStateFlow.value = state
+        return state
     }
 
     override suspend fun saveProfileState(state: ProfileState) {
+        _profileStateFlow.value = state
         secureStorage.save(KEY_DISPLAY_NAME, state.displayName)
         secureStorage.save(KEY_EMAIL, state.email)
         secureStorage.save(KEY_PUSH_NOTIFICATIONS, state.pushNotifications.toString())
