@@ -29,6 +29,14 @@ interface AppStrings {
     val profileMenuSecuritySubtitle: String
     val profileMenuPnlTitle: String
     val profileMenuPnlSubtitle: String
+    val profileMenuSponsorshipTitle: String
+    val profileMenuSponsorshipSubtitle: String
+    val sponsorshipTitle: String
+    val sponsorshipDesc: String
+    val sponsorshipCoffee: String
+    val sponsorshipCoffeeSub: String
+    val sponsorshipBeer: String
+    val sponsorshipBeerSub: String
     val profileMenuHelpTitle: String
     val profileMenuHelpSubtitle: String
     val profileMenuLanguageTitle: String
@@ -249,6 +257,14 @@ private object EnStrings : AppStrings {
     override val profileMenuSecuritySubtitle = "Protect your account"
     override val profileMenuPnlTitle = "P&L Analytics"
     override val profileMenuPnlSubtitle = "View your trading performance"
+    override val profileMenuSponsorshipTitle = "Support Development"
+    override val profileMenuSponsorshipSubtitle = "Sponsor the author, buy a coffee"
+    override val sponsorshipTitle = "Support KB Learning"
+    override val sponsorshipDesc = "KB Learning is an independent project dedicated to providing the best crypto learning experience. Your support helps maintain server infrastructure, develop new features, and keep the application ad-free."
+    override val sponsorshipCoffee = "One-time Donation"
+    override val sponsorshipCoffeeSub = "Support current development"
+    override val sponsorshipBeer = "Monthly Sponsorship"
+    override val sponsorshipBeerSub = "Help sustain long-term growth"
     override val profileMenuHelpTitle = "Help & Support"
     override val profileMenuHelpSubtitle = "Get help and contact us"
     override val profileMenuLanguageTitle = "Language"
@@ -452,6 +468,14 @@ private object RuStrings : AppStrings {
     override val profileMenuSecuritySubtitle = "Защитите свой аккаунт"
     override val profileMenuPnlTitle = "Аналитика P&L"
     override val profileMenuPnlSubtitle = "Статистика вашей торговли"
+    override val profileMenuSponsorshipTitle = "Поддержать проект"
+    override val profileMenuSponsorshipSubtitle = "Спонсировать автора, купить кофе"
+    override val sponsorshipTitle = "Поддержать проект"
+    override val sponsorshipDesc = "KB Learning — это независимый проект, созданный для комфортного обучения. Ваша поддержка помогает оплачивать серверную инфраструктуру, разрабатывать новые функции и сохранять приложение без рекламы."
+    override val sponsorshipCoffee = "Разовое пожертвование"
+    override val sponsorshipCoffeeSub = "Поддержать текущую разработку"
+    override val sponsorshipBeer = "Ежемесячная поддержка"
+    override val sponsorshipBeerSub = "Помочь долгосрочному развитию"
     override val profileMenuHelpTitle = "Помощь и поддержка"
     override val profileMenuHelpSubtitle = "Получить помощь и связаться с нами"
     override val profileMenuLanguageTitle = "Язык"
