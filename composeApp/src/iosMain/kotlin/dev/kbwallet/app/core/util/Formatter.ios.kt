@@ -7,17 +7,18 @@ import platform.Foundation.NSNumberFormatterDecimalStyle
 actual fun formatFiat(amount: Double, showDecimal: Boolean): String {
     val numberFormatter = NSNumberFormatter()
     numberFormatter.numberStyle = NSNumberFormatterDecimalStyle
+    val absAmount = kotlin.math.abs(amount)
     when {
         showDecimal.not() -> {
             numberFormatter.minimumFractionDigits = 0.toULong()
             numberFormatter.maximumFractionDigits = 0.toULong()
         }
-        amount >= 0.01 -> {
+        absAmount == 0.0 || absAmount >= 0.01 -> {
             numberFormatter.minimumFractionDigits = 2.toULong()
             numberFormatter.maximumFractionDigits = 2.toULong()
         }
         else -> {
-            numberFormatter.minimumFractionDigits = 8.toULong()
+            numberFormatter.minimumFractionDigits = 2.toULong()
             numberFormatter.maximumFractionDigits = 8.toULong()
         }
     }
