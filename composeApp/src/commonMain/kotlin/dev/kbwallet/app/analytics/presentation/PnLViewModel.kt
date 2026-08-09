@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlin.math.round
 
 data class PnLState(
     val totalTrades: Int = 0,
@@ -83,7 +84,7 @@ class PnLViewModel(
                     totalRealized = formatFiat(totalRealized),
                     realizedPnL = formatFiat(pnl),
                     isPnLPositive = pnl >= 0,
-                    winRate = "${"%.0f".format(winRate)}%",
+                    winRate = "${round(winRate).toLong()}%",
                     bestTrade = if (bestTrade != Double.MIN_VALUE) formatFiat(bestTrade) else "—",
                     worstTrade = if (worstTrade != Double.MAX_VALUE) formatFiat(worstTrade) else "—",
                     avgProfitPerTrade = formatFiat(avgProfit),

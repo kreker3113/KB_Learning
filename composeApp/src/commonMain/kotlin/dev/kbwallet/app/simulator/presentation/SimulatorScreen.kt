@@ -41,6 +41,19 @@ import dev.kbwallet.app.theme.LocalKBLearningColorsPalette
 import dev.kbwallet.app.theme.component.StatCard
 import dev.kbwallet.app.theme.component.StatCardSize
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.math.roundToInt
+import kotlin.math.round
+
+/** Format a Double to N decimal places (KMP-safe, no String.format). */
+private fun fmtDec(value: Double, decimals: Int): String {
+    if (decimals <= 0) return round(value).toLong().toString()
+    val factor = listOf(1.0, 10.0, 100.0, 1000.0).getOrElse(decimals) { 1.0 }
+    val rounded = round(value * factor) / factor
+    val parts = rounded.toString().split('.')
+    val intPart = parts[0]
+    val fracPart = (parts.getOrElse(1) { "0" }).take(decimals).padEnd(decimals, '0')
+    return "$intPart.$fracPart"
+}
 
 private val SubtextGray = Color(0xFFAAAAAA)
 
@@ -277,7 +290,7 @@ fun SimulatorScreen(
                                     Icon(Icons.Default.Warning, null, tint = DarkLossRedColor, modifier = Modifier.size(14.dp))
                                     Spacer(Modifier.width(6.dp))
                                     Text(
-                                        text = strings.simulatorLiquidatesAt(formatFiat(liqPreview), "%.1f".format(100.0 / previewLeverage)),
+                                        text = strings.simulatorLiquidatesAt(formatFiat(liqPreview), fmtDec(100.0 / previewLeverage, 1)),
                                         color = DarkLossRedColor,
                                         fontSize = 11.sp,
                                     )
@@ -353,16 +366,16 @@ fun SimulatorScreen(
                     item { Text(strings.simulatorMetricsTitle, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold) }
                     item {
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Max)) {
-                            StatCard(strings.simulatorMetricWinRate, "${"%.0f".format(m.winRate * 100)}%", Modifier.weight(1f), size = StatCardSize.Compact, monospaceValue = true)
-                            StatCard(strings.simulatorMetricProfitFactor, "${"%.2f".format(m.profitFactor)}", Modifier.weight(1f), size = StatCardSize.Compact, monospaceValue = true)
+                            StatCard(strings.simulatorMetricWinRate, "${fmtDec(m.winRate * 100, 0)}%", Modifier.weight(1f), size = StatCardSize.Compact, monospaceValue = true)
+                            StatCard(strings.simulatorMetricProfitFactor, fmtDec(m.profitFactor, 2), Modifier.weight(1f), size = StatCardSize.Compact, monospaceValue = true)
                             StatCard(strings.simulatorMetricTrades, "${m.totalTrades}", Modifier.weight(1f), size = StatCardSize.Compact, monospaceValue = true)
                         }
                     }
                     item {
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Max)) {
-                            StatCard(strings.simulatorMetricMaxDD, "$${"%.0f".format(m.maxDrawdown)}", Modifier.weight(1f), DarkLossRedColor, size = StatCardSize.Compact, monospaceValue = true)
-                            StatCard(strings.simulatorMetricBest, "$${"%.0f".format(m.bestTrade)}", Modifier.weight(1f), DarkProfitGreenColor, size = StatCardSize.Compact, monospaceValue = true)
-                            StatCard(strings.simulatorMetricSharpe, "${"%.2f".format(m.sharpeRatio)}", Modifier.weight(1f), size = StatCardSize.Compact, monospaceValue = true)
+                            StatCard(strings.simulatorMetricMaxDD, "$${fmtDec(m.maxDrawdown, 0)}", Modifier.weight(1f), DarkLossRedColor, size = StatCardSize.Compact, monospaceValue = true)
+                            StatCard(strings.simulatorMetricBest, "$${fmtDec(m.bestTrade, 0)}", Modifier.weight(1f), DarkProfitGreenColor, size = StatCardSize.Compact, monospaceValue = true)
+                            StatCard(strings.simulatorMetricSharpe, fmtDec(m.sharpeRatio, 2), Modifier.weight(1f), size = StatCardSize.Compact, monospaceValue = true)
                         }
                     }
                 }
@@ -406,7 +419,7 @@ private fun PositionCard(pos: SimPosition, onClose: () -> Unit) {
                 Spacer(Modifier.width(12.dp))
                 Text(strings.simulatorNowLabel(formatFiat(pos.currentPrice)), fontSize = 12.sp, color = SubtextGray)
                 Spacer(Modifier.weight(1f))
-                Text(strings.simulatorPnlLine("%.0f".format(pos.pnl), "%.1f".format(pos.pnlPercent)),
+                Text(strings.simulatorPnlLine(fmtDec(pos.pnl, 0), fmtDec(pos.pnlPercent, 1)),
                     fontSize = 13.sp, fontWeight = FontWeight.Bold, color = pnlColor)
             }
             if (pos.stopLoss != null || pos.takeProfit != null) {
@@ -450,7 +463,7 @@ private fun ClosedTradeCard(trade: ClosedTrade) {
                 Text(strings.simulatorEntryExitLabel(formatFiat(trade.entryPrice), formatFiat(trade.exitPrice)), fontSize = 11.sp, color = SubtextGray)
             }
             Column(horizontalAlignment = Alignment.End) {
-                Text("${"%.0f".format(trade.pnl)} (${"%.1f".format(trade.pnlPercent)}%)",
+                Text("${fmtDec(trade.pnl, 0)} (${fmtDec(trade.pnlPercent, 1)}%)",
                     fontSize = 13.sp, fontWeight = FontWeight.Bold, color = pnlColor)
                 Text(trade.exitReason.name, fontSize = 10.sp, color = SubtextGray)
             }
