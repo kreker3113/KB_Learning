@@ -187,11 +187,12 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    // Name the output APK "KB Learning-<variant>.apk"
+    // Name the output APK "KB Learning-v1.0-<variant>.apk"
     applicationVariants.all {
+        val version = defaultConfig.versionName
         outputs.all {
             val output = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
-            output.outputFileName = "KB Learning-${buildType.name}.apk"
+            output.outputFileName = "KB Learning-v${version}-${buildType.name}.apk"
         }
     }
 }
