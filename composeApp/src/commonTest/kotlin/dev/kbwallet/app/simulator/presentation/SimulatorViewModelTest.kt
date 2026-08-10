@@ -88,7 +88,6 @@ class SimulatorViewModelTest {
 
         viewModel.state.test {
             val state = awaitItem()
-            // Could be any intermediate state if emissions are rapid, but eventually:
             if (state.positions.isEmpty()) {
                 val nextState = awaitItem()
                 assertEquals(1, nextState.positions.size)
@@ -97,6 +96,59 @@ class SimulatorViewModelTest {
                 assertEquals(1, state.positions.size)
                 assertEquals(9000.0, state.cashBalance)
             }
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `loadCoins error maps to ui state`() = runTest {
+        dataSource.simulateError = true
+        viewModel.loadCoins()
+
+        viewModel.state.test {
+            var state = awaitItem()
+            while (state.error == null) state = awaitItem()
+            assertEquals(DataError.Remote.SERVER.toUiText(), state.error)
+            assertTrue(state.availableCoins.isEmpty())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `selectCoin error maps to ui state`() = runTest {
+        dataSource.simulateError = true
+        val dummyCoin = Coin("1", "Bitcoin", "BTC", "")
+        viewModel.selectCoin(dummyCoin)
+
+        viewModel.state.test {
+            var state = awaitItem()
+            while (state.error == null) state = awaitItem()
+            assertFalse(state.isLoading)
+            assertEquals(DataError.Remote.SERVER.toUiText(), state.error)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `retry after loadCoins error clears error`() = runTest {
+        dataSource.simulateError = true
+        viewModel.loadCoins()
+
+        viewModel.state.test {
+            var state = awaitItem()
+            while (state.error == null) state = awaitItem()
+            assertEquals(DataError.Remote.SERVER.toUiText(), state.error)
+            cancelAndIgnoreRemainingEvents()
+        }
+
+        dataSource.simulateError = false
+        viewModel.loadCoins()
+
+        viewModel.state.test {
+            var state = awaitItem()
+            while (state.availableCoins.isEmpty() && state.error == null) state = awaitItem()
+            assertTrue(state.availableCoins.isNotEmpty())
+            assertEquals(null, state.error)
             cancelAndIgnoreRemainingEvents()
         }
     }

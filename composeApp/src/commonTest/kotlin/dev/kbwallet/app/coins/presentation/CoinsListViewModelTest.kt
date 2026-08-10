@@ -79,14 +79,50 @@ class CoinsListViewModelTest {
 
     @Test
     fun `onCoinLongPressed loads chart data`() = runTest {
-        // We first need the coins to be loaded
         viewModel.onCoinLongPressed("1")
 
         viewModel.state.test {
             val state = awaitItem()
             assertNotNull(state.chartState)
             assertFalse(state.chartState!!.isLoading)
-            // Note: FakeCoinsRemoteDataSource returns empty lists for history by default
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `onCoinLongPressed shows chart error when datasource fails`() = runTest {
+        dataSource.simulateError = true
+        viewModel.onCoinLongPressed("1")
+
+        viewModel.state.test {
+            var state = awaitItem()
+            while (state.chartState == null || state.chartState!!.isLoading) state = awaitItem()
+            assertNotNull(state.chartState!!.error)
+            assertEquals(DataError.Remote.SERVER.toUiText(), state.chartState!!.error)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `retry after error clears error and loads coins`() = runTest {
+        dataSource.simulateError = true
+        viewModel.loadCoins()
+
+        viewModel.state.test {
+            var state = awaitItem()
+            while (state.error == null) state = awaitItem()
+            assertEquals(DataError.Remote.SERVER.toUiText(), state.error)
+            cancelAndIgnoreRemainingEvents()
+        }
+
+        dataSource.simulateError = false
+        viewModel.loadCoins()
+
+        viewModel.state.test {
+            var state = awaitItem()
+            while (state.coins.isEmpty() && state.error == null) state = awaitItem()
+            assertTrue(state.coins.isNotEmpty())
+            assertEquals(null, state.error)
             cancelAndIgnoreRemainingEvents()
         }
     }

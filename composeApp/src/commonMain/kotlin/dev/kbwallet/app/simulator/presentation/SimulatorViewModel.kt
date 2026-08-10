@@ -43,7 +43,7 @@ class SimulatorViewModel(
                     val coins = result.data.map { dto ->
                         Coin(id = dto.id, name = dto.name, symbol = dto.symbol.uppercase(), iconUrl = dto.image)
                     }.take(20)
-                    _state.update { it.copy(availableCoins = coins, isLoading = false) }
+                    _state.update { it.copy(availableCoins = coins, isLoading = false, error = null) }
                 }
                 is dev.kbwallet.app.core.domain.Result.Error -> {
                     _state.update { it.copy(error = result.error.toUiText(), isLoading = false) }

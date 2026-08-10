@@ -78,4 +78,31 @@ class DashboardViewModelTest {
             cancelAndIgnoreRemainingEvents()
         }
     }
+
+    @Test
+    fun `retry after error clears error and reloads data`() = runTest {
+        // First: simulate an error
+        coinsDataSource.simulateError = true
+        viewModel.loadData()
+
+        viewModel.state.test {
+            var state = awaitItem()
+            while (state.error == null) state = awaitItem()
+            assertEquals(DataError.Remote.SERVER.toUiText(), state.error)
+            cancelAndIgnoreRemainingEvents()
+        }
+
+        // Then: fix the data source and retry
+        coinsDataSource.simulateError = false
+        viewModel.loadData()
+
+        viewModel.state.test {
+            var state = awaitItem()
+            // After retry, error should be cleared and data should load
+            while (state.topCoins.isEmpty() && state.error == null) state = awaitItem()
+            assertTrue(state.topCoins.isNotEmpty())
+            assertEquals(null, state.error)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
 }

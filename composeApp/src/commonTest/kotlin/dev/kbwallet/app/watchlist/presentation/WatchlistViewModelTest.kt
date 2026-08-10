@@ -74,10 +74,9 @@ class WatchlistViewModelTest {
     @Test
     fun `error maps to UI text`() = runTest {
         repository.simulateError = true
-        viewModel.loadWatchlist() // re-trigger
+        viewModel.loadWatchlist()
 
         viewModel.state.test {
-            // Skips loading item
             val state = awaitItem()
             if (state.isLoading) {
                 val nextState = awaitItem()
@@ -87,6 +86,32 @@ class WatchlistViewModelTest {
                 assertFalse(state.isLoading)
                 assertEquals(DataError.Remote.SERVER.toUiText(), state.error)
             }
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `retry after error clears error and loads watchlist`() = runTest {
+        repository.simulateError = true
+        viewModel.loadWatchlist()
+
+        viewModel.state.test {
+            var state = awaitItem()
+            while (state.error == null) state = awaitItem()
+            assertEquals(DataError.Remote.SERVER.toUiText(), state.error)
+            cancelAndIgnoreRemainingEvents()
+        }
+
+        // Fix error, add data, retry
+        repository.simulateError = false
+        repository.addToWatchlist("1", "Bitcoin", "BTC", "url", 50000.0)
+        viewModel.loadWatchlist()
+
+        viewModel.state.test {
+            var state = awaitItem()
+            while (state.items.isEmpty() && state.error == null) state = awaitItem()
+            assertNull(state.error)
+            assertTrue(state.items.isNotEmpty())
             cancelAndIgnoreRemainingEvents()
         }
     }
