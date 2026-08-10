@@ -1,5 +1,8 @@
 package dev.kbwallet.app.chart.presentation.util
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.setValue
 import dev.kbwallet.app.chart.domain.model.CandleModel
 import kotlin.math.max
 
@@ -9,15 +12,18 @@ import kotlin.math.max
  */
 class ChartTransform(
     val candles: List<CandleModel>,
-    private var _visibleStart: Float = 0f,
-    private var _visibleEnd: Float = 1f,
+    initialVisibleStart: Float = 0f,
+    initialVisibleEnd: Float = 1f,
 ) {
-    val visibleStartIdx: Int get() = (candles.size * _visibleStart).toInt().coerceIn(0, candles.lastIndex)
-    val visibleEndIdx: Int get() = (candles.size * _visibleEnd).toInt().coerceIn(visibleStartIdx + 1, candles.size)
+    private var _visibleStart by mutableFloatStateOf(initialVisibleStart)
+    private var _visibleEnd by mutableFloatStateOf(initialVisibleEnd)
+
+    val visibleStartIdx: Int get() = if (candles.isEmpty()) 0 else (candles.size * _visibleStart).toInt().coerceIn(0, candles.lastIndex)
+    val visibleEndIdx: Int get() = if (candles.isEmpty()) 0 else (candles.size * _visibleEnd).toInt().coerceIn(visibleStartIdx + 1, candles.size)
     val visibleCount: Int get() = max(1, visibleEndIdx - visibleStartIdx)
 
     val visibleCandles: List<CandleModel>
-        get() = candles.subList(visibleStartIdx, visibleEndIdx)
+        get() = if (candles.isEmpty()) emptyList() else candles.subList(visibleStartIdx, visibleEndIdx)
 
     val priceRange: ClosedFloatingPointRange<Double>
         get() {
@@ -31,19 +37,23 @@ class ChartTransform(
 
     val volumeRange: ClosedFloatingPointRange<Double>
         get() {
-            val maxVol = visibleCandles.maxOfOrNull { it.volume } ?: 1.0
+            val vs = visibleCandles
+            if (vs.isEmpty()) return 0.0..1.0
+            val maxVol = vs.maxOfOrNull { it.volume } ?: 1.0
             return 0.0..(maxVol * 1.05)
         }
 
     val span: Float get() = _visibleEnd - _visibleStart
 
     fun pan(deltaFraction: Float) {
+        if (candles.isEmpty()) return
         val d = deltaFraction.coerceIn(-_visibleStart, 1f - _visibleEnd)
         _visibleStart += d
         _visibleEnd += d
     }
 
     fun zoom(scaleFactor: Float, anchorFraction: Float) {
+        if (candles.isEmpty()) return
         val newSpan = (span / scaleFactor).coerceIn(0.02f, 1f)
         val anchor = _visibleStart + anchorFraction * span
         _visibleStart = (anchor - anchorFraction * newSpan).coerceIn(0f, 1f - newSpan)

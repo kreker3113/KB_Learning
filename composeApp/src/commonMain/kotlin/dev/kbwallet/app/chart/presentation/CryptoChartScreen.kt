@@ -170,11 +170,10 @@ fun CryptoChartScreen(
                     trendColor = trendColor,
                 )
             } else if (state.error != null) {
-                Text(
-                    state.error ?: "—",
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontSize = 13.sp,
-                    modifier = Modifier.align(Alignment.Center),
+                dev.kbwallet.app.core.presentation.components.ErrorStateView(
+                    message = org.jetbrains.compose.resources.stringResource(state.error!!),
+                    onRetry = { viewModel.retry() },
+                    modifier = Modifier.align(Alignment.Center)
                 )
             }
         }

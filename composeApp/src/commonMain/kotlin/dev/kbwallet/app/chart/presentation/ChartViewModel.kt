@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import dev.kbwallet.app.core.util.toUiText
 
 class ChartViewModel(
     private val getChartDataUseCase: GetChartDataUseCase,
@@ -60,10 +61,14 @@ class ChartViewModel(
                         )
                     }
                 }
-                is Result.Error -> {
-                    _state.update { it.copy(isLoading = false, error = "No data") }
+                is dev.kbwallet.app.core.domain.Result.Error -> {
+                    _state.update { it.copy(isLoading = false, error = result.error.toUiText()) }
                 }
             }
         }
+    }
+
+    fun retry() {
+        loadData(_state.value.selectedRange)
     }
 }

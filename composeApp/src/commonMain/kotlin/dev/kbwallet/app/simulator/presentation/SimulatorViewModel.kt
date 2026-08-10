@@ -18,9 +18,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlin.math.abs
 import kotlin.math.sqrt
+import dev.kbwallet.app.core.util.toUiText
+
+import dev.kbwallet.app.coins.domain.api.CoinsRemoteDataSource
 
 class SimulatorViewModel(
-    private val coinsRemoteDataSource: KtorCoinsRemoteDataSource,
+    private val coinsRemoteDataSource: CoinsRemoteDataSource,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SimulatorState())
@@ -42,8 +45,8 @@ class SimulatorViewModel(
                     }.take(20)
                     _state.update { it.copy(availableCoins = coins, isLoading = false) }
                 }
-                is Result.Error -> {
-                    _state.update { it.copy(error = "Failed to load coins", isLoading = false) }
+                is dev.kbwallet.app.core.domain.Result.Error -> {
+                    _state.update { it.copy(error = result.error.toUiText(), isLoading = false) }
                 }
             }
         }
@@ -62,7 +65,7 @@ class SimulatorViewModel(
                 is Result.Success -> {
                     val candles = result.data.sortedBy { it.openTime }
                     if (candles.size < 10) {
-                        _state.update { it.copy(error = "Not enough data", isLoading = false) }
+                        _state.update { it.copy(error = dev.kbwallet.app.core.domain.DataError.Remote.UNKNOWN.toUiText(), isLoading = false) }
                         return@launch
                     }
                     _state.update {
@@ -78,13 +81,14 @@ class SimulatorViewModel(
                             closedTrades = emptyList(),
                             metrics = SimulatorMetrics(),
                             activeHint = getHint(),
+                            error = null,
                         )
                     }
                     nextPositionId = 1L
                     nextTradeId = 1L
                 }
-                is Result.Error -> {
-                    _state.update { it.copy(error = "Failed to load data", isLoading = false) }
+                is dev.kbwallet.app.core.domain.Result.Error -> {
+                    _state.update { it.copy(error = result.error.toUiText(), isLoading = false) }
                 }
             }
         }

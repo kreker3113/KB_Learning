@@ -37,7 +37,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import dev.kbwallet.app.core.i18n.appStrings
+import dev.kbwallet.app.core.presentation.components.ErrorStateView
 import dev.kbwallet.app.theme.LocalKBLearningColorsPalette
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -72,10 +74,15 @@ fun WatchlistScreen(
             )
         }
 
-        if (state.isLoading) {
+        if (state.isLoading && state.items.isEmpty()) {
             Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
                 CircularProgressIndicator(color = MaterialTheme.colorScheme.primary, modifier = Modifier.size(32.dp))
             }
+        } else if (state.error != null && state.items.isEmpty()) {
+            ErrorStateView(
+                message = stringResource(state.error!!),
+                onRetry = { viewModel.loadWatchlist() }
+            )
         } else if (state.items.isEmpty()) {
             Box(
                 contentAlignment = Alignment.Center,

@@ -50,7 +50,7 @@ fun DashboardScreen(
     val viewModel = koinViewModel<DashboardViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    if (state.isLoading) {
+    if (state.isLoading && state.portfolioSummaryCoins.isEmpty() && state.topCoins.isEmpty()) {
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier.fillMaxSize()
@@ -60,6 +60,11 @@ fun DashboardScreen(
                 modifier = Modifier.size(32.dp)
             )
         }
+    } else if (state.error != null && state.portfolioSummaryCoins.isEmpty() && state.topCoins.isEmpty()) {
+        dev.kbwallet.app.core.presentation.components.ErrorStateView(
+            message = org.jetbrains.compose.resources.stringResource(state.error!!),
+            onRetry = { viewModel.loadData() }
+        )
     } else {
         DashboardContent(
             state = state,

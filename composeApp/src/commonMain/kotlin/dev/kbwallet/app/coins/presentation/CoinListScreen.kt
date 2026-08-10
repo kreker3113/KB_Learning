@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -39,6 +40,9 @@ import dev.kbwallet.app.core.i18n.appStrings
 import dev.kbwallet.app.theme.LocalKBLearningColorsPalette
 import org.koin.compose.viewmodel.koinViewModel
 
+import dev.kbwallet.app.core.presentation.components.ErrorStateView
+import org.jetbrains.compose.resources.stringResource
+
 @Composable
 fun CoinListScreen(
     onCoinClicked: (String) -> Unit,
@@ -49,14 +53,23 @@ fun CoinListScreen(
     val state by coinsListViewModel.state.collectAsStateWithLifecycle()
     val strings = appStrings()
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
-        // ── Header ──
+    if (state.error != null && state.coins.isEmpty()) {
+        Box(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
+            ErrorStateView(
+                message = stringResource(state.error!!),
+                onRetry = { coinsListViewModel.loadCoins() }
+            )
+        }
+    } else {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+                .systemBarsPadding()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            // ── Header ──
         item {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 IconButton(onClick = onBack, modifier = Modifier.size(36.dp)) {
@@ -85,6 +98,7 @@ fun CoinListScreen(
                 onCoinClicked = onCoinClicked,
             )
         }
+    }
     }
 }
 

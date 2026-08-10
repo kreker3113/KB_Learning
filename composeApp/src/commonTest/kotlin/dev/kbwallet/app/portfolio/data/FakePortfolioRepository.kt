@@ -86,6 +86,15 @@ class FakePortfolioRepository : PortfolioRepository {
     override suspend fun getTotalTradeCount(): Int = 0
     override suspend fun getTotalBuyCount(): Int = 0
     override suspend fun getTotalSellCount(): Int = 0
+    override suspend fun updateTransactionNotes(transactionId: Long, notes: String, tags: String) {
+        // no-op
+    }
+
+    override suspend fun placeLimitOrder(order: dev.kbwallet.app.history.data.LimitOrderEntity) {}
+    override fun getActiveLimitOrders(): kotlinx.coroutines.flow.Flow<List<dev.kbwallet.app.history.data.LimitOrderEntity>> = kotlinx.coroutines.flow.flowOf(emptyList())
+    override fun getAllLimitOrders(): kotlinx.coroutines.flow.Flow<List<dev.kbwallet.app.history.data.LimitOrderEntity>> = kotlinx.coroutines.flow.flowOf(emptyList())
+    override suspend fun cancelLimitOrder(orderId: Long) {}
+    override suspend fun getActiveLimitOrdersList(): List<dev.kbwallet.app.history.data.LimitOrderEntity> = emptyList()
 
     fun simulateError() {
         _data.value = Result.Error(DataError.Remote.SERVER)

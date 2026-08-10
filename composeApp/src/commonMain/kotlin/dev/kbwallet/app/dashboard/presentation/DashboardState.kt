@@ -8,6 +8,7 @@ data class DashboardState(
     val isPerformancePositive: Boolean = true,
     val topCoins: List<DashboardCoinItem> = emptyList(),
     val portfolioSummaryCoins: List<DashboardCoinItem> = emptyList(),
+    val error: org.jetbrains.compose.resources.StringResource? = null,
 )
 
 data class DashboardCoinItem(

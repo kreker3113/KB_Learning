@@ -30,12 +30,19 @@ class CoinsListViewModel(
             initialValue = CoinsState()
         )
 
+    fun loadCoins() {
+        viewModelScope.launch {
+            _state.update { it.copy(error = null) }
+            getAllCoins()
+        }
+    }
+
 
     private suspend fun getAllCoins() {
         when(val coinsResponse = getCoinsListUseCase.execute()) {
             is Result.Success -> {
-                _state.update {
-                    CoinsState(
+                _state.update { currentState ->
+                    currentState.copy(
                         coins = coinsResponse.data.map { coinItem ->
                             UiCoinListItem(
                                 id = coinItem.coin.id,
@@ -93,6 +100,7 @@ class CoinsListViewModel(
                                 sparkLine = emptyList(),
                                 isLoading = false,
                                 coinName = "",
+                                error = priceHistory.error.toUiText()
                             )
                         )
                     }

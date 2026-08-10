@@ -1,5 +1,7 @@
 package dev.kbwallet.app.simulator.presentation
 
+import androidx.compose.foundation.layout.systemBarsPadding
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -43,6 +45,8 @@ import dev.kbwallet.app.theme.component.StatCardSize
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.math.roundToInt
 import kotlin.math.round
+import dev.kbwallet.app.core.presentation.components.ErrorStateView
+import org.jetbrains.compose.resources.stringResource
 
 /** Format a Double to N decimal places (KMP-safe, no String.format). */
 private fun fmtDec(value: Double, decimals: Int): String {
@@ -56,6 +60,7 @@ private fun fmtDec(value: Double, decimals: Int): String {
 }
 
 private val SubtextGray = Color(0xFFAAAAAA)
+
 
 @Composable
 fun SimulatorScreen(
@@ -73,6 +78,7 @@ fun SimulatorScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
+            .systemBarsPadding()
     ) {
         // ── Header ──
         Row(
@@ -102,6 +108,12 @@ fun SimulatorScreen(
                 CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
             }
             return
+        } else if (state.error != null && state.availableCoins.isEmpty()) {
+            ErrorStateView(
+                message = stringResource(state.error!!),
+                onRetry = { viewModel.loadCoins() }
+            )
+            return
         }
 
         LazyColumn(
@@ -127,7 +139,14 @@ fun SimulatorScreen(
                 }
             }
 
-            if (state.selectedCoin != null && state.candles.isNotEmpty()) {
+            if (state.selectedCoin != null && state.error != null) {
+                item {
+                    ErrorStateView(
+                        message = stringResource(state.error!!),
+                        onRetry = { viewModel.selectCoin(state.selectedCoin!!) }
+                    )
+                }
+            } else if (state.selectedCoin != null && state.candles.isNotEmpty()) {
                 val coin = state.selectedCoin!!
                 val candle = state.candles.getOrNull(state.currentCandleIndex)
 
