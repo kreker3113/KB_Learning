@@ -45,17 +45,17 @@ class WatchlistRepositoryImpl(
                     val items = when {
                         result is dev.kbwallet.app.core.domain.Result.Success -> {
                             entities.mapNotNull { entity ->
-                                val coin = result.data.data.coins.find { it.uuid == entity.coinId }
+                                val coin = result.data.find { it.id == entity.coinId }
                                 coin?.let {
                                     WatchlistItem(
                                         coin = dev.kbwallet.app.core.domain.coin.Coin(
-                                            id = it.uuid,
+                                            id = it.id,
                                             name = it.name,
-                                            symbol = it.symbol,
-                                            iconUrl = it.iconUrl,
+                                            symbol = it.symbol.uppercase(),
+                                            iconUrl = it.image,
                                         ),
-                                        currentPrice = it.price,
-                                        change24h = it.change,
+                                        currentPrice = it.currentPrice,
+                                        change24h = it.priceChangePercentage24h ?: 0.0,
                                         addedPrice = entity.addedPrice,
                                         addedAt = entity.addedAt,
                                     )

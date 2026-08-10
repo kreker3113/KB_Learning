@@ -49,11 +49,11 @@ class MarketSimulator(
         // Get current prices
         val coinsResult = coinsRemoteDataSource.getListOfCoins()
         if (coinsResult !is Result.Success) return
-        val coinsMap = coinsResult.data.data.coins.associateBy { it.uuid }
+        val coinsMap = coinsResult.data.associateBy { it.id }
 
         for (order in activeOrders) {
             val currentCoin = coinsMap[order.coinId] ?: continue
-            val currentPrice = currentCoin.price
+            val currentPrice = currentCoin.currentPrice
             val shouldExecute = when (order.type) {
                 "LIMIT" -> {
                     if (order.side == "BUY") currentPrice <= order.targetPrice

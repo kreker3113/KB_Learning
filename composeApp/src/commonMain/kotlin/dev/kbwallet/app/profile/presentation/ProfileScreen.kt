@@ -26,6 +26,7 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.TrendingUp
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -50,6 +51,7 @@ fun ProfileScreen(
     onNavigateToNotifications: () -> Unit,
     onNavigateToSecurity: () -> Unit,
     onNavigateToHelp: () -> Unit,
+    onNavigateToSponsorship: () -> Unit,
     onNavigateToPnL: () -> Unit = {},
     onNavigateToLanguage: () -> Unit = {},
 ) {
@@ -186,6 +188,14 @@ fun ProfileScreen(
                 title = strings.profileMenuLanguageTitle,
                 subtitle = strings.profileMenuLanguageSubtitle,
                 onClick = onNavigateToLanguage,
+            )
+        }
+        item {
+            ProfileMenuOption(
+                icon = Icons.Default.Favorite,
+                title = strings.profileMenuSponsorshipTitle,
+                subtitle = strings.profileMenuSponsorshipSubtitle,
+                onClick = onNavigateToSponsorship,
             )
         }
         item {

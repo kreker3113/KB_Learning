@@ -14,19 +14,16 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
-// CoinRanking API key: read from local.properties (gitignored, never committed) or an
-// env var, falling back to the project's existing key so a fresh clone still builds
-// out of the box. This is a client-embedded key (any mobile client key is extractable
-// from the compiled app regardless of where it's read from at build time) — the point
-// of this indirection is to stop committing it as a plaintext literal in source control,
-// not to make it a real secret. Set coinRanking.apiKey in local.properties to override.
+// CoinGecko Demo API key: read from local.properties (gitignored, never committed) or
+// an env var. Register for a free Demo key at https://www.coingecko.com/en/api/pricing
+// and set coinGecko.apiKey in local.properties, or set COINGECKO_API_KEY env var.
 val localProperties = Properties().apply {
     val file = rootProject.file("local.properties")
     if (file.exists()) file.inputStream().use { load(it) }
 }
-val coinRankingApiKey: String = localProperties.getProperty("coinRanking.apiKey")
-    ?: System.getenv("COINRANKING_API_KEY")
-    ?: "coinranking9ce5a01a8185ad079a954b40e5bae7f3c81238639c547926"
+val coinGeckoApiKey: String = localProperties.getProperty("coinGecko.apiKey")
+    ?: System.getenv("COINGECKO_API_KEY")
+    ?: ""
 
 val generatedApiKeysDir = layout.buildDirectory.dir("generated/apiKeys/commonMain/kotlin")
 
@@ -41,9 +38,9 @@ val generateApiKeys by tasks.registering {
             |package dev.kbwallet.app.core.network
             |
             |internal object ApiKeys {
-            |    const val COIN_RANKING: String = "$coinRankingApiKey"
+            |    const val COIN_GECKO: String = "$coinGeckoApiKey"
             |}
-            |""".trimMargin()
+            """.trimMargin()
         )
     }
 }
@@ -190,6 +187,13 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    // Name the output APK "KB Learning.apk"
+    applicationVariants.all {
+        outputs.all {
+            val output = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
+            output.outputFileName = "KB Learning.apk"
+        }
+    }
 }
 
 room {
@@ -211,6 +215,10 @@ compose.desktop {
 }
 
 dependencies {
-    ksp(libs.room.compiler)
+    add("kspAndroid", libs.room.compiler)
+    add("kspIosX64", libs.room.compiler)
+    add("kspIosArm64", libs.room.compiler)
+    add("kspIosSimulatorArm64", libs.room.compiler)
+    add("kspDesktop", libs.room.compiler)
     debugImplementation(compose.uiTooling)
 }

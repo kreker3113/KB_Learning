@@ -56,12 +56,12 @@ class PortfolioRepositoryImpl(
                         .onError { error ->
                             emit(Result.Error(error))
                         }
-                        .onSuccess { coinsDto ->
+                        .onSuccess { coins ->
                             val portfolioCoins =
                                 portfolioCoinEntities.mapNotNull { portfolioCoinEntity ->
-                                    val coin = coinsDto.data.coins.find { it.uuid == portfolioCoinEntity.coinId }
+                                    val coin = coins.find { it.id == portfolioCoinEntity.coinId }
                                     coin?.let {
-                                        portfolioCoinEntity.toPortfolioCoinModel(it.price)
+                                        portfolioCoinEntity.toPortfolioCoinModel(it.currentPrice)
                                     }
                                 }
                             emit(Result.Success(portfolioCoins))
@@ -80,8 +80,9 @@ class PortfolioRepositoryImpl(
             }
             .onSuccess { coinDto ->
                 val portfolioCoinEntity = portfolioDao.getCoinById(coinId)
+                val currentPrice = coinDto.marketData?.currentPrice?.get("usd") ?: 0.0
                 return if (portfolioCoinEntity != null) {
-                    Result.Success(portfolioCoinEntity.toPortfolioCoinModel(coinDto.data.coin.price))
+                    Result.Success(portfolioCoinEntity.toPortfolioCoinModel(currentPrice))
                 } else {
                     Result.Success(null)
                 }
@@ -114,9 +115,9 @@ class PortfolioRepositoryImpl(
                     val apiResult = coinsRemoteDataSource.getListOfCoins()
                     apiResult.onError { error ->
                         emit(Result.Error(error))
-                    }.onSuccess { coinsDto ->
+                    }.onSuccess { coins ->
                         val totalValue = portfolioCoinsEntities.sumOf { ownedCoin ->
-                            val coinPrice = coinsDto.data.coins.find { it.uuid == ownedCoin.coinId }?.price ?: 0.0
+                            val coinPrice = coins.find { it.id == ownedCoin.coinId }?.currentPrice ?: 0.0
                             ownedCoin.amountOwned * coinPrice
                         }
                         emit(Result.Success(totalValue))
