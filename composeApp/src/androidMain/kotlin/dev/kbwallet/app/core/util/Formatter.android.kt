@@ -3,11 +3,11 @@ package dev.kbwallet.app.core.util
 import java.text.DecimalFormat
 
 actual fun formatFiat(amount: Double, showDecimal: Boolean): String {
+    val absAmount = kotlin.math.abs(amount)
     val formatter = when {
-        showDecimal.not() -> DecimalFormat("#,###")
-        amount >= 1 -> DecimalFormat("#,###.00")
-        amount >= 0.01 -> DecimalFormat("0.00")
-        else -> DecimalFormat("0.00000000")
+        showDecimal.not() -> java.text.DecimalFormat("#,###")
+        absAmount == 0.0 || absAmount >= 0.01 -> java.text.DecimalFormat("#,##0.00")
+        else -> java.text.DecimalFormat("0.00######")
     }
     return "$ " + formatter.format(amount)
 }

@@ -12,8 +12,8 @@ class GetCoinsListUseCase(
 ) {
 
     suspend fun execute(): Result<List<CoinModel>, DataError.Remote> {
-        return client.getListOfCoins().map { dto ->
-            dto.data.coins.map { it.toCoinModel() }
+        return client.getListOfCoins().map { coins ->
+            coins.map { it.toCoinModel() }
         }
     }
 }

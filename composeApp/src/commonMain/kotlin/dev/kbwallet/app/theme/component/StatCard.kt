@@ -59,7 +59,8 @@ fun StatCard(
                 text = title,
                 color = Color.Gray,
                 fontSize = size.titleFontSize,
-                maxLines = 1,
+                maxLines = 2,
+                lineHeight = size.titleFontSize * 1.2f, // Ensure readable line height if it wraps
                 overflow = TextOverflow.Ellipsis,
             )
             Text(

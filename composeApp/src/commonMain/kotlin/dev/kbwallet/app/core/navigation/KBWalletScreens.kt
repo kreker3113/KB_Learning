@@ -48,6 +48,9 @@ object HelpSupport
 @Serializable
 object LanguageSettings
 
+@Serializable
+object Sponsorship
+
 // ── Trading Simulator additions ──
 @Serializable
 object PnLAnalytics
