@@ -1,0 +1,46 @@
+name: CI
+
+# Runs the test suite on every push and every pull request — no build/package
+# step here on purpose, that only happens on a version tag (see release.yml).
+on:
+  push:
+    branches: [ '**' ]  # branch pushes only — a bare `push:` also fires on tags,
+                         # which would double up with release.yml on every `v*` push.
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      # commonTest (incl. the Compose UI tests under runComposeUiTest) is run
+      # against the desktop/JVM target. It's the only target that can execute
+      # those tests without extra setup: Android's local unit tests would need
+      # Robolectric wired up (not done yet — they NPE without it), and the iOS
+      # targets need a macOS runner. desktopTest still compiles and exercises
+      # every commonTest source file, so coverage isn't actually narrower.
+      - name: Run tests
+        run: ./gradlew :composeApp:desktopTest --console=plain
+
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: desktop-test-report
+          path: composeApp/build/reports/tests/desktopTest/

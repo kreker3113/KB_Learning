@@ -29,6 +29,11 @@ val generatedApiKeysDir = layout.buildDirectory.dir("generated/apiKeys/commonMai
 
 val generateApiKeys by tasks.registering {
     val outputDir = generatedApiKeysDir
+    // Without this, Gradle has no idea the generated file depends on
+    // local.properties/the env var, so it happily serves a stale, cached
+    // ApiKeys.kt after either one changes — which is exactly how an updated
+    // key silently kept building against the old (dead) one.
+    inputs.property("coinGeckoApiKey", coinGeckoApiKey)
     outputs.dir(outputDir)
     doLast {
         val packageDir = outputDir.get().asFile.resolve("dev/kbwallet/app/core/network")
@@ -203,6 +208,19 @@ room {
 compose.desktop {
     application {
         mainClass = "dev.kbwallet.app.MainKt"
+
+        // The bundled ProGuard (7.2.2, via the Compose Gradle plugin) can't parse
+        // class files newer than Java 18 — it throws
+        // `UnsupportedOperationException: Unsupported version number [65.0]` the
+        // moment it opens a Java 21 class on the library/runtime classpath, which
+        // packageReleaseDeb/packageReleaseDmg pull in on any JDK 21 toolchain.
+        // Minification isn't load-bearing for a desktop app like this one, so
+        // disabling it trades a slightly larger distributable for release
+        // packaging that actually completes on JDK 21 (matches what both this
+        // machine and most current CI runners default to).
+        buildTypes.release.proguard {
+            isEnabled.set(false)
+        }
 
         nativeDistributions {
             targetFormats(TargetFormat.Deb, TargetFormat.Rpm, TargetFormat.Dmg, TargetFormat.Msi)
