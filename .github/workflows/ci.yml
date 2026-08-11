@@ -4,6 +4,8 @@ name: CI
 # step here on purpose, that only happens on a version tag (see release.yml).
 on:
   push:
+    branches: [ '**' ]  # branch pushes only — a bare `push:` also fires on tags,
+                         # which would double up with release.yml on every `v*` push.
   pull_request:
 
 permissions:

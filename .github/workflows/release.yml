@@ -105,6 +105,31 @@ jobs:
           name: macos-dmg
           path: composeApp/build/compose/binaries/main-release/dmg/*.dmg
 
+  windows:
+    name: Windows (.msi)
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Package .msi
+        run: ./gradlew.bat :composeApp:packageReleaseMsi --console=plain
+        env:
+          COINGECKO_API_KEY: ${{ secrets.COINGECKO_API_KEY }}
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-msi
+          path: composeApp/build/compose/binaries/main-release/msi/*.msi
+
   ios:
     name: iOS (Simulator build, unsigned)
     runs-on: macos-latest
@@ -143,7 +168,7 @@ jobs:
 
   publish-release:
     name: Publish GitHub Release
-    needs: [ android, linux, macos, ios ]
+    needs: [ android, linux, macos, windows, ios ]
     runs-on: ubuntu-latest
     steps:
       - name: Download all artifacts
@@ -160,3 +185,4 @@ jobs:
             artifacts/linux-packages/*.deb
             artifacts/linux-packages/*.rpm
             artifacts/macos-dmg/*.dmg
+            artifacts/windows-msi/*.msi
