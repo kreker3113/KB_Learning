@@ -4,6 +4,7 @@ import dev.kbwallet.app.core.domain.DataError
 import dev.kbwallet.app.core.domain.EmptyResult
 import dev.kbwallet.app.core.domain.Result
 import dev.kbwallet.app.core.domain.coin.Coin
+import dev.kbwallet.app.history.data.LimitOrderEntity
 import dev.kbwallet.app.history.data.TransactionEntity
 import dev.kbwallet.app.portfolio.domain.PortfolioCoinModel
 import dev.kbwallet.app.portfolio.domain.PortfolioRepository
@@ -86,6 +87,35 @@ class FakePortfolioRepository : PortfolioRepository {
     override suspend fun getTotalTradeCount(): Int = 0
     override suspend fun getTotalBuyCount(): Int = 0
     override suspend fun getTotalSellCount(): Int = 0
+
+    override suspend fun updateTransactionNotes(transactionId: Long, notes: String, tags: String) {
+        // no-op
+    }
+
+    // ── Limit Orders ──
+    private val _limitOrders = MutableStateFlow<List<LimitOrderEntity>>(emptyList())
+
+    override suspend fun placeLimitOrder(order: LimitOrderEntity) {
+        _limitOrders.update { it + order }
+    }
+
+    override fun getActiveLimitOrders(): Flow<List<LimitOrderEntity>> {
+        return _limitOrders.map { orders -> orders.filter { it.status == "ACTIVE" } }
+    }
+
+    override fun getAllLimitOrders(): Flow<List<LimitOrderEntity>> {
+        return _limitOrders.asStateFlow()
+    }
+
+    override suspend fun cancelLimitOrder(orderId: Long) {
+        _limitOrders.update { orders ->
+            orders.map { if (it.id == orderId) it.copy(status = "CANCELLED") else it }
+        }
+    }
+
+    override suspend fun getActiveLimitOrdersList(): List<LimitOrderEntity> {
+        return _limitOrders.value.filter { it.status == "ACTIVE" }
+    }
 
     fun simulateError() {
         _data.value = Result.Error(DataError.Remote.SERVER)

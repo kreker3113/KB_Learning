@@ -6,8 +6,8 @@ import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.runComposeUiTest
-import kbwallet.composeapp.generated.resources.Res
-import kbwallet.composeapp.generated.resources.error_unknown
+import kblearning.composeapp.generated.resources.Res
+import kblearning.composeapp.generated.resources.error_unknown
 import dev.kbwallet.app.trade.presentation.common.TradeScreen
 import dev.kbwallet.app.trade.presentation.common.TradeState
 import dev.kbwallet.app.trade.presentation.common.TradeType
