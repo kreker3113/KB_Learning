@@ -21,9 +21,18 @@ import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.drawText
+import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import dev.kbwallet.app.chart.domain.model.CandleModel
 import dev.kbwallet.app.chart.domain.model.isBullish
 import dev.kbwallet.app.chart.presentation.util.ChartTransform
+import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 /**
  * Candlestick chart — Japanese candles with wicks.
@@ -43,6 +52,7 @@ fun CandlestickChart(
     onCrosshair: ((Int?) -> Unit)? = null,
     chartHeightFraction: Float = 0.85f,
 ) {
+    val textMeasurer = rememberTextMeasurer()
     var crosshairIdx by remember { mutableIntStateOf(-1) }
 
     Canvas(
@@ -50,22 +60,23 @@ fun CandlestickChart(
             .fillMaxSize()
             .pointerInput(transform) {
                 detectTapGestures { offset ->
-                    val idx = hitTest(offset.x, size.width.toFloat(), transform)
-                    crosshairIdx = idx
-                    onCrosshair?.invoke(idx)
-                }
-            }
-            .pointerInput(transform) {
-                detectHorizontalDragGestures { _, dragAmount ->
-                    val fraction = -(dragAmount / size.width.toFloat())
-                    transform.pan(fraction)
-                    crosshairIdx = -1
-                    onCrosshair?.invoke(null)
+                    val rightMargin = 55.dp.toPx()
+                    val chartWidth = size.width - rightMargin
+                    if (offset.x <= chartWidth) {
+                        val idx = hitTest(offset.x, chartWidth, transform)
+                        crosshairIdx = idx
+                        onCrosshair?.invoke(idx)
+                    } else {
+                        crosshairIdx = -1
+                        onCrosshair?.invoke(null)
+                    }
                 }
             }
             .pointerInput(transform) {
                 detectTransformGestures { _, pan, zoom, _ ->
-                    val fraction = -(pan.x / size.width.toFloat())
+                    val rightMargin = 55.dp.toPx()
+                    val chartWidth = size.width - rightMargin
+                    val fraction = -(pan.x / chartWidth)
                     transform.pan(fraction)
                     if (zoom != 1f) {
                         transform.zoom(zoom, 0.5f)
@@ -75,8 +86,10 @@ fun CandlestickChart(
                 }
             }
     ) {
+        val rightMargin = 55.dp.toPx()
         val chartHeight = size.height * chartHeightFraction
-        val chartWidth = size.width
+        val chartWidth = size.width - rightMargin
+        
         val candles = transform.candles
         if (candles.isEmpty()) return@Canvas
 
@@ -86,10 +99,8 @@ fun CandlestickChart(
         if (count == 0) return@Canvas
 
         // Calculate candle width based on viewport.
-        // Bounds are expressed in dp (not raw canvas px) so bodies stay a visible
-        // rectangle instead of collapsing to a sliver on high-density screens.
         val candleSpacing = chartWidth / count
-        val candleBodyWidth = (candleSpacing * 0.7f).coerceIn(2.dp.toPx(), 10.dp.toPx())
+        val candleBodyWidth = (candleSpacing * 0.7f).coerceAtLeast(2.dp.toPx())
 
         // Draw visible candles
         for (i in visStart until visEnd) {
@@ -106,6 +117,17 @@ fun CandlestickChart(
             val bodyColor = if (isBull) bullColor else bearColor
             val bodyTop = if (isBull) closeY else openY
             val bodyBottom = if (isBull) openY else closeY
+
+            // Volume bar
+            val volFraction = transform.volumeToFraction(c.volume)
+            if (volFraction > 0f) {
+                val volHeight = (volFraction * chartHeight * 0.25f).coerceAtLeast(1f) // max 25% of chart height
+                drawRect(
+                    color = bodyColor.copy(alpha = 0.3f),
+                    topLeft = Offset(centerX - candleBodyWidth / 2, chartHeight - volHeight),
+                    size = Size(candleBodyWidth, volHeight)
+                )
+            }
 
             // Wick (high-low line)
             drawLine(
@@ -134,6 +156,45 @@ fun CandlestickChart(
             }
         }
 
+        // ── Y-Axis (Prices) ──
+        val priceRange = transform.priceRange
+        val minPrice = priceRange.start
+        val maxPrice = priceRange.endInclusive
+        val steps = 5
+        val priceStep = (maxPrice - minPrice) / steps
+        val axisTextStyle = TextStyle(color = Color.Gray, fontSize = 10.sp, fontWeight = FontWeight.Normal)
+
+        for (i in 0..steps) {
+            val p = minPrice + priceStep * i
+            val y = transform.priceToFraction(p) * chartHeight
+            val label = dev.kbwallet.app.chart.presentation.util.ChartFormatters.formatPrice(p)
+            
+            drawText(
+                textMeasurer = textMeasurer,
+                text = label,
+                style = axisTextStyle,
+                topLeft = Offset(chartWidth + 4.dp.toPx(), y - 6.dp.toPx())
+            )
+        }
+
+        // ── X-Axis (Time) ──
+        val timeSteps = 4
+        val timeStepIdx = (count / timeSteps).coerceAtLeast(1)
+        for (i in visStart..visEnd step timeStepIdx) {
+            if (i >= candles.size) break
+            val c = candles[i]
+            val localIdx = i - visStart
+            val cx = (localIdx.toFloat() + 0.5f) * candleSpacing
+            val label = dev.kbwallet.app.chart.presentation.util.ChartFormatters.formatTimeShort(c.openTime)
+            
+            drawText(
+                textMeasurer = textMeasurer,
+                text = label,
+                style = axisTextStyle,
+                topLeft = Offset(cx - 15.dp.toPx(), chartHeight + 4.dp.toPx())
+            )
+        }
+
         // ── Crosshair ──
         if (crosshairIdx in visStart until visEnd) {
             val localIdx = crosshairIdx - visStart
@@ -142,7 +203,7 @@ fun CandlestickChart(
 
             // Vertical line
             drawLine(
-                color = Color.White.copy(alpha = 0.2f),
+                color = Color.White.copy(alpha = 0.5f),
                 start = Offset(cx, 0f),
                 end = Offset(cx, chartHeight),
                 strokeWidth = 1.dp.toPx(),
@@ -151,10 +212,40 @@ fun CandlestickChart(
             // Horizontal line at close
             val closeY = transform.priceToFraction(c.close) * chartHeight
             drawLine(
-                color = Color.White.copy(alpha = 0.2f),
+                color = Color.White.copy(alpha = 0.5f),
                 start = Offset(0f, closeY),
                 end = Offset(chartWidth, closeY),
                 strokeWidth = 1.dp.toPx(),
+            )
+
+            // Crosshair labels
+            val priceLabel = dev.kbwallet.app.chart.presentation.util.ChartFormatters.formatPrice(c.close)
+            val timeLabel = dev.kbwallet.app.chart.presentation.util.ChartFormatters.formatTimeShort(c.openTime)
+            
+            // Price Tag
+            drawRect(
+                color = Color.White,
+                topLeft = Offset(chartWidth, closeY - 8.dp.toPx()),
+                size = Size(rightMargin, 16.dp.toPx())
+            )
+            drawText(
+                textMeasurer = textMeasurer,
+                text = priceLabel,
+                style = axisTextStyle.copy(color = Color.Black, fontWeight = FontWeight.Bold),
+                topLeft = Offset(chartWidth + 2.dp.toPx(), closeY - 6.dp.toPx())
+            )
+
+            // Time Tag
+            drawRect(
+                color = Color.White,
+                topLeft = Offset(cx - 25.dp.toPx(), chartHeight),
+                size = Size(50.dp.toPx(), 16.dp.toPx())
+            )
+            drawText(
+                textMeasurer = textMeasurer,
+                text = timeLabel,
+                style = axisTextStyle.copy(color = Color.Black, fontWeight = FontWeight.Bold),
+                topLeft = Offset(cx - 20.dp.toPx(), chartHeight + 2.dp.toPx())
             )
         }
     }

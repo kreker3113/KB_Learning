@@ -2,7 +2,7 @@ package dev.kbwallet.app.simulator.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dev.kbwallet.app.chart.data.remote.impl.CoinRankingKlineDataSource
+import dev.kbwallet.app.chart.data.remote.impl.CoinGeckoKlineDataSource
 import dev.kbwallet.app.chart.domain.model.CandleModel
 import dev.kbwallet.app.chart.domain.model.TimeRange
 import dev.kbwallet.app.coins.data.remote.impl.KtorCoinsRemoteDataSource
@@ -37,8 +37,8 @@ class SimulatorViewModel(
             val result = coinsRemoteDataSource.getListOfCoins()
             when (result) {
                 is Result.Success -> {
-                    val coins = result.data.data.coins.map { dto ->
-                        Coin(id = dto.uuid, name = dto.name, symbol = dto.symbol, iconUrl = dto.iconUrl)
+                    val coins = result.data.map { dto ->
+                        Coin(id = dto.id, name = dto.name, symbol = dto.symbol.uppercase(), iconUrl = dto.image)
                     }.take(20)
                     _state.update { it.copy(availableCoins = coins, isLoading = false) }
                 }
@@ -57,7 +57,7 @@ class SimulatorViewModel(
     private fun loadHistoryData(coin: Coin) {
         viewModelScope.launch {
             val timeRange = TimeRange.ONE_DAY
-            val klineSource = CoinRankingKlineDataSource(coinsRemoteDataSource)
+            val klineSource = CoinGeckoKlineDataSource(coinsRemoteDataSource)
             when (val result = klineSource.fetchKlines(coin.id, timeRange)) {
                 is Result.Success -> {
                     val candles = result.data.sortedBy { it.openTime }

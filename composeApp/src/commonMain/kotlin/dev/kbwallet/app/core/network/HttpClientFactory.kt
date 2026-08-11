@@ -42,7 +42,7 @@ object HttpClientFactory {
             }
             install(HttpCache)
             defaultRequest {
-                headers { append("x-access-token", ApiKeys.COIN_RANKING) }
+                headers { append("x-cg-demo-api-key", ApiKeys.COIN_GECKO) }
                 contentType(ContentType.Application.Json)
             }
         }

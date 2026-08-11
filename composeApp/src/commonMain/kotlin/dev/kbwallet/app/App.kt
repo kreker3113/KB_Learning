@@ -48,6 +48,7 @@ import dev.kbwallet.app.core.navigation.Profile
 import dev.kbwallet.app.core.navigation.SecuritySettings
 import dev.kbwallet.app.core.navigation.Sell
 import dev.kbwallet.app.core.navigation.Simulator
+import dev.kbwallet.app.core.navigation.Sponsorship
 import dev.kbwallet.app.core.navigation.Library
 import dev.kbwallet.app.core.navigation.Topic
 import dev.kbwallet.app.core.i18n.AppStrings
@@ -65,6 +66,7 @@ import dev.kbwallet.app.profile.presentation.LanguageSettingsScreen
 import dev.kbwallet.app.profile.presentation.NotificationSettingsScreen
 import dev.kbwallet.app.profile.presentation.ProfileScreen
 import dev.kbwallet.app.profile.presentation.SecuritySettingsScreen
+import dev.kbwallet.app.profile.presentation.SponsorshipScreen
 import dev.kbwallet.app.theme.KBLearningTheme
 import dev.kbwallet.app.trade.presentation.buy.BuyScreen
 import dev.kbwallet.app.trade.presentation.sell.SellScreen
@@ -194,6 +196,11 @@ fun App() {
                     onNavigateBack = { navController.popBackStack() }
                 )
             }
+            composable<Sponsorship> {
+                SponsorshipScreen(
+                    onBack = { navController.popBackStack() }
+                )
+            }
 
             // ── Trading Simulator additions ──
             composable<PnLAnalytics> {
@@ -314,6 +321,9 @@ private fun MainScaffold(navController: NavHostController) {
                     },
                     onNavigateToLanguage = {
                         navController.navigate(LanguageSettings)
+                    },
+                    onNavigateToSponsorship = {
+                        navController.navigate(Sponsorship)
                     },
                 )
             }
