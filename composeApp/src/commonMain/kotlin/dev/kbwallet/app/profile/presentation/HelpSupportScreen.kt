@@ -42,7 +42,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -189,13 +188,13 @@ fun HelpSupportScreen(
                         Text(
                             text = strings.helpAboutVersion,
                             style = MaterialTheme.typography.bodyMedium,
-                            color = Color.Gray,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                         Spacer(modifier = Modifier.height(2.dp))
                         Text(
                             text = strings.helpAboutTagline,
                             style = MaterialTheme.typography.bodySmall,
-                            color = Color.Gray,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
                 }
@@ -241,7 +240,7 @@ private fun FaqCard(question: String, answer: String, collapseLabel: String, exp
                 Icon(
                     imageVector = Icons.Default.ChevronRight,
                     contentDescription = if (expanded) collapseLabel else expandLabel,
-                    tint = Color.Gray,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier
                         .size(24.dp)
                         .rotate(if (expanded) 90f else 0f),
@@ -261,7 +260,7 @@ private fun FaqCard(question: String, answer: String, collapseLabel: String, exp
                     Text(
                         text = answer,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color.Gray,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         lineHeight = 20.sp,
                     )
                 }

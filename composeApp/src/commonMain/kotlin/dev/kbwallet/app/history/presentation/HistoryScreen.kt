@@ -29,7 +29,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -140,7 +139,7 @@ private fun HistoryContent(state: HistoryState) {
                         Text(
                             text = strings.historyEmptySubtitle,
                             style = MaterialTheme.typography.bodyMedium,
-                            color = Color.Gray,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
                 }
@@ -157,7 +156,7 @@ private fun HistoryContent(state: HistoryState) {
                         Text(
                             text = "📝 ${transaction.notes}",
                             style = MaterialTheme.typography.bodySmall,
-                            color = Color.Gray,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(start = 8.dp)
                         )
                         if (transaction.tags.isNotEmpty()) {
@@ -223,7 +222,7 @@ private fun TransactionItem(transaction: TransactionUiModel) {
                     Text(
                         text = "${transaction.formattedDate}, ${transaction.formattedTime}",
                         style = MaterialTheme.typography.bodySmall,
-                        color = Color.Gray,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
                 Column(horizontalAlignment = Alignment.End) {
@@ -236,7 +235,7 @@ private fun TransactionItem(transaction: TransactionUiModel) {
                     Text(
                         text = transaction.formattedUnitAmount,
                         style = MaterialTheme.typography.bodySmall,
-                        color = Color.Gray,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }

@@ -164,7 +164,7 @@ fun TradeScreen(
                     TradeType.SELL -> if (state.isAmountInUnits) strings.tradeCoinAmountLabel else strings.tradeSellAmountLabel
                 },
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.Gray,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
 
             // ── Amount Input ──
@@ -178,7 +178,7 @@ fun TradeScreen(
                 Text(
                     text = state.fiatEquivalent,
                     style = MaterialTheme.typography.bodySmall,
-                    color = Color.Gray,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(top = 4.dp),
                 )
             }
@@ -187,7 +187,7 @@ fun TradeScreen(
             Text(
                 text = state.availableAmount,
                 style = MaterialTheme.typography.labelLarge,
-                color = Color.Gray,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(4.dp)
             )
 

@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -234,8 +235,22 @@ private fun PortfolioContent(
                             values = chartValues,
                             colors = chartColors,
                             strokeWidth = 40f,
+                            // fillMaxWidth(0.7f) alone sized this off the
+                            // available container width with no ceiling — on
+                            // a phone that's a reasonable ~250dp circle, but
+                            // on the desktop target's much wider window it
+                            // blew up to take up most of the screen.
+                            // NB: chaining `.fillMaxWidth(0.7f).widthIn(max=X)`
+                            // does NOT cap it — fillMaxWidth already pins
+                            // minWidth == maxWidth on the incoming constraints,
+                            // and widthIn's own max gets coerced back up into
+                            // that fixed [min,max] range, making it a no-op.
+                            // widthIn(max) alone is sufficient: DonutChart's
+                            // Canvas uses Modifier.aspectRatio(1f), which by
+                            // itself already expands to fill the available
+                            // (now-capped) width.
                             modifier = Modifier
-                                .fillMaxWidth(0.7f)
+                                .widthIn(max = 240.dp)
                                 .padding(16.dp),
                         )
 

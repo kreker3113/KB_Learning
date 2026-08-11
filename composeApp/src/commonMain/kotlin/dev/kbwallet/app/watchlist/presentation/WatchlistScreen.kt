@@ -82,12 +82,12 @@ fun WatchlistScreen(
                 modifier = Modifier.fillMaxSize().padding(32.dp)
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(strings.watchlistEmptyTitle, style = MaterialTheme.typography.titleMedium, color = Color.Gray)
+                    Text(strings.watchlistEmptyTitle, style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     Spacer(Modifier.height(4.dp))
                     Text(
                         strings.watchlistEmptySubtitle,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color.Gray,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }
@@ -144,7 +144,7 @@ private fun WatchlistRow(
             Text(
                 text = item.symbol.uppercase(),
                 style = MaterialTheme.typography.bodySmall,
-                color = Color.Gray,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
         Column(horizontalAlignment = Alignment.End) {
