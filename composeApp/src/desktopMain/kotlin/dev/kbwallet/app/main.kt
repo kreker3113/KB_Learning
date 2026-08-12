@@ -20,6 +20,7 @@ fun main() {
             onCloseRequest = ::exitApplication,
             title = "KB Wallet",
             state = windowState,
+            icon = androidx.compose.ui.res.painterResource("icon.png"),
         ) {
             App()
         }
