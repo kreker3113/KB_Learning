@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.datetime.Clock
 
 class PortfolioRepositoryImpl(
@@ -130,9 +131,7 @@ class PortfolioRepositoryImpl(
     }
 
     override fun cashBalanceFlow(): Flow<Double> {
-        return flow {
-            emit(userBalanceDao.getCashBalance() ?: 10000.0)
-        }
+        return userBalanceDao.getCashBalanceFlow().map { it ?: 10000.0 }
     }
 
     override fun totalBalanceFlow(): Flow<Result<Double, DataError.Remote>> {

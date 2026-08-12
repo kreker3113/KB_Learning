@@ -16,7 +16,7 @@ import androidx.lifecycle.repeatOnLifecycle
 @Composable
 fun SellScreen(
     coinId: String,
-    navigateToPortfolio: () -> Unit,
+    onSuccess: () -> Unit,
     onBack: () -> Unit = {},
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -31,7 +31,7 @@ fun SellScreen(
             viewModel.events.collect { event ->
                 when (event) {
                     is SellEvents.SellSuccess -> {
-                        navigateToPortfolio()
+                        onSuccess()
                     }
                 }
             }
@@ -41,6 +41,7 @@ fun SellScreen(
         state = state,
         tradeType = TradeType.SELL,
         onAmountChange = viewModel::onAmountChanged,
+        onPercentageClicked = viewModel::onPercentageClicked,
         onSubmitClicked = viewModel::onSellClicked,
         onToggleMode = viewModel::onToggleMode,
         onBack = onBack,
