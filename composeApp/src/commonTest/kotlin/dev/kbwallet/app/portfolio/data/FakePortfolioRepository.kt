@@ -91,15 +91,6 @@ class FakePortfolioRepository : PortfolioRepository {
         // no-op
     }
 
-    override suspend fun placeLimitOrder(order: dev.kbwallet.app.history.data.LimitOrderEntity) {}
-    override fun getActiveLimitOrders(): kotlinx.coroutines.flow.Flow<List<dev.kbwallet.app.history.data.LimitOrderEntity>> = kotlinx.coroutines.flow.flowOf(emptyList())
-    override fun getAllLimitOrders(): kotlinx.coroutines.flow.Flow<List<dev.kbwallet.app.history.data.LimitOrderEntity>> = kotlinx.coroutines.flow.flowOf(emptyList())
-    override suspend fun cancelLimitOrder(orderId: Long) {}
-    override suspend fun getActiveLimitOrdersList(): List<dev.kbwallet.app.history.data.LimitOrderEntity> = emptyList()
-
-    override suspend fun updateTransactionNotes(transactionId: Long, notes: String, tags: String) {
-        // no-op
-    }
 
     // ── Limit Orders ──
     private val _limitOrders = MutableStateFlow<List<LimitOrderEntity>>(emptyList())
