@@ -38,9 +38,6 @@ class BuyViewModel(
         state.copy(
             amount = amount
         )
-    }.onStart {
-        val balance = portfolioRepository.cashBalanceFlow().first()
-        getCoinDetails(balance)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
@@ -62,7 +59,8 @@ class BuyViewModel(
                             iconUrl = coinResponse.data.coin.iconUrl,
                             price = coinResponse.data.price,
                         ),
-                        availableAmount = "Available: ${formatFiat(balance)}"
+                        availableAmount = formatFiat(balance),
+                        availableBalance = balance
                     )
                 }
             }
@@ -103,22 +101,39 @@ class BuyViewModel(
             if (_state.value.isAmountInUnits) {
                 val maxUnits = if (currentCoin.price > 0) balance / currentCoin.price else 0.0
                 _state.update {
-                    it.copy(availableAmount = "Available: ${formatFiat(maxUnits, showDecimal = false)} ${currentCoin.symbol}")
+                    it.copy(
+                        availableAmount = "${formatFiat(maxUnits, showDecimal = false)} ${currentCoin.symbol}",
+                        availableBalance = maxUnits
+                    )
                 }
             } else {
                 _state.update {
-                    it.copy(availableAmount = "Available: ${formatFiat(balance)}")
+                    it.copy(
+                        availableAmount = formatFiat(balance),
+                        availableBalance = balance
+                    )
                 }
             }
         }
     }
 
+    fun onPercentageClicked(fraction: Double) {
+        val amount = _state.value.availableBalance * fraction
+        if (amount > 0) {
+            onAmountChanged(amount.toString())
+        }
+    }
+
     fun onBuyClicked() {
+        if (_state.value.isLoading) return
         val tradeCoin = state.value.coin ?: return
-        val amount = _amount.value.toDoubleOrNull()
-        if (amount == null || amount <= 0.0) {
+        val amount = _amount.value.toDoubleOrNull() ?: return
+        if (amount <= 0.0) return
+        if (amount > _state.value.availableBalance) {
+            _state.update { it.copy(error = dev.kbwallet.app.core.domain.DataError.Local.INSUFFICIENT_FUNDS.toUiText()) }
             return
         }
+        _state.update { it.copy(isLoading = true, error = null) }
         viewModelScope.launch {
             val fiatAmount = if (_state.value.isAmountInUnits) amount * tradeCoin.price else amount
             val buyCoinResponse = buyCoinUseCase.buyCoin(
@@ -129,6 +144,8 @@ class BuyViewModel(
 
             when(buyCoinResponse) {
                 is Result.Success -> {
+                    _amount.value = ""
+                    _state.update { it.copy(isLoading = false, error = null) }
                     _events.send(BuyEvents.BuySuccess)
                 }
                 is Result.Error -> {
@@ -137,6 +154,34 @@ class BuyViewModel(
                             isLoading = false,
                             error = buyCoinResponse.error.toUiText(),
                         )
+                    }
+                }
+            }
+        }
+    }
+
+    init {
+        viewModelScope.launch {
+            portfolioRepository.cashBalanceFlow().collect { balance ->
+                val currentCoin = _state.value.coin
+                if (currentCoin == null) {
+                    getCoinDetails(balance)
+                } else {
+                    if (_state.value.isAmountInUnits) {
+                        val maxUnits = if (currentCoin.price > 0) balance / currentCoin.price else 0.0
+                        _state.update {
+                            it.copy(
+                                availableAmount = "${formatFiat(maxUnits, showDecimal = false)} ${currentCoin.symbol}",
+                                availableBalance = maxUnits
+                            )
+                        }
+                    } else {
+                        _state.update {
+                            it.copy(
+                                availableAmount = formatFiat(balance),
+                                availableBalance = balance
+                            )
+                        }
                     }
                 }
             }

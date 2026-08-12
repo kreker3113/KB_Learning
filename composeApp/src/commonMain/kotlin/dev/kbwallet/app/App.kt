@@ -142,34 +142,10 @@ fun App() {
             composable<Coins> {
                 CoinListScreen(
                     onCoinClicked = { coinId ->
-                        navController.navigate(Buy(coinId))
+                        navController.navigate(CryptoChart(coinId, ""))
                     },
                     onChartRequested = { coinId, coinName ->
                         navController.navigate(CryptoChart(coinId, coinName))
-                    },
-                    onBack = { navController.popBackStack() },
-                )
-            }
-            composable<Buy> { navBackStackEntry ->
-                val coinId: String = navBackStackEntry.toRoute<Buy>().coinId
-                BuyScreen(
-                    coinId = coinId,
-                    navigateToPortfolio = {
-                        navController.navigate(Portfolio) {
-                            popUpTo(Portfolio) { inclusive = true }
-                        }
-                    },
-                    onBack = { navController.popBackStack() },
-                )
-            }
-            composable<Sell> { navBackStackEntry ->
-                val coinId: String = navBackStackEntry.toRoute<Sell>().coinId
-                SellScreen(
-                    coinId = coinId,
-                    navigateToPortfolio = {
-                        navController.navigate(Portfolio) {
-                            popUpTo(Portfolio) { inclusive = true }
-                        }
                     },
                     onBack = { navController.popBackStack() },
                 )
@@ -179,7 +155,7 @@ fun App() {
                 CryptoChartScreen(
                     coinId = route.coinId,
                     coinName = route.coinName,
-                    onBack = { navController.popBackStack() },
+                    onBack = { navController.popBackStack() }
                 )
             }
 
@@ -299,7 +275,7 @@ private fun MainScaffold(navController: NavHostController) {
                         navController.navigate(Coins)
                     },
                     onCoinItemClicked = { coinId ->
-                        navController.navigate(Sell(coinId))
+                        navController.navigate(CryptoChart(coinId, ""))
                     },
                     onSimulatorClicked = {
                         navController.navigate(Simulator)
@@ -310,7 +286,7 @@ private fun MainScaffold(navController: NavHostController) {
                 )
                 BottomTab.Portfolio -> PortfolioScreen(
                     onCoinItemClicked = { coinId ->
-                        navController.navigate(Sell(coinId))
+                        navController.navigate(CryptoChart(coinId, ""))
                     },
                     onDiscoverCoinsClicked = {
                         navController.navigate(Coins)
