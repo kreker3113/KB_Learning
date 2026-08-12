@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -27,7 +28,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -36,6 +36,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import dev.kbwallet.app.core.i18n.appStrings
 import dev.kbwallet.app.theme.LocalKBLearningColorsPalette
+import dev.kbwallet.app.theme.component.StatCard
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -48,7 +49,7 @@ fun DashboardScreen(
     val viewModel = koinViewModel<DashboardViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    if (state.isLoading) {
+    if (state.isLoading && state.portfolioSummaryCoins.isEmpty() && state.topCoins.isEmpty()) {
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier.fillMaxSize()
@@ -58,6 +59,11 @@ fun DashboardScreen(
                 modifier = Modifier.size(32.dp)
             )
         }
+    } else if (state.error != null && state.portfolioSummaryCoins.isEmpty() && state.topCoins.isEmpty()) {
+        dev.kbwallet.app.core.presentation.components.ErrorStateView(
+            message = org.jetbrains.compose.resources.stringResource(state.error!!),
+            onRetry = { viewModel.loadData() }
+        )
     } else {
         DashboardContent(
             state = state,
@@ -111,19 +117,19 @@ private fun DashboardContent(
         item {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Max)
             ) {
-                DashboardStatCard(
+                StatCard(
                     title = strings.dashboardStatPortfolioValue,
                     value = state.portfolioValue,
                     modifier = Modifier.weight(1f)
                 )
-                DashboardStatCard(
+                StatCard(
                     title = strings.dashboardStatAssets,
                     value = state.coinCount.toString(),
                     modifier = Modifier.weight(1f)
                 )
-                DashboardStatCard(
+                StatCard(
                     title = strings.dashboardStat24hChange,
                     value = state.recentPerformance,
                     modifier = Modifier.weight(1f),
@@ -167,7 +173,7 @@ private fun DashboardContent(
                     Text(
                         text = strings.dashboardTradingTipBody,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color.Gray,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         lineHeight = 20.sp,
                     )
                 }
@@ -198,7 +204,7 @@ private fun DashboardContent(
                     Text(
                         text = strings.dashboardLibrarySubtitle,
                         style = MaterialTheme.typography.bodySmall,
-                        color = Color.Gray,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
                 Text(
@@ -244,7 +250,7 @@ private fun DashboardContent(
                         Text(
                             text = strings.dashboardNoAssetsSubtitle,
                             style = MaterialTheme.typography.bodyMedium,
-                            color = Color.Gray,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
                 } else {
@@ -290,38 +296,6 @@ private fun DashboardContent(
                     }
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun DashboardStatCard(
-    title: String,
-    value: String,
-    modifier: Modifier = Modifier,
-    valueColor: Color = MaterialTheme.colorScheme.onBackground,
-) {
-    Box(
-        modifier = modifier
-            .background(
-                MaterialTheme.colorScheme.surface,
-                RoundedCornerShape(16.dp)
-            )
-            .padding(16.dp)
-    ) {
-        Column {
-            Text(
-                text = title,
-                color = Color.Gray,
-                fontSize = 12.sp,
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = value,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = valueColor,
-            )
         }
     }
 }

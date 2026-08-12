@@ -10,7 +10,7 @@ import kotlinx.coroutines.ensureActive
 import kotlin.coroutines.coroutineContext
 
 suspend inline fun <reified T> safeCall(
-    execute: () -> HttpResponse
+    crossinline execute: suspend () -> HttpResponse
 ): Result<T, DataError.Remote> {
     val response = try {
         execute()

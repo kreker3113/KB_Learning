@@ -13,7 +13,7 @@ ktor = "3.0.0"
 ksp = "2.0.21-1.0.25"
 kotlin-date-time = "0.6.1"
 kotlinx-serialization = "1.7.3"
-kotlinx-coroutines-test = "1.9.0"
+kotlinx-coroutines = "1.9.0"
 androidx-lifecycle = "2.8.4"
 room = "2.7.0-alpha11"
 sqlite = "2.5.0-SNAPSHOT"
@@ -27,7 +27,8 @@ core-ktx = "1.7.0"
 # Shared Libraries
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
-kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines-test" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit" }
 test-assertk = { module = "com.willowtreeapps.assertk:assertk", version.ref = "assertK" }
@@ -42,6 +43,7 @@ ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 ktor-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
 ktor-ios = { module = "io.ktor:ktor-client-ios", version.ref = "ktor" }
+ktor-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
 
 # Other Libraries
 kotlin-date-time = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlin-date-time" }

@@ -35,40 +35,43 @@ class WatchlistRepositoryImpl(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override fun getWatchlistWithPrices(): Flow<List<WatchlistItem>> {
+    override fun getWatchlistWithPrices(): Flow<dev.kbwallet.app.core.domain.Result<List<WatchlistItem>, dev.kbwallet.app.core.domain.DataError.Remote>> {
         return watchlistDao.getAllWatchlistItems().flatMapLatest { entities ->
             if (entities.isEmpty()) {
-                flow { emit(emptyList()) }
+                flow { emit(dev.kbwallet.app.core.domain.Result.Success(emptyList())) }
             } else {
                 flow {
                     val result = coinsRemoteDataSource.getListOfCoins()
-                    val items = when {
-                        result is dev.kbwallet.app.core.domain.Result.Success -> {
-                            entities.mapNotNull { entity ->
-                                val coin = result.data.data.coins.find { it.uuid == entity.coinId }
+                    val itemsResult = when (result) {
+                        is dev.kbwallet.app.core.domain.Result.Success -> {
+                            val items = entities.mapNotNull { entity ->
+                                val coin = result.data.find { it.id == entity.coinId }
                                 coin?.let {
                                     WatchlistItem(
                                         coin = dev.kbwallet.app.core.domain.coin.Coin(
-                                            id = it.uuid,
+                                            id = it.id,
                                             name = it.name,
-                                            symbol = it.symbol,
-                                            iconUrl = it.iconUrl,
+                                            symbol = it.symbol.uppercase(),
+                                            iconUrl = it.image,
                                         ),
-                                        currentPrice = it.price,
-                                        change24h = it.change,
+                                        currentPrice = it.currentPrice,
+                                        change24h = it.priceChangePercentage24h ?: 0.0,
                                         addedPrice = entity.addedPrice,
                                         addedAt = entity.addedAt,
                                     )
                                 }
                             }
+                            dev.kbwallet.app.core.domain.Result.Success(items)
                         }
-                        else -> emptyList()
+                        is dev.kbwallet.app.core.domain.Result.Error -> {
+                            dev.kbwallet.app.core.domain.Result.Error(result.error)
+                        }
                     }
-                    emit(items)
+                    emit(itemsResult)
                 }
             }
         }.catch {
-            emit(emptyList())
+            emit(dev.kbwallet.app.core.domain.Result.Error(dev.kbwallet.app.core.domain.DataError.Remote.UNKNOWN))
         }
     }
 

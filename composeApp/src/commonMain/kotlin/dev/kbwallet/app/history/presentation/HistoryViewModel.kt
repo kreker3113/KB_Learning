@@ -9,7 +9,6 @@ import dev.kbwallet.app.portfolio.domain.PortfolioRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -21,11 +20,11 @@ class HistoryViewModel(
     private val portfolioRepository: PortfolioRepository,
 ) : ViewModel() {
 
+    // See DashboardViewModel's _state for why there's no onStart { isLoading =
+    // true } here — this had the identical bug (History was the other screen
+    // that froze).
     private val _state = MutableStateFlow(HistoryState(isLoading = true))
     val state: StateFlow<HistoryState> = _state
-        .onStart {
-            _state.update { it.copy(isLoading = true) }
-        }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),

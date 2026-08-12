@@ -20,6 +20,19 @@ object HttpClientFactory {
                 json(
                     json = Json {
                         ignoreUnknownKeys = true
+                        // CoinRanking quotes its numeric fields as JSON strings
+                        // (price, change, etc. — presumably to avoid float
+                        // precision loss), which strict kotlinx.serialization
+                        // rejects for Double/Int properties by default. Without
+                        // this every coin/price-history response silently threw
+                        // a SerializationException inside safeCall's catch block
+                        // and every coin-dependent screen (list, chart,
+                        // simulator, buy/sell) rendered permanently empty with
+                        // no visible error — this was masked for a long time
+                        // because the shared demo key was itself dead/rate-
+                        // limited, so a real 200 response never reached the
+                        // deserializer until now.
+                        isLenient = true
                     }
                 )
             }
@@ -29,7 +42,7 @@ object HttpClientFactory {
             }
             install(HttpCache)
             defaultRequest {
-                headers { append("x-access-token", ApiKeys.COIN_RANKING) }
+                headers { append("x-cg-demo-api-key", ApiKeys.COIN_GECKO) }
                 contentType(ContentType.Application.Json)
             }
         }

@@ -10,7 +10,7 @@ data class ChartState(
     val candles: List<CandleModel> = emptyList(),
     val selectedRange: TimeRange = TimeRange.ONE_DAY,
     val isLoading: Boolean = false,
-    val error: String? = null,
+    val error: org.jetbrains.compose.resources.StringResource? = null,
     val crosshairIndex: Int? = null,
     val currentPrice: Double = 0.0,
     val priceChange: Double = 0.0,

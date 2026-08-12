@@ -44,7 +44,7 @@ data class SimulatorState(
 
     // ── UI state ──
     val isLoading: Boolean = true,
-    val error: String? = null,
+    val error: org.jetbrains.compose.resources.StringResource? = null,
     val activeHint: String? = null,
     val showHeatmap: Boolean = false,
 )

@@ -2,7 +2,7 @@ package dev.kbwallet.app.simulator.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dev.kbwallet.app.chart.data.remote.impl.CoinRankingKlineDataSource
+import dev.kbwallet.app.chart.data.remote.impl.CoinGeckoKlineDataSource
 import dev.kbwallet.app.chart.domain.model.CandleModel
 import dev.kbwallet.app.chart.domain.model.TimeRange
 import dev.kbwallet.app.coins.data.remote.impl.KtorCoinsRemoteDataSource
@@ -18,9 +18,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlin.math.abs
 import kotlin.math.sqrt
+import dev.kbwallet.app.core.util.toUiText
+
+import dev.kbwallet.app.coins.domain.api.CoinsRemoteDataSource
 
 class SimulatorViewModel(
-    private val coinsRemoteDataSource: KtorCoinsRemoteDataSource,
+    private val coinsRemoteDataSource: CoinsRemoteDataSource,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SimulatorState())
@@ -37,13 +40,13 @@ class SimulatorViewModel(
             val result = coinsRemoteDataSource.getListOfCoins()
             when (result) {
                 is Result.Success -> {
-                    val coins = result.data.data.coins.map { dto ->
-                        Coin(id = dto.uuid, name = dto.name, symbol = dto.symbol, iconUrl = dto.iconUrl)
+                    val coins = result.data.map { dto ->
+                        Coin(id = dto.id, name = dto.name, symbol = dto.symbol.uppercase(), iconUrl = dto.image)
                     }.take(20)
-                    _state.update { it.copy(availableCoins = coins, isLoading = false) }
+                    _state.update { it.copy(availableCoins = coins, isLoading = false, error = null) }
                 }
-                is Result.Error -> {
-                    _state.update { it.copy(error = "Failed to load coins", isLoading = false) }
+                is dev.kbwallet.app.core.domain.Result.Error -> {
+                    _state.update { it.copy(error = result.error.toUiText(), isLoading = false) }
                 }
             }
         }
@@ -57,12 +60,12 @@ class SimulatorViewModel(
     private fun loadHistoryData(coin: Coin) {
         viewModelScope.launch {
             val timeRange = TimeRange.ONE_DAY
-            val klineSource = CoinRankingKlineDataSource(coinsRemoteDataSource)
+            val klineSource = CoinGeckoKlineDataSource(coinsRemoteDataSource)
             when (val result = klineSource.fetchKlines(coin.id, timeRange)) {
                 is Result.Success -> {
                     val candles = result.data.sortedBy { it.openTime }
                     if (candles.size < 10) {
-                        _state.update { it.copy(error = "Not enough data", isLoading = false) }
+                        _state.update { it.copy(error = dev.kbwallet.app.core.domain.DataError.Remote.UNKNOWN.toUiText(), isLoading = false) }
                         return@launch
                     }
                     _state.update {
@@ -78,13 +81,14 @@ class SimulatorViewModel(
                             closedTrades = emptyList(),
                             metrics = SimulatorMetrics(),
                             activeHint = getHint(),
+                            error = null,
                         )
                     }
                     nextPositionId = 1L
                     nextTradeId = 1L
                 }
-                is Result.Error -> {
-                    _state.update { it.copy(error = "Failed to load data", isLoading = false) }
+                is dev.kbwallet.app.core.domain.Result.Error -> {
+                    _state.update { it.copy(error = result.error.toUiText(), isLoading = false) }
                 }
             }
         }

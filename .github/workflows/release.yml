@@ -1,0 +1,201 @@
+name: Release
+
+# Builds a distributable for every platform on a version tag push (v1.0, v1.1, ...)
+# and publishes them all as a single GitHub Release. Push/PR only run tests (ci.yml) —
+# nothing here runs on those.
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  android:
+    name: Android (.apk)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build Debug APK
+        run: ./gradlew :composeApp:assembleDebug --console=plain
+        env:
+          COINGECKO_API_KEY: ${{ secrets.COINGECKO_API_KEY }}
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apk
+          path: composeApp/build/outputs/apk/debug/*.apk
+
+  linux:
+    name: Linux (.deb / .rpm)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      # packageReleaseRpm shells out to rpmbuild, which ubuntu-latest doesn't
+      # ship by default.
+      - name: Install rpmbuild
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y rpm
+
+      - name: Package .deb and .rpm
+        run: ./gradlew :composeApp:packageReleaseDeb :composeApp:packageReleaseRpm --console=plain
+        env:
+          COINGECKO_API_KEY: ${{ secrets.COINGECKO_API_KEY }}
+
+      - name: Upload Linux artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-packages
+          path: |
+            composeApp/build/compose/binaries/main-release/deb/*.deb
+            composeApp/build/compose/binaries/main-release/rpm/*.rpm
+
+  macos:
+    name: macOS (.dmg)
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Package .dmg
+        run: ./gradlew :composeApp:packageReleaseDmg --console=plain
+        env:
+          COINGECKO_API_KEY: ${{ secrets.COINGECKO_API_KEY }}
+
+      - name: Upload macOS artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-dmg
+          path: composeApp/build/compose/binaries/main-release/dmg/*.dmg
+
+  windows:
+    name: Windows (.msi)
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Package .msi
+        run: ./gradlew.bat :composeApp:packageReleaseMsi --console=plain
+        env:
+          COINGECKO_API_KEY: ${{ secrets.COINGECKO_API_KEY }}
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-msi
+          path: composeApp/build/compose/binaries/main-release/msi/*.msi
+
+  ios:
+    name: iOS (Simulator build, unsigned)
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      # No Apple Developer signing certs/provisioning profiles are configured as
+      # secrets, so this can't produce a distributable, signed .ipa — it builds
+      # for the Simulator with code signing off, which is enough to prove the
+      # app (including the embedded Kotlin/Native framework, built via the
+      # target's "Compile Kotlin Framework" run-script phase) actually compiles
+      # for iOS. Wire up a signing identity + provisioning profile as secrets
+      # here if a real device/App Store build is ever needed.
+      - name: Build iOS app for Simulator (unsigned)
+        run: |
+          xcodebuild build \
+            -project iosApp/iosApp.xcodeproj \
+            -target iosApp \
+            -configuration Release \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO
+        env:
+          COINGECKO_API_KEY: ${{ secrets.COINGECKO_API_KEY }}
+
+  publish-release:
+    name: Publish GitHub Release
+    needs: [ android, linux, macos, windows, ios ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          # ** (not *) on every pattern: upload-artifact preserves each
+          # artifact's directory structure relative to the *common ancestor*
+          # of all path patterns given to that upload step. The linux job
+          # uploads deb and rpm from two different sibling directories, so
+          # their common ancestor is one level up — the files land inside
+          # the artifact as deb/*.deb and rpm/*.rpm, not flat at the root.
+          # A flat `artifacts/linux-packages/*.deb` glob here silently
+          # matches nothing (action-gh-release doesn't error on that), which
+          # is why v1.0.0's release was missing .deb/.rpm despite the linux
+          # job itself succeeding. The single-pattern jobs (android/macos/
+          # windows) don't hit this — their artifact root IS the file — but
+          # ** is used everywhere for consistency and to stay safe if that
+          # ever changes.
+          files: |
+            artifacts/android-apk/**/*.apk
+            artifacts/linux-packages/**/*.deb
+            artifacts/linux-packages/**/*.rpm
+            artifacts/macos-dmg/**/*.dmg
+            artifacts/windows-msi/**/*.msi

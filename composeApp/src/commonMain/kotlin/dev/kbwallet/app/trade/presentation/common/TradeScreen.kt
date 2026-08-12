@@ -20,8 +20,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
@@ -57,6 +61,7 @@ fun TradeScreen(
     onAmountChange: (String) -> Unit,
     onSubmitClicked: () -> Unit,
     onToggleMode: () -> Unit,
+    onBack: () -> Unit = {},
 ) {
     val strings = appStrings()
     val accentColor = when (tradeType) {
@@ -75,6 +80,18 @@ fun TradeScreen(
             .imePadding()
             .background(MaterialTheme.colorScheme.background)
     ) {
+        // ── Back ──
+        IconButton(
+            onClick = onBack,
+            modifier = Modifier.align(Alignment.TopStart).padding(4.dp).size(36.dp),
+        ) {
+            Icon(
+                Icons.Default.ArrowBack,
+                contentDescription = strings.actionBack,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.align(Alignment.Center)
@@ -147,7 +164,7 @@ fun TradeScreen(
                     TradeType.SELL -> if (state.isAmountInUnits) strings.tradeCoinAmountLabel else strings.tradeSellAmountLabel
                 },
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.Gray,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
 
             // ── Amount Input ──
@@ -161,7 +178,7 @@ fun TradeScreen(
                 Text(
                     text = state.fiatEquivalent,
                     style = MaterialTheme.typography.bodySmall,
-                    color = Color.Gray,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(top = 4.dp),
                 )
             }
@@ -170,7 +187,7 @@ fun TradeScreen(
             Text(
                 text = state.availableAmount,
                 style = MaterialTheme.typography.labelLarge,
-                color = Color.Gray,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(4.dp)
             )
 

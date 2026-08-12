@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.kbwallet.app.core.i18n.appStrings
 import dev.kbwallet.app.theme.LocalKBLearningColorsPalette
+import dev.kbwallet.app.theme.component.StatCard
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -66,10 +68,10 @@ fun PnLScreen(onBack: () -> Unit) {
             ) {
                 // Summary Cards
                 item {
-                    Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth()) {
-                        PnLStatCard(strings.pnlStatTotalTrades, state.totalTrades.toString(), Modifier.weight(1f))
-                        PnLStatCard(strings.pnlStatWinRate, state.winRate, Modifier.weight(1f), MaterialTheme.colorScheme.primary)
-                        PnLStatCard(strings.pnlStatActiveOrders, state.activeLimitOrders.toString(), Modifier.weight(1f))
+                    Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Max)) {
+                        StatCard(strings.pnlStatTotalTrades, state.totalTrades.toString(), Modifier.weight(1f))
+                        StatCard(strings.pnlStatWinRate, state.winRate, Modifier.weight(1f), MaterialTheme.colorScheme.primary)
+                        StatCard(strings.pnlStatActiveOrders, state.activeLimitOrders.toString(), Modifier.weight(1f))
                     }
                 }
 
@@ -86,7 +88,7 @@ fun PnLScreen(onBack: () -> Unit) {
                             .padding(24.dp)
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
-                            Text(strings.pnlRealized, color = Color.Gray, fontSize = 13.sp)
+                            Text(strings.pnlRealized, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 13.sp)
                             Spacer(Modifier.height(8.dp))
                             Text(
                                 state.realizedPnL,
@@ -121,29 +123,9 @@ fun PnLScreen(onBack: () -> Unit) {
 }
 
 @Composable
-private fun PnLStatCard(
-    title: String,
-    value: String,
-    modifier: Modifier = Modifier,
-    valueColor: Color = MaterialTheme.colorScheme.onBackground,
-) {
-    Box(
-        modifier = modifier
-            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(16.dp))
-            .padding(16.dp)
-    ) {
-        Column {
-            Text(title, color = Color.Gray, fontSize = 12.sp)
-            Spacer(Modifier.height(4.dp))
-            Text(value, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = valueColor)
-        }
-    }
-}
-
-@Composable
 private fun PnLRow(label: String, value: String, valueColor: Color = MaterialTheme.colorScheme.onBackground) {
     Row(modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface, RoundedCornerShape(12.dp)).padding(16.dp)) {
-        Text(label, style = MaterialTheme.typography.bodyMedium, color = Color.Gray, modifier = Modifier.weight(1f))
+        Text(label, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.weight(1f))
         Text(value, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold, color = valueColor)
     }
 }

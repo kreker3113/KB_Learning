@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,6 +26,7 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.TrendingUp
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -33,13 +35,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.kbwallet.app.core.i18n.appStrings
+import dev.kbwallet.app.theme.component.StatCard
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -48,6 +50,7 @@ fun ProfileScreen(
     onNavigateToNotifications: () -> Unit,
     onNavigateToSecurity: () -> Unit,
     onNavigateToHelp: () -> Unit,
+    onNavigateToSponsorship: () -> Unit,
     onNavigateToPnL: () -> Unit = {},
     onNavigateToLanguage: () -> Unit = {},
 ) {
@@ -104,7 +107,7 @@ fun ProfileScreen(
                 Text(
                     text = state.email,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Gray,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 OutlinedButton(
@@ -124,20 +127,20 @@ fun ProfileScreen(
         item {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Max)
             ) {
-                ProfileStatCard(
+                StatCard(
                     title = strings.profileStatTotalTrades,
                     value = state.totalTrades.toString(),
                     modifier = Modifier.weight(1f),
                 )
-                ProfileStatCard(
+                StatCard(
                     title = strings.profileStatWinRate,
                     value = state.winRate,
                     modifier = Modifier.weight(1f),
                     valueColor = MaterialTheme.colorScheme.primary,
                 )
-                ProfileStatCard(
+                StatCard(
                     title = strings.profileStatDaysActive,
                     value = state.daysActive,
                     modifier = Modifier.weight(1f),
@@ -188,42 +191,18 @@ fun ProfileScreen(
         }
         item {
             ProfileMenuOption(
+                icon = Icons.Default.Favorite,
+                title = strings.profileMenuSponsorshipTitle,
+                subtitle = strings.profileMenuSponsorshipSubtitle,
+                onClick = onNavigateToSponsorship,
+            )
+        }
+        item {
+            ProfileMenuOption(
                 icon = Icons.AutoMirrored.Filled.HelpOutline,
                 title = strings.profileMenuHelpTitle,
                 subtitle = strings.profileMenuHelpSubtitle,
                 onClick = onNavigateToHelp,
-            )
-        }
-    }
-}
-
-@Composable
-private fun ProfileStatCard(
-    title: String,
-    value: String,
-    modifier: Modifier = Modifier,
-    valueColor: Color = MaterialTheme.colorScheme.onBackground,
-) {
-    Box(
-        modifier = modifier
-            .background(
-                MaterialTheme.colorScheme.surface,
-                RoundedCornerShape(16.dp)
-            )
-            .padding(16.dp)
-    ) {
-        Column {
-            Text(
-                text = title,
-                color = Color.Gray,
-                fontSize = 12.sp,
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = value,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = valueColor,
             )
         }
     }
@@ -264,13 +243,13 @@ private fun ProfileMenuOption(
             Text(
                 text = subtitle,
                 style = MaterialTheme.typography.bodySmall,
-                color = Color.Gray,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
         Icon(
             imageVector = Icons.Default.ChevronRight,
             contentDescription = null,
-            tint = Color.Gray,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.size(24.dp),
         )
     }

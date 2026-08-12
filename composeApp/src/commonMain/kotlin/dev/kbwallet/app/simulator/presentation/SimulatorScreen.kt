@@ -1,5 +1,7 @@
 package dev.kbwallet.app.simulator.presentation
 
+import androidx.compose.foundation.layout.systemBarsPadding
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -38,9 +40,27 @@ import dev.kbwallet.app.simulator.domain.*
 import dev.kbwallet.app.theme.DarkLossRedColor
 import dev.kbwallet.app.theme.DarkProfitGreenColor
 import dev.kbwallet.app.theme.LocalKBLearningColorsPalette
+import dev.kbwallet.app.theme.component.StatCard
+import dev.kbwallet.app.theme.component.StatCardSize
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.math.roundToInt
+import kotlin.math.round
+import dev.kbwallet.app.core.presentation.components.ErrorStateView
+import org.jetbrains.compose.resources.stringResource
+
+/** Format a Double to N decimal places (KMP-safe, no String.format). */
+private fun fmtDec(value: Double, decimals: Int): String {
+    if (decimals <= 0) return round(value).toLong().toString()
+    val factor = listOf(1.0, 10.0, 100.0, 1000.0).getOrElse(decimals) { 1.0 }
+    val rounded = round(value * factor) / factor
+    val parts = rounded.toString().split('.')
+    val intPart = parts[0]
+    val fracPart = (parts.getOrElse(1) { "0" }).take(decimals).padEnd(decimals, '0')
+    return "$intPart.$fracPart"
+}
 
 private val SubtextGray = Color(0xFFAAAAAA)
+
 
 @Composable
 fun SimulatorScreen(
@@ -58,6 +78,7 @@ fun SimulatorScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
+            .systemBarsPadding()
     ) {
         // ── Header ──
         Row(
@@ -68,7 +89,12 @@ fun SimulatorScreen(
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, strings.actionBack, tint = MaterialTheme.colorScheme.onSurfaceVariant)
             }
             Spacer(Modifier.width(8.dp))
-            Text(strings.simulatorTitle, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+            Text(
+                text = strings.simulatorTitle,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground
+            )
             Spacer(Modifier.weight(1f))
             if (state.activeHint != null) {
                 IconButton(onClick = { viewModel.nextHint() }) {
@@ -81,6 +107,12 @@ fun SimulatorScreen(
             Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
                 CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
             }
+            return
+        } else if (state.error != null && state.availableCoins.isEmpty()) {
+            ErrorStateView(
+                message = stringResource(state.error!!),
+                onRetry = { viewModel.loadCoins() }
+            )
             return
         }
 
@@ -107,7 +139,14 @@ fun SimulatorScreen(
                 }
             }
 
-            if (state.selectedCoin != null && state.candles.isNotEmpty()) {
+            if (state.selectedCoin != null && state.error != null) {
+                item {
+                    ErrorStateView(
+                        message = stringResource(state.error!!),
+                        onRetry = { viewModel.selectCoin(state.selectedCoin!!) }
+                    )
+                }
+            } else if (state.selectedCoin != null && state.candles.isNotEmpty()) {
                 val coin = state.selectedCoin!!
                 val candle = state.candles.getOrNull(state.currentCandleIndex)
 
@@ -200,13 +239,13 @@ fun SimulatorScreen(
                 // ── Balance / Equity ──
                 item {
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Max),
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
                     ) {
-                        SimStatCard(strings.simulatorStatBalance, formatFiat(state.cashBalance), Modifier.weight(1f))
-                        SimStatCard(strings.simulatorStatEquity, formatFiat(state.equity), Modifier.weight(1f), DarkProfitGreenColor)
+                        StatCard(strings.simulatorStatBalance, formatFiat(state.cashBalance), Modifier.weight(1f), size = StatCardSize.Compact)
+                        StatCard(strings.simulatorStatEquity, formatFiat(state.equity), Modifier.weight(1f), DarkProfitGreenColor, size = StatCardSize.Compact)
                         val pnl = state.equity - state.initialBalance
-                        SimStatCard(strings.simulatorStatPnl, formatFiat(pnl), Modifier.weight(1f), if (pnl >= 0) DarkProfitGreenColor else DarkLossRedColor)
+                        StatCard(strings.simulatorStatPnl, formatFiat(pnl), Modifier.weight(1f), if (pnl >= 0) DarkProfitGreenColor else DarkLossRedColor, size = StatCardSize.Compact)
                     }
                 }
 
@@ -275,7 +314,7 @@ fun SimulatorScreen(
                                     Icon(Icons.Default.Warning, null, tint = DarkLossRedColor, modifier = Modifier.size(14.dp))
                                     Spacer(Modifier.width(6.dp))
                                     Text(
-                                        text = strings.simulatorLiquidatesAt(formatFiat(liqPreview), "%.1f".format(100.0 / previewLeverage)),
+                                        text = strings.simulatorLiquidatesAt(formatFiat(liqPreview), fmtDec(100.0 / previewLeverage, 1)),
                                         color = DarkLossRedColor,
                                         fontSize = 11.sp,
                                     )
@@ -350,17 +389,17 @@ fun SimulatorScreen(
                     val m = state.metrics
                     item { Text(strings.simulatorMetricsTitle, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold) }
                     item {
-                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-                            MetricCard(strings.simulatorMetricWinRate, "${"%.0f".format(m.winRate * 100)}%", Modifier.weight(1f))
-                            MetricCard(strings.simulatorMetricProfitFactor, "${"%.2f".format(m.profitFactor)}", Modifier.weight(1f))
-                            MetricCard(strings.simulatorMetricTrades, "${m.totalTrades}", Modifier.weight(1f))
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Max)) {
+                            StatCard(strings.simulatorMetricWinRate, "${fmtDec(m.winRate * 100, 0)}%", Modifier.weight(1f), size = StatCardSize.Compact, monospaceValue = true)
+                            StatCard(strings.simulatorMetricProfitFactor, fmtDec(m.profitFactor, 2), Modifier.weight(1f), size = StatCardSize.Compact, monospaceValue = true)
+                            StatCard(strings.simulatorMetricTrades, "${m.totalTrades}", Modifier.weight(1f), size = StatCardSize.Compact, monospaceValue = true)
                         }
                     }
                     item {
-                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-                            MetricCard(strings.simulatorMetricMaxDD, "$${"%.0f".format(m.maxDrawdown)}", Modifier.weight(1f), DarkLossRedColor)
-                            MetricCard(strings.simulatorMetricBest, "$${"%.0f".format(m.bestTrade)}", Modifier.weight(1f), DarkProfitGreenColor)
-                            MetricCard(strings.simulatorMetricSharpe, "${"%.2f".format(m.sharpeRatio)}", Modifier.weight(1f))
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Max)) {
+                            StatCard(strings.simulatorMetricMaxDD, "$${fmtDec(m.maxDrawdown, 0)}", Modifier.weight(1f), DarkLossRedColor, size = StatCardSize.Compact, monospaceValue = true)
+                            StatCard(strings.simulatorMetricBest, "$${fmtDec(m.bestTrade, 0)}", Modifier.weight(1f), DarkProfitGreenColor, size = StatCardSize.Compact, monospaceValue = true)
+                            StatCard(strings.simulatorMetricSharpe, fmtDec(m.sharpeRatio, 2), Modifier.weight(1f), size = StatCardSize.Compact, monospaceValue = true)
                         }
                     }
                 }
@@ -404,7 +443,7 @@ private fun PositionCard(pos: SimPosition, onClose: () -> Unit) {
                 Spacer(Modifier.width(12.dp))
                 Text(strings.simulatorNowLabel(formatFiat(pos.currentPrice)), fontSize = 12.sp, color = SubtextGray)
                 Spacer(Modifier.weight(1f))
-                Text(strings.simulatorPnlLine("%.0f".format(pos.pnl), "%.1f".format(pos.pnlPercent)),
+                Text(strings.simulatorPnlLine(fmtDec(pos.pnl, 0), fmtDec(pos.pnlPercent, 1)),
                     fontSize = 13.sp, fontWeight = FontWeight.Bold, color = pnlColor)
             }
             if (pos.stopLoss != null || pos.takeProfit != null) {
@@ -448,7 +487,7 @@ private fun ClosedTradeCard(trade: ClosedTrade) {
                 Text(strings.simulatorEntryExitLabel(formatFiat(trade.entryPrice), formatFiat(trade.exitPrice)), fontSize = 11.sp, color = SubtextGray)
             }
             Column(horizontalAlignment = Alignment.End) {
-                Text("${"%.0f".format(trade.pnl)} (${"%.1f".format(trade.pnlPercent)}%)",
+                Text("${fmtDec(trade.pnl, 0)} (${fmtDec(trade.pnlPercent, 1)}%)",
                     fontSize = 13.sp, fontWeight = FontWeight.Bold, color = pnlColor)
                 Text(trade.exitReason.name, fontSize = 10.sp, color = SubtextGray)
             }
@@ -483,22 +522,3 @@ private fun OrderField(
     )
 }
 
-@Composable
-private fun SimStatCard(title: String, value: String, modifier: Modifier = Modifier, valueColor: Color = MaterialTheme.colorScheme.onBackground) {
-    Box(modifier = modifier.background(MaterialTheme.colorScheme.surface, RoundedCornerShape(12.dp)).padding(12.dp)) {
-        Column {
-            Text(title, fontSize = 11.sp, color = SubtextGray)
-            Text(value, fontSize = 16.sp, fontWeight = FontWeight.Bold, color = valueColor)
-        }
-    }
-}
-
-@Composable
-private fun MetricCard(title: String, value: String, modifier: Modifier = Modifier, valueColor: Color = MaterialTheme.colorScheme.onBackground) {
-    Box(modifier = modifier.background(MaterialTheme.colorScheme.surface, RoundedCornerShape(10.dp)).padding(10.dp)) {
-        Column {
-            Text(title, fontSize = 10.sp, color = SubtextGray)
-            Text(value, fontSize = 14.sp, fontWeight = FontWeight.Bold, color = valueColor, fontFamily = FontFamily.Monospace)
-        }
-    }
-}

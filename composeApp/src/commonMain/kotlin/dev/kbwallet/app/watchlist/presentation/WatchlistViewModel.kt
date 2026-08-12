@@ -2,10 +2,13 @@ package dev.kbwallet.app.watchlist.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.kbwallet.app.core.domain.Result
 import dev.kbwallet.app.core.util.formatFiat
 import dev.kbwallet.app.core.util.formatPercentage
+import dev.kbwallet.app.core.util.toUiText
 import dev.kbwallet.app.watchlist.domain.WatchlistItem
 import dev.kbwallet.app.watchlist.domain.WatchlistRepository
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -16,6 +19,7 @@ import kotlinx.coroutines.launch
 data class WatchlistState(
     val items: List<UiWatchlistItem> = emptyList(),
     val isLoading: Boolean = true,
+    val error: org.jetbrains.compose.resources.StringResource? = null,
 )
 
 data class UiWatchlistItem(
@@ -37,13 +41,32 @@ class WatchlistViewModel(
     val state: StateFlow<WatchlistState> = _state
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), WatchlistState())
 
+    private var job: Job? = null
+
     init {
-        viewModelScope.launch {
-            watchlistRepository.getWatchlistWithPrices().collect { items ->
-                _state.value = WatchlistState(
-                    isLoading = false,
-                    items = items.map { it.toUi() }
-                )
+        loadWatchlist()
+    }
+
+    fun loadWatchlist() {
+        job?.cancel()
+        _state.value = _state.value.copy(isLoading = true, error = null)
+        job = viewModelScope.launch {
+            watchlistRepository.getWatchlistWithPrices().collect { result ->
+                when (result) {
+                    is Result.Success -> {
+                        _state.value = WatchlistState(
+                            isLoading = false,
+                            items = result.data.map { it.toUi() },
+                            error = null
+                        )
+                    }
+                    is Result.Error -> {
+                        _state.value = _state.value.copy(
+                            isLoading = false,
+                            error = result.error.toUiText()
+                        )
+                    }
+                }
             }
         }
     }

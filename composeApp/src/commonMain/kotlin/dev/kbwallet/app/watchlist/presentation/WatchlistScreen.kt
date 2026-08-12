@@ -37,7 +37,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import dev.kbwallet.app.core.i18n.appStrings
+import dev.kbwallet.app.core.presentation.components.ErrorStateView
 import dev.kbwallet.app.theme.LocalKBLearningColorsPalette
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -72,22 +74,27 @@ fun WatchlistScreen(
             )
         }
 
-        if (state.isLoading) {
+        if (state.isLoading && state.items.isEmpty()) {
             Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
                 CircularProgressIndicator(color = MaterialTheme.colorScheme.primary, modifier = Modifier.size(32.dp))
             }
+        } else if (state.error != null && state.items.isEmpty()) {
+            ErrorStateView(
+                message = stringResource(state.error!!),
+                onRetry = { viewModel.loadWatchlist() }
+            )
         } else if (state.items.isEmpty()) {
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier.fillMaxSize().padding(32.dp)
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(strings.watchlistEmptyTitle, style = MaterialTheme.typography.titleMedium, color = Color.Gray)
+                    Text(strings.watchlistEmptyTitle, style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     Spacer(Modifier.height(4.dp))
                     Text(
                         strings.watchlistEmptySubtitle,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color.Gray,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }
@@ -144,7 +151,7 @@ private fun WatchlistRow(
             Text(
                 text = item.symbol.uppercase(),
                 style = MaterialTheme.typography.bodySmall,
-                color = Color.Gray,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
         Column(horizontalAlignment = Alignment.End) {

@@ -31,6 +31,8 @@ import dev.kbwallet.app.simulator.domain.MarketSimulator
 import dev.kbwallet.app.dashboard.presentation.DashboardViewModel
 import dev.kbwallet.app.history.presentation.HistoryViewModel
 import dev.kbwallet.app.portfolio.presentation.PortfolioViewModel
+import dev.kbwallet.app.profile.domain.UserRepository
+import dev.kbwallet.app.profile.data.UserRepositoryImpl
 import dev.kbwallet.app.profile.presentation.ProfileViewModel
 import dev.kbwallet.app.chart.di.chartModule
 import dev.kbwallet.app.trade.domain.BuyCoinUseCase
@@ -60,6 +62,9 @@ val sharedModule = module {
     single { AuthApiClient(get()) }
     single { TokenStorage() }
     single { SecureTokenStorage() }
+    
+    // Repositories
+    single<UserRepository> { UserRepositoryImpl(get()) }
 
     // localization
     single { LanguageController(get()) }
@@ -96,7 +101,7 @@ val sharedModule = module {
     viewModel { HistoryViewModel(get()) }
 
     // profile
-    viewModel { ProfileViewModel(get()) }
+    viewModel { ProfileViewModel(get(), get()) }
 
     // chart
     includes(chartModule)

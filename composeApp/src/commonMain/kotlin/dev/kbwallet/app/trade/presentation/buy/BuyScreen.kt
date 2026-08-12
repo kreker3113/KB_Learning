@@ -16,6 +16,7 @@ import androidx.lifecycle.repeatOnLifecycle
 fun BuyScreen(
     coinId: String,
     navigateToPortfolio: () -> Unit,
+    onBack: () -> Unit = {},
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val viewModel = koinViewModel<BuyViewModel>(
@@ -41,5 +42,6 @@ fun BuyScreen(
         onAmountChange = viewModel::onAmountChanged,
         onSubmitClicked = viewModel::onBuyClicked,
         onToggleMode = viewModel::onToggleMode,
+        onBack = onBack,
     )
 }

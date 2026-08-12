@@ -1,8 +1,6 @@
 package dev.kbwallet.app
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -16,16 +14,18 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import dev.kbwallet.app.analytics.presentation.PnLScreen
@@ -49,6 +49,7 @@ import dev.kbwallet.app.core.navigation.Profile
 import dev.kbwallet.app.core.navigation.SecuritySettings
 import dev.kbwallet.app.core.navigation.Sell
 import dev.kbwallet.app.core.navigation.Simulator
+import dev.kbwallet.app.core.navigation.Sponsorship
 import dev.kbwallet.app.core.navigation.Library
 import dev.kbwallet.app.core.navigation.Topic
 import dev.kbwallet.app.core.i18n.AppStrings
@@ -66,6 +67,7 @@ import dev.kbwallet.app.profile.presentation.LanguageSettingsScreen
 import dev.kbwallet.app.profile.presentation.NotificationSettingsScreen
 import dev.kbwallet.app.profile.presentation.ProfileScreen
 import dev.kbwallet.app.profile.presentation.SecuritySettingsScreen
+import dev.kbwallet.app.profile.presentation.SponsorshipScreen
 import dev.kbwallet.app.theme.KBLearningTheme
 import dev.kbwallet.app.trade.presentation.buy.BuyScreen
 import dev.kbwallet.app.trade.presentation.sell.SellScreen
@@ -90,20 +92,24 @@ private fun BottomTab.label(strings: AppStrings): String = when (this) {
     BottomTab.Profile -> strings.navProfile
 }
 
-// Routes where the bottom bar should be visible
-private val bottomBarRoutes = setOf(
-    Dashboard::class,
-    Portfolio::class,
-    History::class,
-    Profile::class,
-)
-
 @Composable
 @Preview
 fun App() {
     ProvideAppLanguage {
     val navController: NavHostController = rememberNavController()
     KBLearningTheme {
+        // Surface (not just a painted Box/Column background) is what actually
+        // provides LocalContentColor to everything below it. Without it, any
+        // Text/Icon that doesn't set an explicit color falls back to Compose's
+        // hardcoded default (black) — invisible on this app's dark background.
+        // Only MainScaffold's own Scaffold did this for the 4 bottom-tab
+        // screens; every secondary screen (Simulator, Coins, Buy/Sell, Profile
+        // sub-screens, Library, ...) sits directly under NavHost with no such
+        // wrapper, hence "dark text on dark background" on those screens.
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background,
+        ) {
         NavHost(
             navController = navController,
             startDestination = Biometric,
@@ -141,6 +147,7 @@ fun App() {
                     onChartRequested = { coinId, coinName ->
                         navController.navigate(CryptoChart(coinId, coinName))
                     },
+                    onBack = { navController.popBackStack() },
                 )
             }
             composable<Buy> { navBackStackEntry ->
@@ -151,7 +158,8 @@ fun App() {
                         navController.navigate(Portfolio) {
                             popUpTo(Portfolio) { inclusive = true }
                         }
-                    }
+                    },
+                    onBack = { navController.popBackStack() },
                 )
             }
             composable<Sell> { navBackStackEntry ->
@@ -162,7 +170,8 @@ fun App() {
                         navController.navigate(Portfolio) {
                             popUpTo(Portfolio) { inclusive = true }
                         }
-                    }
+                    },
+                    onBack = { navController.popBackStack() },
                 )
             }
             composable<CryptoChart> { navBackStackEntry ->
@@ -200,6 +209,11 @@ fun App() {
                     onNavigateBack = { navController.popBackStack() }
                 )
             }
+            composable<Sponsorship> {
+                SponsorshipScreen(
+                    onBack = { navController.popBackStack() }
+                )
+            }
 
             // ── Trading Simulator additions ──
             composable<PnLAnalytics> {
@@ -229,78 +243,58 @@ fun App() {
                 )
             }
         }
+        }
     }
     }
 }
 
+// Switching between these four tabs used to go through a nested NavHost of its
+// own (innerNavController), relying on Navigation-Compose's popUpTo/saveState/
+// restoreState machinery to avoid piling up a fresh screen + ViewModel on every
+// tap. That machinery is still alpha-quality in this KMP fork (2.8.0-alpha09)
+// and turned out to be the real cause behind the Dashboard/History freezes —
+// they're four sibling tabs with no back-stack semantics between them, so a
+// NavHost was never necessary here in the first place. Plain state switching
+// keeps exactly one instance of each tab's ViewModel alive for the lifetime of
+// this screen (scoped to the same ViewModelStoreOwner Koin already resolves
+// against), with none of the navigation-library risk.
 @Composable
 private fun MainScaffold(navController: NavHostController) {
     val strings = appStrings()
-    val innerNavController = rememberNavController()
-    val navBackStackEntry by innerNavController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
-
-    val showBottomBar = currentDestination?.let { dest ->
-        bottomBarRoutes.any { dest.hasRoute(it) }
-    } ?: true
+    var selectedTab by rememberSaveable { mutableStateOf(BottomTab.Dashboard) }
 
     Scaffold(
         bottomBar = {
-            AnimatedVisibility(
-                visible = showBottomBar,
-                enter = slideInVertically(initialOffsetY = { it }),
-                exit = slideOutVertically(targetOffsetY = { it }),
+            NavigationBar(
+                containerColor = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.onSurface,
             ) {
-                NavigationBar(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    contentColor = MaterialTheme.colorScheme.onSurface,
-                ) {
-                    BottomTab.entries.forEach { tab ->
-                        val selected = when (tab) {
-                            BottomTab.Dashboard -> currentDestination?.hasRoute(Dashboard::class) == true
-                            BottomTab.Portfolio -> currentDestination?.hasRoute(Portfolio::class) == true
-                            BottomTab.History -> currentDestination?.hasRoute(History::class) == true
-                            BottomTab.Profile -> currentDestination?.hasRoute(Profile::class) == true
-                        }
-                        NavigationBarItem(
-                            selected = selected,
-                            onClick = {
-                                when (tab) {
-                                    BottomTab.Dashboard -> innerNavController.navigate(Dashboard)
-                                    BottomTab.Portfolio -> innerNavController.navigate(Portfolio)
-                                    BottomTab.History -> innerNavController.navigate(History)
-                                    BottomTab.Profile -> innerNavController.navigate(Profile)
-                                }
-                            },
-                            icon = {
-                                Icon(
-                                    imageVector = tab.icon,
-                                    contentDescription = tab.label(strings),
-                                )
-                            },
-                            label = { Text(text = tab.label(strings)) },
-                            colors = NavigationBarItemDefaults.colors(
-                                selectedIconColor = MaterialTheme.colorScheme.primary,
-                                selectedTextColor = MaterialTheme.colorScheme.primary,
-                                unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                                unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                                indicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
-                            ),
-                        )
-                    }
+                BottomTab.entries.forEach { tab ->
+                    NavigationBarItem(
+                        selected = tab == selectedTab,
+                        onClick = { selectedTab = tab },
+                        icon = {
+                            Icon(
+                                imageVector = tab.icon,
+                                contentDescription = tab.label(strings),
+                            )
+                        },
+                        label = { Text(text = tab.label(strings)) },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = MaterialTheme.colorScheme.primary,
+                            selectedTextColor = MaterialTheme.colorScheme.primary,
+                            unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                            unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                            indicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
+                        ),
+                    )
                 }
             }
         }
     ) { innerPadding ->
-        NavHost(
-            navController = innerNavController,
-            startDestination = Dashboard,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
-        ) {
-            composable<Dashboard> {
-                DashboardScreen(
+        Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
+            when (selectedTab) {
+                BottomTab.Dashboard -> DashboardScreen(
                     onDiscoverCoinsClicked = {
                         navController.navigate(Coins)
                     },
@@ -314,9 +308,7 @@ private fun MainScaffold(navController: NavHostController) {
                         navController.navigate(Library)
                     },
                 )
-            }
-            composable<Portfolio> {
-                PortfolioScreen(
+                BottomTab.Portfolio -> PortfolioScreen(
                     onCoinItemClicked = { coinId ->
                         navController.navigate(Sell(coinId))
                     },
@@ -324,12 +316,8 @@ private fun MainScaffold(navController: NavHostController) {
                         navController.navigate(Coins)
                     },
                 )
-            }
-            composable<History> {
-                HistoryScreen()
-            }
-            composable<Profile> {
-                ProfileScreen(
+                BottomTab.History -> HistoryScreen()
+                BottomTab.Profile -> ProfileScreen(
                     onNavigateToEditProfile = {
                         navController.navigate(EditProfile)
                     },
@@ -347,6 +335,9 @@ private fun MainScaffold(navController: NavHostController) {
                     },
                     onNavigateToLanguage = {
                         navController.navigate(LanguageSettings)
+                    },
+                    onNavigateToSponsorship = {
+                        navController.navigate(Sponsorship)
                     },
                 )
             }

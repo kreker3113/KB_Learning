@@ -1,5 +1,11 @@
 package dev.kbwallet.app.chart.presentation.util
 
+import kotlin.math.abs
+import kotlin.math.round
+import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+
 object ChartFormatters {
 
     fun formatPrice(price: Double): String {
@@ -47,15 +53,15 @@ object ChartFormatters {
     }
 
     fun formatTimeShort(timestampMs: Long): String {
-        val m = (timestampMs / 60_000).toInt()
-        val d = m / 1440; val h = (m % 1440) / 60; val mm = m % 60
-        return when { d > 0 -> "${d}d"; h > 0 -> "${h}h"; else -> "${mm}m" }
+        if (timestampMs == 0L) return ""
+        val dt = Instant.fromEpochMilliseconds(timestampMs).toLocalDateTime(TimeZone.currentSystemDefault())
+        return "${dt.dayOfMonth.toString().padStart(2, '0')}.${dt.monthNumber.toString().padStart(2, '0')}"
     }
 
     fun formatDateTime(timestampMs: Long): String {
-        val m = (timestampMs / 60_000).toInt()
-        val d = m / 1440; val h = (m % 1440) / 60; val mm = m % 60
-        return "${d}d ${h.toString().padStart(2, '0')}:${mm.toString().padStart(2, '0')}"
+        if (timestampMs == 0L) return ""
+        val dt = Instant.fromEpochMilliseconds(timestampMs).toLocalDateTime(TimeZone.currentSystemDefault())
+        return "${dt.dayOfMonth.toString().padStart(2, '0')}.${dt.monthNumber.toString().padStart(2, '0')} ${dt.hour.toString().padStart(2, '0')}:${dt.minute.toString().padStart(2, '0')}"
     }
 }
 

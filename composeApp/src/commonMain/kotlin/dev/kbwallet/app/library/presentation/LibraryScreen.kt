@@ -40,7 +40,7 @@ fun LibraryScreen(
     modifier: Modifier = Modifier,
 ) {
     val strings = appStrings()
-    val topicsByLevel = LibraryContent.topics.groupBy { it.level }
+    val topicsByLevel = LibraryContent.topics().groupBy { it.level }
 
     Column(
         modifier = modifier
