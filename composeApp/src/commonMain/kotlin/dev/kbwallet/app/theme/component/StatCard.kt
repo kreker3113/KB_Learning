@@ -57,7 +57,7 @@ fun StatCard(
         Column(verticalArrangement = Arrangement.spacedBy(size.titleValueGap)) {
             Text(
                 text = title,
-                color = Color.Gray,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = size.titleFontSize,
                 maxLines = 2,
                 lineHeight = size.titleFontSize * 1.2f, // Ensure readable line height if it wraps

@@ -14,6 +14,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -97,6 +98,18 @@ fun App() {
     ProvideAppLanguage {
     val navController: NavHostController = rememberNavController()
     KBLearningTheme {
+        // Surface (not just a painted Box/Column background) is what actually
+        // provides LocalContentColor to everything below it. Without it, any
+        // Text/Icon that doesn't set an explicit color falls back to Compose's
+        // hardcoded default (black) — invisible on this app's dark background.
+        // Only MainScaffold's own Scaffold did this for the 4 bottom-tab
+        // screens; every secondary screen (Simulator, Coins, Buy/Sell, Profile
+        // sub-screens, Library, ...) sits directly under NavHost with no such
+        // wrapper, hence "dark text on dark background" on those screens.
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background,
+        ) {
         NavHost(
             navController = navController,
             startDestination = Biometric,
@@ -229,6 +242,7 @@ fun App() {
                     onBack = { navController.popBackStack() },
                 )
             }
+        }
         }
     }
     }

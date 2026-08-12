@@ -148,7 +148,7 @@ private fun CoinListItem(
             Text(
                 text = coin.symbol,
                 style = MaterialTheme.typography.bodySmall,
-                color = Color.Gray,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
         Column(horizontalAlignment = Alignment.End) {

@@ -180,9 +180,22 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
+          # ** (not *) on every pattern: upload-artifact preserves each
+          # artifact's directory structure relative to the *common ancestor*
+          # of all path patterns given to that upload step. The linux job
+          # uploads deb and rpm from two different sibling directories, so
+          # their common ancestor is one level up — the files land inside
+          # the artifact as deb/*.deb and rpm/*.rpm, not flat at the root.
+          # A flat `artifacts/linux-packages/*.deb` glob here silently
+          # matches nothing (action-gh-release doesn't error on that), which
+          # is why v1.0.0's release was missing .deb/.rpm despite the linux
+          # job itself succeeding. The single-pattern jobs (android/macos/
+          # windows) don't hit this — their artifact root IS the file — but
+          # ** is used everywhere for consistency and to stay safe if that
+          # ever changes.
           files: |
-            artifacts/android-apk/*.apk
-            artifacts/linux-packages/*.deb
-            artifacts/linux-packages/*.rpm
-            artifacts/macos-dmg/*.dmg
-            artifacts/windows-msi/*.msi
+            artifacts/android-apk/**/*.apk
+            artifacts/linux-packages/**/*.deb
+            artifacts/linux-packages/**/*.rpm
+            artifacts/macos-dmg/**/*.dmg
+            artifacts/windows-msi/**/*.msi

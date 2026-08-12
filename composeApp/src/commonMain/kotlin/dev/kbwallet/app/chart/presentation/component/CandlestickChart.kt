@@ -5,6 +5,7 @@ import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -54,6 +55,10 @@ fun CandlestickChart(
 ) {
     val textMeasurer = rememberTextMeasurer()
     var crosshairIdx by remember { mutableIntStateOf(-1) }
+    // MaterialTheme is a @Composable reader — has to be resolved here, in the
+    // composition, and captured; the Canvas content lambda below runs as a
+    // DrawScope during the draw phase and can't call it directly.
+    val axisColor = MaterialTheme.colorScheme.onSurfaceVariant
 
     Canvas(
         modifier = modifier
@@ -162,7 +167,7 @@ fun CandlestickChart(
         val maxPrice = priceRange.endInclusive
         val steps = 5
         val priceStep = (maxPrice - minPrice) / steps
-        val axisTextStyle = TextStyle(color = Color.Gray, fontSize = 10.sp, fontWeight = FontWeight.Normal)
+        val axisTextStyle = TextStyle(color = axisColor, fontSize = 10.sp, fontWeight = FontWeight.Normal)
 
         for (i in 0..steps) {
             val p = minPrice + priceStep * i

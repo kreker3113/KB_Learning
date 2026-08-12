@@ -88,7 +88,7 @@ fun PnLScreen(onBack: () -> Unit) {
                             .padding(24.dp)
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
-                            Text(strings.pnlRealized, color = Color.Gray, fontSize = 13.sp)
+                            Text(strings.pnlRealized, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 13.sp)
                             Spacer(Modifier.height(8.dp))
                             Text(
                                 state.realizedPnL,
@@ -125,7 +125,7 @@ fun PnLScreen(onBack: () -> Unit) {
 @Composable
 private fun PnLRow(label: String, value: String, valueColor: Color = MaterialTheme.colorScheme.onBackground) {
     Row(modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface, RoundedCornerShape(12.dp)).padding(16.dp)) {
-        Text(label, style = MaterialTheme.typography.bodyMedium, color = Color.Gray, modifier = Modifier.weight(1f))
+        Text(label, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.weight(1f))
         Text(value, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold, color = valueColor)
     }
 }

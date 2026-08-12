@@ -44,3 +44,11 @@ jobs:
         with:
           name: desktop-test-report
           path: composeApp/build/reports/tests/desktopTest/
+
+      # No test sources in :server yet, so this is effectively a compile check —
+      # still worth having, since nothing else in CI ever touches this module and
+      # it could silently stop building otherwise. jvmToolchain(21) in its
+      # build.gradle.kts pulls its own JDK via the foojay resolver regardless of
+      # the java-version set up above.
+      - name: Build and test server module
+        run: ./gradlew :server:test --console=plain
