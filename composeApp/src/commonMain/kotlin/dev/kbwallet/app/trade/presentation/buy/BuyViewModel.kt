@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dev.kbwallet.app.coins.domain.GetCoinDetailsUseCase
 import dev.kbwallet.app.core.domain.Result
 import dev.kbwallet.app.core.util.formatFiat
+import dev.kbwallet.app.core.util.toPlainAmountString
 import dev.kbwallet.app.core.util.toUiText
 import dev.kbwallet.app.portfolio.domain.PortfolioRepository
 import dev.kbwallet.app.trade.domain.BuyCoinUseCase
@@ -16,7 +17,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -120,7 +120,7 @@ class BuyViewModel(
     fun onPercentageClicked(fraction: Double) {
         val amount = _state.value.availableBalance * fraction
         if (amount > 0) {
-            onAmountChanged(amount.toString())
+            onAmountChanged(amount.toPlainAmountString())
         }
     }
 

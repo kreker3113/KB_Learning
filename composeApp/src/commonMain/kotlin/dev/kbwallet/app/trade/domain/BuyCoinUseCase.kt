@@ -18,19 +18,26 @@ class BuyCoinUseCase(
         price: Double,
     ): EmptyResult<DataError> {
         val balance = portfolioRepository.cashBalanceFlow().first()
-        if (balance < amountInFiat) {
+        // The MAX/percentage buy buttons compute amountInFiat as availableBalance *
+        // fraction — for fraction == 1.0 that's balance itself, but intermediate
+        // unit<->fiat round trips elsewhere in the flow can leave it a few ULPs above
+        // the true balance in IEEE-754 double math. Tolerate that instead of bouncing
+        // a legitimate "buy with everything I have" as insufficient funds.
+        val fiatEpsilon = balance * 1e-9 + 1e-9
+        if (balance + fiatEpsilon < amountInFiat) {
             return Result.Error(DataError.Local.INSUFFICIENT_FUNDS)
         }
+        val actualAmountInFiat = amountInFiat.coerceAtMost(balance)
 
         val existingCoinResult = portfolioRepository.getPortfolioCoin(coin.id)
         val existingCoin = when (existingCoinResult) {
             is Result.Success -> existingCoinResult.data
             is Result.Error -> return Result.Error(existingCoinResult.error)
         }
-        val amountInUnit = amountInFiat / price
+        val amountInUnit = actualAmountInFiat / price
         if (existingCoin != null) {
             val newAmountOwned = existingCoin.ownedAmountInUnit + amountInUnit
-            val newTotalInvestment = existingCoin.ownedAmountInFiat + amountInFiat
+            val newTotalInvestment = existingCoin.ownedAmountInFiat + actualAmountInFiat
             val newAveragePurchasePrice = newTotalInvestment / newAmountOwned
             portfolioRepository.savePortfolioCoin(
                 existingCoin.copy(
@@ -45,18 +52,18 @@ class BuyCoinUseCase(
                     coin = coin,
                     performancePercent = 0.0,
                     averagePurchasePrice = price,
-                    ownedAmountInFiat = amountInFiat,
+                    ownedAmountInFiat = actualAmountInFiat,
                     ownedAmountInUnit = amountInUnit
                 )
             )
         }
-        portfolioRepository.updateCashBalance(balance - amountInFiat)
+        portfolioRepository.updateCashBalance(balance - actualAmountInFiat)
         portfolioRepository.recordTransaction(
             coinId = coin.id,
             coinName = coin.name,
             coinSymbol = coin.symbol,
             type = "BUY",
-            amountInFiat = amountInFiat,
+            amountInFiat = actualAmountInFiat,
             amountInUnit = amountInUnit,
             pricePerUnit = price,
         )
