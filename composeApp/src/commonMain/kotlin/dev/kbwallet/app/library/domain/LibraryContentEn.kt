@@ -15,6 +15,18 @@ internal val enLibraryTopics: List<LibraryTopic> = listOf(
         ),
     ),
     LibraryTopic(
+        id = "why-use-crypto",
+        title = "Why do you actually need cryptocurrency?",
+        level = LibraryLevel.BEGINNER,
+        summary = "Beyond price speculation: what problems crypto actually solves.",
+        content = listOf(
+            "For most people crypto shows up first as a speculative asset to trade, but that's not the reason it was built. At its core it solves a coordination problem: how strangers who don't trust each other can move value directly, without relying on a bank, a government, or a payment company to approve the transaction.",
+            "Practical everyday use cases: sending money across borders faster and often cheaper than traditional wire transfers or remittance services, especially where local banking is slow, expensive, or unavailable; holding savings in a form that isn't controlled by a single company or government, relevant in countries with unstable currencies or capital controls; and interacting directly with decentralized apps (trading, lending, gaming) that only accept crypto because no traditional payment rail has been built for them yet.",
+            "For some people the use case is simply diversification — a small allocation to an asset class that doesn't move in lockstep with stocks, bonds, or real estate, alongside the acknowledgment that this lack of correlation can break down badly during systemic panics.",
+            "It's fine to want to buy crypto because you find the technology interesting or expect the price to rise. Just be honest with yourself about which reason applies to you, because the reason should drive how much you buy, how you store it, and how closely you need to watch the market.",
+        ),
+    ),
+    LibraryTopic(
         id = "wallets-and-keys",
         title = "Wallets, private keys & seed phrases",
         level = LibraryLevel.BEGINNER,
@@ -51,6 +63,42 @@ internal val enLibraryTopics: List<LibraryTopic> = listOf(
         ),
     ),
     LibraryTopic(
+        id = "buying-your-first-crypto",
+        title = "Buying your first crypto: a step-by-step walkthrough",
+        level = LibraryLevel.BEGINNER,
+        summary = "From choosing an exchange to owning your first coins — the whole process end to end.",
+        content = listOf(
+            "The most common path for a first purchase is: pick a reputable, regulated exchange available in your country → create an account and verify your identity (KYC) → deposit fiat money → place a buy order → optionally withdraw the coins to your own wallet.",
+            "Verification (KYC) usually asks for a government ID and sometimes a selfie or proof of address. This isn't optional on regulated exchanges — it's a legal requirement, and skipping it (by staying on an unverified account) usually caps how much you can deposit or withdraw.",
+            "Once your account is funded, buying works like buying a stock: choose the trading pair (e.g. BTC/USD), decide how much fiat you want to spend, and place a market order for simplicity or a limit order if you want to control the exact price (see order types).",
+            "Your coins now sit in the exchange's custodial wallet, not yours (see \"not your keys, not your coins\"). For a small amount you plan to trade, that's fine to leave there; for anything you consider savings, the natural next step is withdrawing to a wallet where you hold the private key yourself.",
+        ),
+    ),
+    LibraryTopic(
+        id = "funding-methods",
+        title = "Funding methods: where and how to top up",
+        level = LibraryLevel.BEGINNER,
+        summary = "Bank cards, bank transfers, P2P and crypto deposits each trade off speed, cost, and limits.",
+        content = listOf(
+            "Bank card (debit/credit): the fastest way to fund an account — usually instant — but typically the most expensive, with card-processing fees on top of the exchange's own fee, and lower deposit limits than a bank transfer.",
+            "Bank transfer (wire, SEPA, ACH, or a local equivalent): usually the cheapest way to deposit a large amount, but slower — anywhere from same-day to a few business days — and the account name on your bank normally has to match the name verified on the exchange.",
+            "P2P (peer-to-peer): you buy directly from another individual through the exchange's escrow system, paying them by bank transfer, cash, or a local payment app. It's useful where card/bank rails are restricted, but carries extra risk — stick to platforms with built-in escrow and a seller's trade history/reputation, and never send payment outside the escrow flow.",
+            "Crypto deposit: if you already hold crypto elsewhere (another exchange, another wallet), you can top up an account by sending coins directly to your deposit address. Always double-check you're sending the right coin on the right network (see the next topic on withdrawing) — sending, say, USDT on the wrong network to an address that only expects it on another can mean permanent loss.",
+        ),
+    ),
+    LibraryTopic(
+        id = "withdrawing-and-cashing-out",
+        title = "Withdrawing crypto & cashing back out to fiat",
+        level = LibraryLevel.BEGINNER,
+        summary = "Moving coins to your own wallet, and turning crypto back into money in your bank account.",
+        content = listOf(
+            "To withdraw, you send coins from the exchange to an address you control. Always copy-paste the address (never type it by hand) and, for a first-time or unfamiliar address, send a small test amount first before sending the full sum — this catches typos and wrong-network mistakes before they become expensive.",
+            "Every crypto only exists on specific networks, and withdrawal screens usually make you pick one (e.g. USDT can move on Ethereum, Tron, or other chains). Sending to an address on the wrong network is one of the most common ways beginners permanently lose funds — the receiving side has to support the exact same network you send on.",
+            "Withdrawals also carry a network fee (paid to the blockchain, not the exchange) which varies a lot by network and congestion — some chains cost cents, others can cost several dollars at busy times. Some exchanges also charge their own separate withdrawal fee on top.",
+            "Cashing out to fiat works in reverse: sell your crypto for a fiat balance on the exchange, then withdraw that fiat balance to your linked bank account (or, in some regions, via a card payout or P2P sale). Expect a similar range of settlement times as a deposit — instant to a few business days — and be aware this sale is very likely a taxable event in most countries (see taxes & regulation).",
+        ),
+    ),
+    LibraryTopic(
         id = "stablecoins",
         title = "Stablecoins",
         level = LibraryLevel.BEGINNER,
@@ -60,6 +108,18 @@ internal val enLibraryTopics: List<LibraryTopic> = listOf(
             "Fiat-collateralized stablecoins are backed by reserves (cash and short-term bonds) held by the issuing company — their stability depends entirely on trusting that company holds and discloses those reserves honestly.",
             "Other designs (crypto-collateralized or algorithmic stablecoins) try to keep the peg without a central reserve. These have historically been less reliable — several algorithmic stablecoins have lost their peg entirely and collapsed.",
             "Stablecoins are not risk-free just because the price doesn't move much day to day — you're still trusting the issuer and the blockchain they run on.",
+        ),
+    ),
+    LibraryTopic(
+        id = "account-security-basics",
+        title = "Account & wallet security basics",
+        level = LibraryLevel.BEGINNER,
+        summary = "A short checklist that prevents the majority of beginner losses.",
+        content = listOf(
+            "Enable two-factor authentication (2FA) on every exchange account, preferably with an authenticator app (Google Authenticator, Authy) rather than SMS — SIM-swap attacks can intercept text-message codes.",
+            "Use a unique, long password for every crypto-related account, ideally generated and stored in a password manager. Reusing a password from another site means a breach anywhere else can be used to drain your crypto account.",
+            "Set up a withdrawal address allowlist where the exchange supports it (only pre-approved addresses can receive withdrawals), and enable withdrawal/login email or app notifications so you notice unauthorized activity immediately.",
+            "Treat any unsolicited message asking you to \"verify your account,\" \"claim a reward,\" or urgently move funds as an attack, even if it looks like it's from the exchange's real domain or support team — verify through the app or official website you typed in yourself, never through a link in a message.",
         ),
     ),
     LibraryTopic(
