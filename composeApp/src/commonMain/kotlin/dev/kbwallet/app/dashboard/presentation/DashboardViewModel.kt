@@ -43,17 +43,19 @@ class DashboardViewModel(
     private val retryTrigger = RetryTrigger()
 
     // Three independent async sources (portfolio coins, total balance, top coins)
-    // all feed the single DashboardState.error shown on screen. Each used to just
-    // write `error = null` on its own success, which could silently hide another
-    // source's still-active error (or resurrect a stale one) depending on update
-    // order between the three concurrent collectors. Tracking each source's last
-    // error separately and re-deriving the combined banner via refreshError()
-    // after every update avoids that race.
+    // all feed the single DashboardState.error shown on screen. Naively writing
+    // `error = null` on any one source's success can silently hide another
+    // source's still-active error (or resurrect a stale one), depending on
+    // update order between the three concurrent collectors. Tracking each
+    // source's last error separately and folding them into every _state.update
+    // via combinedError() avoids that race.
     private var portfolioCoinsError: StringResource? = null
     private var totalBalanceError: StringResource? = null
     private var topCoinsError: StringResource? = null
 
     private var topCoinsJob: Job? = null
+
+    private fun combinedError(): StringResource? = portfolioCoinsError ?: totalBalanceError ?: topCoinsError
 
     init {
         // ── Portfolio coins (reactive) ──
@@ -81,6 +83,7 @@ class DashboardViewModel(
                         _state.update {
                             it.copy(
                                 isLoading = false,
+                                error = combinedError(),
                                 coinCount = coins.size,
                                 portfolioSummaryCoins = summaryItems,
                                 recentPerformance = formatPercentage(weightedPerf),
@@ -90,10 +93,9 @@ class DashboardViewModel(
                     }
                     is Result.Error -> {
                         portfolioCoinsError = result.error.toUiText()
-                        _state.update { it.copy(isLoading = false) }
+                        _state.update { it.copy(isLoading = false, error = combinedError()) }
                     }
                 }
-                refreshError()
             }
         }
 
@@ -103,22 +105,17 @@ class DashboardViewModel(
                 when (result) {
                     is Result.Success -> {
                         totalBalanceError = null
-                        _state.update { it.copy(portfolioValue = formatFiat(result.data)) }
+                        _state.update { it.copy(portfolioValue = formatFiat(result.data), error = combinedError()) }
                     }
                     is Result.Error -> {
                         totalBalanceError = result.error.toUiText()
+                        _state.update { it.copy(error = combinedError()) }
                     }
                 }
-                refreshError()
             }
         }
 
         loadTopCoins()
-    }
-
-    /** Recomputes the single displayed error from whichever source(s) currently have one. */
-    private fun refreshError() {
-        _state.update { it.copy(error = portfolioCoinsError ?: totalBalanceError ?: topCoinsError) }
     }
 
     // ── Top coins (one-shot) ──
@@ -139,13 +136,13 @@ class DashboardViewModel(
                             isPositive = coin.change >= 0,
                         )
                     }
-                    _state.update { it.copy(topCoins = topCoins) }
+                    _state.update { it.copy(topCoins = topCoins, error = combinedError()) }
                 }
                 is Result.Error -> {
                     topCoinsError = coinsResult.error.toUiText()
+                    _state.update { it.copy(error = combinedError()) }
                 }
             }
-            refreshError()
         }
     }
 

@@ -1,4 +1,4 @@
-package dev.kbwallet.app.core.database.portfolio
+package dev.kbwallet.app.core.database
 
 import androidx.room.ConstructedBy
 import androidx.room.Database
@@ -14,7 +14,17 @@ import dev.kbwallet.app.portfolio.data.local.UserBalanceEntity
 import dev.kbwallet.app.watchlist.data.WatchlistDao
 import dev.kbwallet.app.watchlist.data.WatchlistEntity
 
-@ConstructedBy(PortfolioDatabaseCreator::class)
+/**
+ * The single shared Room database for the whole app — portfolio holdings,
+ * watchlist, transaction history, and limit orders all live here together.
+ * Was previously named `PortfolioDatabase` (in a `database.portfolio`
+ * subpackage), which read as portfolio-only storage even though watchlist/
+ * history/limit-orders have always lived here too — renamed for clarity,
+ * not behavior. The on-disk file name stays "portfolio.db" (see the
+ * per-platform getAppDatabaseBuilder() in this package) — renaming that too
+ * would silently orphan every existing install's local data on update.
+ */
+@ConstructedBy(AppDatabaseCreator::class)
 @Database(
     entities = [
         PortfolioCoinEntity::class,
@@ -25,7 +35,7 @@ import dev.kbwallet.app.watchlist.data.WatchlistEntity
     ],
     version = 7
 )
-abstract class PortfolioDatabase: RoomDatabase() {
+abstract class AppDatabase: RoomDatabase() {
     abstract fun portfolioDao(): PortfolioDao
     abstract fun userBalanceDao(): UserBalanceDao
     abstract fun transactionDao(): TransactionDao

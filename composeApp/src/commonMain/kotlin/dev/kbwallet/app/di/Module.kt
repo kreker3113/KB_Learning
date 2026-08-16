@@ -25,8 +25,8 @@ import dev.kbwallet.app.trade.presentation.buy.BuyViewModel
 import dev.kbwallet.app.trade.presentation.sell.SellViewModel
 import org.koin.dsl.module
 import androidx.room.RoomDatabase
-import dev.kbwallet.app.core.database.portfolio.PortfolioDatabase
-import dev.kbwallet.app.core.database.portfolio.getPortfolioDatabase
+import dev.kbwallet.app.core.database.AppDatabase
+import dev.kbwallet.app.core.database.getAppDatabase
 import dev.kbwallet.app.simulator.domain.MarketSimulator
 import dev.kbwallet.app.dashboard.presentation.DashboardViewModel
 import dev.kbwallet.app.history.presentation.HistoryViewModel
@@ -77,14 +77,14 @@ val sharedModule = module {
 
     // portfolio
     single {
-        getPortfolioDatabase(get<RoomDatabase.Builder<PortfolioDatabase>>())
+        getAppDatabase(get<RoomDatabase.Builder<AppDatabase>>())
     }
     singleOf(::PortfolioRepositoryImpl).bind<PortfolioRepository>()
-    single { get<PortfolioDatabase>().portfolioDao() }
-    single { get<PortfolioDatabase>().userBalanceDao() }
-    single { get<PortfolioDatabase>().transactionDao() }
-    single { get<PortfolioDatabase>().limitOrderDao() }
-    single { get<PortfolioDatabase>().watchlistDao() }
+    single { get<AppDatabase>().portfolioDao() }
+    single { get<AppDatabase>().userBalanceDao() }
+    single { get<AppDatabase>().transactionDao() }
+    single { get<AppDatabase>().limitOrderDao() }
+    single { get<AppDatabase>().watchlistDao() }
     viewModel { PortfolioViewModel(get()) }
 
     // coins list

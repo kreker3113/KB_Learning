@@ -1,8 +1,8 @@
 package dev.kbwallet.app.di
 
 import androidx.room.RoomDatabase
-import dev.kbwallet.app.core.database.getPortfolioDatabaseBuilder
-import dev.kbwallet.app.core.database.portfolio.PortfolioDatabase
+import dev.kbwallet.app.core.database.AppDatabase
+import dev.kbwallet.app.core.database.getAppDatabaseBuilder
 import dev.kbwallet.app.core.i18n.DesktopLanguageStorage
 import dev.kbwallet.app.core.i18n.LanguageStorage
 import io.ktor.client.engine.HttpClientEngine
@@ -15,6 +15,6 @@ actual val platformModule = module {
 
     // core
     single<HttpClientEngine> { CIO.create() }
-    singleOf(::getPortfolioDatabaseBuilder).bind<RoomDatabase.Builder<PortfolioDatabase>>()
+    singleOf(::getAppDatabaseBuilder).bind<RoomDatabase.Builder<AppDatabase>>()
     single<LanguageStorage> { DesktopLanguageStorage() }
 }
