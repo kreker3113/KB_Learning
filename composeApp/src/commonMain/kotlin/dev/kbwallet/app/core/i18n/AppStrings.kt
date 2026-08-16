@@ -181,6 +181,7 @@ interface AppStrings {
     val tradeSellAmountLabel: String
     val tradeBuyButton: String
     val tradeSellButton: String
+    val tradeAvailablePrefix: String
 
     // ── Trading simulator screen ──
     val simulatorTitle: String
@@ -400,6 +401,7 @@ private object EnStrings : AppStrings {
     override val tradeSellAmountLabel = "Sell Amount"
     override val tradeBuyButton = "Buy"
     override val tradeSellButton = "Sell"
+    override val tradeAvailablePrefix = "Available: "
 
     override val simulatorTitle = "Trading Simulator"
     override val simulatorHintContentDesc = "Hint"
@@ -615,6 +617,7 @@ private object RuStrings : AppStrings {
     override val tradeSellAmountLabel = "Сумма продажи"
     override val tradeBuyButton = "Купить"
     override val tradeSellButton = "Продать"
+    override val tradeAvailablePrefix = "Доступно: "
 
     override val simulatorTitle = "Торговый симулятор"
     override val simulatorHintContentDesc = "Подсказка"

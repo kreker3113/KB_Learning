@@ -36,6 +36,7 @@ class BuyScreenTest {
                 onAmountChange = {},
                 onSubmitClicked = {},
                 onToggleMode = {},
+                onPercentageClicked = {}
             )
         }
 
@@ -50,6 +51,7 @@ class BuyScreenTest {
                 onAmountChange = {},
                 onSubmitClicked = {},
                 onToggleMode = {},
+                onPercentageClicked = {}
             )
         }
 
@@ -78,6 +80,7 @@ class BuyScreenTest {
                 onAmountChange = {},
                 onSubmitClicked = {},
                 onToggleMode = {},
+                onPercentageClicked = {}
             )
         }
 
@@ -106,6 +109,7 @@ class BuyScreenTest {
                 onAmountChange = {},
                 onSubmitClicked = {},
                 onToggleMode = {},
+                onPercentageClicked = {}
             )
         }
 

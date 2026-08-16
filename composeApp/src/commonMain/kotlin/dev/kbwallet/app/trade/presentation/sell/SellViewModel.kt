@@ -37,22 +37,6 @@ class SellViewModel(
         state.copy(
             amount = amount
         )
-    }.onStart {
-        when(val portfolioCoinResponse = portfolioRepository.getPortfolioCoin(coinId)) {
-            is Result.Success -> {
-                portfolioCoinResponse.data?.ownedAmountInUnit?.let {
-                    getCoinDetails(it)
-                }
-            }
-            is Result.Error -> {
-                _state.update {
-                    it.copy(
-                        isLoading = false,
-                        error = portfolioCoinResponse.error.toUiText()
-                    )
-                }
-            }
-        }
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
@@ -86,14 +70,16 @@ class SellViewModel(
                     if (_state.value.isAmountInUnits) {
                         _state.update {
                             it.copy(
-                                availableAmount = "Available: ${formatFiat(owned, showDecimal = false)} ${currentCoin.symbol}",
+                                availableAmount = "${formatFiat(owned, showDecimal = false)} ${currentCoin.symbol}",
+                                availableBalance = owned,
                                 error = null,
                             )
                         }
                     } else {
                         _state.update {
                             it.copy(
-                                availableAmount = "Available: ${formatFiat(ownedFiat)}",
+                                availableAmount = formatFiat(ownedFiat),
+                                availableBalance = ownedFiat,
                                 error = null,
                             )
                         }
@@ -119,7 +105,8 @@ class SellViewModel(
                             iconUrl = coinResponse.data.coin.iconUrl,
                             price = coinResponse.data.price,
                         ),
-                        availableAmount = "Available: ${formatFiat(availableAmountInFiat)}"
+                        availableAmount = formatFiat(availableAmountInFiat),
+                        availableBalance = availableAmountInFiat
                     )
                 }
             }
@@ -134,12 +121,23 @@ class SellViewModel(
         }
     }
 
+    fun onPercentageClicked(fraction: Double) {
+        val amount = _state.value.availableBalance * fraction
+        if (amount > 0) {
+            onAmountChanged(amount.toString())
+        }
+    }
+
     fun onSellClicked() {
+        if (_state.value.isLoading) return
         val tradeCoin = state.value.coin ?: return
-        val amount = _amount.value.toDoubleOrNull()
-        if (amount == null || amount <= 0.0) {
+        val amount = _amount.value.toDoubleOrNull() ?: return
+        if (amount <= 0.0) return
+        if (amount > _state.value.availableBalance) {
+            _state.update { it.copy(error = dev.kbwallet.app.core.domain.DataError.Local.INSUFFICIENT_FUNDS.toUiText()) }
             return
         }
+        _state.update { it.copy(isLoading = true, error = null) }
         viewModelScope.launch {
             val fiatAmount = if (_state.value.isAmountInUnits) amount * tradeCoin.price else amount
             val sellCoinResponse = sellCoinUseCase.sellCoin(
@@ -149,6 +147,8 @@ class SellViewModel(
             )
             when (sellCoinResponse) {
                 is Result.Success -> {
+                    _amount.value = ""
+                    _state.update { it.copy(isLoading = false, error = null) }
                     _events.send(SellEvents.SellSuccess)
                 }
                 is Result.Error -> {
@@ -157,6 +157,37 @@ class SellViewModel(
                             isLoading = false,
                             error = sellCoinResponse.error.toUiText()
                         )
+                    }
+                }
+            }
+        }
+    }
+
+    init {
+        viewModelScope.launch {
+            portfolioRepository.allPortfolioCoinsFlow().collect { coinsResult ->
+                if (coinsResult is Result.Success) {
+                    val ownedUnits = coinsResult.data.find { it.coin.id == coinId }?.ownedAmountInUnit ?: 0.0
+                    val currentCoin = _state.value.coin
+                    if (currentCoin == null) {
+                        getCoinDetails(ownedUnits)
+                    } else {
+                        val ownedFiat = ownedUnits * currentCoin.price
+                        if (_state.value.isAmountInUnits) {
+                            _state.update {
+                                it.copy(
+                                    availableAmount = "${formatFiat(ownedUnits, showDecimal = false)} ${currentCoin.symbol}",
+                                    availableBalance = ownedUnits
+                                )
+                            }
+                        } else {
+                            _state.update {
+                                it.copy(
+                                    availableAmount = formatFiat(ownedFiat),
+                                    availableBalance = ownedFiat
+                                )
+                            }
+                        }
                     }
                 }
             }

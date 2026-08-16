@@ -15,7 +15,7 @@ import androidx.lifecycle.repeatOnLifecycle
 @Composable
 fun BuyScreen(
     coinId: String,
-    navigateToPortfolio: () -> Unit,
+    onSuccess: () -> Unit,
     onBack: () -> Unit = {},
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -30,7 +30,7 @@ fun BuyScreen(
             viewModel.events.collect { event ->
                 when (event) {
                     is BuyEvents.BuySuccess -> {
-                        navigateToPortfolio()
+                        onSuccess()
                     }
                 }
             }
@@ -40,6 +40,7 @@ fun BuyScreen(
         state = state,
         tradeType = TradeType.BUY,
         onAmountChange = viewModel::onAmountChanged,
+        onPercentageClicked = viewModel::onPercentageClicked,
         onSubmitClicked = viewModel::onBuyClicked,
         onToggleMode = viewModel::onToggleMode,
         onBack = onBack,
