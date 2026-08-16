@@ -6,6 +6,12 @@ import kotlinx.serialization.Serializable
 @Serializable
 object Biometric
 
+@Serializable
+object Register
+
+@Serializable
+object Login
+
 // ── Main tabs (BottomNavigationBar) ──
 @Serializable
 object Dashboard

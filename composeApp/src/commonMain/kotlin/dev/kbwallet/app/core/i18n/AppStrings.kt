@@ -228,6 +228,23 @@ interface AppStrings {
     val biometricLoginButton: String
     val biometricNotAvailable: String
     val biometricDisclaimer: String
+    val biometricCreateAccountPrompt: String
+    val biometricLoginWithAccountPrompt: String
+
+    // ── Register / Login (email+password account, server-backed) ──
+    val authRegisterTitle: String
+    val authLoginTitle: String
+    val authEmailLabel: String
+    val authPasswordLabel: String
+    val authUsernameOptionalLabel: String
+    val authRegisterButton: String
+    val authLoginButton: String
+    val authSwitchToLoginPrompt: String
+    val authSwitchToRegisterPrompt: String
+    val authBackToBiometricPrompt: String
+    val authErrorGeneric: String
+    val authErrorInvalidInput: String
+    val authErrorEmailExists: String
 
     // ── Bottom navigation ──
     val navDashboard: String
@@ -446,6 +463,22 @@ private object EnStrings : AppStrings {
     override val biometricLoginButton = "Login"
     override val biometricNotAvailable = "Biometric is not available on your device!"
     override val biometricDisclaimer = "This app is for educational purposes only and does not constitute financial advice. Cryptocurrency investments carry risk — do your own research."
+    override val biometricCreateAccountPrompt = "No biometrics? Create an account"
+    override val biometricLoginWithAccountPrompt = "Already have an account? Log in"
+
+    override val authRegisterTitle = "Create your account"
+    override val authLoginTitle = "Log in"
+    override val authEmailLabel = "Email"
+    override val authPasswordLabel = "Password"
+    override val authUsernameOptionalLabel = "Username (optional)"
+    override val authRegisterButton = "Create account"
+    override val authLoginButton = "Log in"
+    override val authSwitchToLoginPrompt = "Already have an account? Log in"
+    override val authSwitchToRegisterPrompt = "Don't have an account? Create one"
+    override val authBackToBiometricPrompt = "Back to biometric login"
+    override val authErrorGeneric = "Something went wrong. Check your details and try again."
+    override val authErrorInvalidInput = "Enter a valid email and a password of at least 6 characters."
+    override val authErrorEmailExists = "An account with this email already exists."
 
     override val navDashboard = "Dashboard"
     override val navPortfolio = "Portfolio"
@@ -662,6 +695,22 @@ private object RuStrings : AppStrings {
     override val biometricLoginButton = "Войти"
     override val biometricNotAvailable = "Биометрия недоступна на вашем устройстве!"
     override val biometricDisclaimer = "Это приложение создано в образовательных целях и не является финансовой консультацией. Инвестиции в криптовалюту сопряжены с риском — проводите собственное исследование."
+    override val biometricCreateAccountPrompt = "Нет биометрии? Создать аккаунт"
+    override val biometricLoginWithAccountPrompt = "Уже есть аккаунт? Войти"
+
+    override val authRegisterTitle = "Создайте аккаунт"
+    override val authLoginTitle = "Вход"
+    override val authEmailLabel = "Email"
+    override val authPasswordLabel = "Пароль"
+    override val authUsernameOptionalLabel = "Имя пользователя (необязательно)"
+    override val authRegisterButton = "Создать аккаунт"
+    override val authLoginButton = "Войти"
+    override val authSwitchToLoginPrompt = "Уже есть аккаунт? Войти"
+    override val authSwitchToRegisterPrompt = "Нет аккаунта? Создать"
+    override val authBackToBiometricPrompt = "Назад ко входу по биометрии"
+    override val authErrorGeneric = "Что-то пошло не так. Проверьте данные и попробуйте снова."
+    override val authErrorInvalidInput = "Введите корректный email и пароль не короче 6 символов."
+    override val authErrorEmailExists = "Аккаунт с таким email уже существует."
 
     override val navDashboard = "Главная"
     override val navPortfolio = "Портфель"
