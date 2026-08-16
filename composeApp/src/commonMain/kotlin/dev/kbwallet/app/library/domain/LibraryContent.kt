@@ -8,7 +8,7 @@ import dev.kbwallet.app.core.i18n.LocalAppLanguage
  * Static, bundled reference content. No network/DB layer needed — this is a
  * fixed curriculum shipped with the app.
  *
- * The 17 topics ship in both English ([enLibraryTopics]) and Russian
+ * The 22 topics ship in both English ([enLibraryTopics]) and Russian
  * ([ruLibraryTopics]) with matching ids/levels/order, switched by the same
  * [LocalAppLanguage] the rest of the UI chrome reacts to — kept as plain data
  * lists rather than [dev.kbwallet.app.core.i18n.AppStrings] entries since that
