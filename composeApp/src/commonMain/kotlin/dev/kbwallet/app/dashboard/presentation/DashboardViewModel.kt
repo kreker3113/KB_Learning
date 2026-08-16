@@ -6,10 +6,13 @@ import dev.kbwallet.app.coins.domain.GetCoinsListUseCase
 import dev.kbwallet.app.core.domain.Result
 import dev.kbwallet.app.core.util.formatFiat
 import dev.kbwallet.app.core.util.formatPercentage
+import dev.kbwallet.app.core.util.toUiText
 import dev.kbwallet.app.portfolio.domain.PortfolioRepository
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -36,10 +39,15 @@ class DashboardViewModel(
             initialValue = DashboardState(isLoading = true)
         )
 
+    // Bumping this forces a fresh subscription to the two reactive flows below
+    // (via flatMapLatest) so retry() can re-trigger their underlying network
+    // call on demand, not just whenever WhileSubscribed happens to restart them.
+    private val retrySignal = MutableStateFlow(0)
+
     init {
         // ── Portfolio coins (reactive) ──
         viewModelScope.launch {
-            portfolioRepository.allPortfolioCoinsFlow().collect { result ->
+            portfolioCoinsFlow().collect { result ->
                 when (result) {
                     is Result.Success -> {
                         val coins = result.data
@@ -61,6 +69,7 @@ class DashboardViewModel(
                         _state.update {
                             it.copy(
                                 isLoading = false,
+                                error = null,
                                 coinCount = coins.size,
                                 portfolioSummaryCoins = summaryItems,
                                 recentPerformance = formatPercentage(weightedPerf),
@@ -69,7 +78,7 @@ class DashboardViewModel(
                         }
                     }
                     is Result.Error -> {
-                        _state.update { it.copy(isLoading = false) }
+                        _state.update { it.copy(isLoading = false, error = result.error.toUiText()) }
                     }
                 }
             }
@@ -77,17 +86,29 @@ class DashboardViewModel(
 
         // ── Total balance (reactive) ──
         viewModelScope.launch {
-            portfolioRepository.totalBalanceFlow().collect { result ->
+            totalBalanceFlow().collect { result ->
                 when (result) {
                     is Result.Success -> {
-                        _state.update { it.copy(portfolioValue = formatFiat(result.data)) }
+                        _state.update { it.copy(portfolioValue = formatFiat(result.data), error = null) }
                     }
-                    is Result.Error -> { /* ignore */ }
+                    is Result.Error -> {
+                        _state.update { it.copy(error = result.error.toUiText()) }
+                    }
                 }
             }
         }
 
-        // ── Top coins (one-shot) ──
+        loadTopCoins()
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun portfolioCoinsFlow() = retrySignal.flatMapLatest { portfolioRepository.allPortfolioCoinsFlow() }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun totalBalanceFlow() = retrySignal.flatMapLatest { portfolioRepository.totalBalanceFlow() }
+
+    // ── Top coins (one-shot) ──
+    private fun loadTopCoins() {
         viewModelScope.launch {
             when (val coinsResult = getCoinsListUseCase.execute()) {
                 is Result.Success -> {
@@ -102,10 +123,18 @@ class DashboardViewModel(
                             isPositive = coin.change >= 0,
                         )
                     }
-                    _state.update { it.copy(topCoins = topCoins) }
+                    _state.update { it.copy(topCoins = topCoins, error = null) }
                 }
-                is Result.Error -> { /* ignore */ }
+                is Result.Error -> {
+                    _state.update { it.copy(error = coinsResult.error.toUiText()) }
+                }
             }
         }
+    }
+
+    /** Re-triggers the portfolio/balance flows and the top-coins fetch after an error. */
+    fun retry() {
+        retrySignal.update { it + 1 }
+        loadTopCoins()
     }
 }

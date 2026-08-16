@@ -40,17 +40,17 @@ class SimulatorViewModel(
                     val coins = result.data.map { dto ->
                         Coin(id = dto.id, name = dto.name, symbol = dto.symbol.uppercase(), iconUrl = dto.image)
                     }.take(20)
-                    _state.update { it.copy(availableCoins = coins, isLoading = false) }
+                    _state.update { it.copy(availableCoins = coins, isLoading = false, error = null) }
                 }
                 is Result.Error -> {
-                    _state.update { it.copy(error = "Failed to load coins", isLoading = false) }
+                    _state.update { it.copy(error = SimulatorErrorType.FAILED_TO_LOAD_COINS, isLoading = false) }
                 }
             }
         }
     }
 
     fun selectCoin(coin: Coin) {
-        _state.update { it.copy(selectedCoin = coin, isLoading = true) }
+        _state.update { it.copy(selectedCoin = coin, isLoading = true, error = null) }
         loadHistoryData(coin)
     }
 
@@ -62,7 +62,7 @@ class SimulatorViewModel(
                 is Result.Success -> {
                     val candles = result.data.sortedBy { it.openTime }
                     if (candles.size < 10) {
-                        _state.update { it.copy(error = "Not enough data", isLoading = false) }
+                        _state.update { it.copy(error = SimulatorErrorType.NOT_ENOUGH_DATA, isLoading = false) }
                         return@launch
                     }
                     _state.update {
@@ -70,6 +70,7 @@ class SimulatorViewModel(
                             candles = candles,
                             currentCandleIndex = 0,
                             isLoading = false,
+                            error = null,
                             initialBalance = 10000.0,
                             cashBalance = 10000.0,
                             equity = 10000.0,
@@ -84,7 +85,7 @@ class SimulatorViewModel(
                     nextTradeId = 1L
                 }
                 is Result.Error -> {
-                    _state.update { it.copy(error = "Failed to load data", isLoading = false) }
+                    _state.update { it.copy(error = SimulatorErrorType.FAILED_TO_LOAD_DATA, isLoading = false) }
                 }
             }
         }

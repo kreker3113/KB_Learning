@@ -40,6 +40,8 @@ import dev.kbwallet.app.chart.presentation.util.ChartFormatters
 import dev.kbwallet.app.chart.presentation.util.ChartTransform
 import dev.kbwallet.app.theme.DarkLossRedColor
 import dev.kbwallet.app.theme.DarkProfitGreenColor
+import dev.kbwallet.app.theme.component.ErrorRetryCard
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -170,11 +172,10 @@ fun CryptoChartScreen(
                     trendColor = trendColor,
                 )
             } else if (state.error != null) {
-                Text(
-                    state.error ?: "—",
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontSize = 13.sp,
-                    modifier = Modifier.align(Alignment.Center),
+                ErrorRetryCard(
+                    message = stringResource(state.error!!),
+                    onRetry = { viewModel.retry() },
+                    modifier = Modifier.align(Alignment.Center).padding(horizontal = 16.dp),
                 )
             }
         }

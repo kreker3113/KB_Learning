@@ -50,6 +50,8 @@ import kotlin.math.roundToInt
 import dev.kbwallet.app.core.i18n.appStrings
 import dev.kbwallet.app.portfolio.presentation.component.DonutChart
 import dev.kbwallet.app.theme.LocalKBLearningColorsPalette
+import dev.kbwallet.app.theme.component.ErrorRetryCard
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 private val SubtextGray = Color(0xFFAAAAAA)
@@ -72,9 +74,21 @@ fun PortfolioScreen(
                 modifier = Modifier.size(32.dp)
             )
         }
+    } else if (state.error != null && state.coins.isEmpty()) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            ErrorRetryCard(
+                message = stringResource(state.error!!),
+                onRetry = { portfolioViewModel.retry() },
+                modifier = Modifier.padding(24.dp),
+            )
+        }
     } else {
         PortfolioContent(
             state = state,
+            onRetry = { portfolioViewModel.retry() },
             onCoinItemClicked = onCoinItemClicked,
             onDiscoverCoinsClicked = onDiscoverCoinsClicked
         )
@@ -85,6 +99,7 @@ fun PortfolioScreen(
 @Composable
 private fun PortfolioContent(
     state: PortfolioState,
+    onRetry: () -> Unit,
     onCoinItemClicked: (String) -> Unit,
     onDiscoverCoinsClicked: () -> Unit,
 ) {
@@ -115,6 +130,16 @@ private fun PortfolioContent(
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground,
             )
+        }
+
+        // ── Partial-error banner (coin list loaded fine, balance fetch failed) ──
+        if (state.error != null && state.coins.isNotEmpty()) {
+            item {
+                ErrorRetryCard(
+                    message = stringResource(state.error!!),
+                    onRetry = onRetry,
+                )
+            }
         }
 
         // ── Balance Section ──

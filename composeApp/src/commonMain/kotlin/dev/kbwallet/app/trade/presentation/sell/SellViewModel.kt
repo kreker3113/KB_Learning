@@ -85,15 +85,23 @@ class SellViewModel(
                     val ownedFiat = (owned * currentCoin.price)
                     if (_state.value.isAmountInUnits) {
                         _state.update {
-                            it.copy(availableAmount = "Available: ${formatFiat(owned, showDecimal = false)} ${currentCoin.symbol}")
+                            it.copy(
+                                availableAmount = "Available: ${formatFiat(owned, showDecimal = false)} ${currentCoin.symbol}",
+                                error = null,
+                            )
                         }
                     } else {
                         _state.update {
-                            it.copy(availableAmount = "Available: ${formatFiat(ownedFiat)}")
+                            it.copy(
+                                availableAmount = "Available: ${formatFiat(ownedFiat)}",
+                                error = null,
+                            )
                         }
                     }
                 }
-                is Result.Error -> {}
+                is Result.Error -> {
+                    _state.update { it.copy(error = portfolioCoinResponse.error.toUiText()) }
+                }
             }
         }
     }

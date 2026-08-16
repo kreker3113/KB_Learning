@@ -60,6 +60,10 @@ class CoinsListViewModel(
             }
         }
     }
+    fun retry() {
+        viewModelScope.launch { getAllCoins() }
+    }
+
     fun onCoinLongPressed(coinId: String) {
         _state.update {
             it.copy(

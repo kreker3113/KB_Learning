@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dev.kbwallet.app.chart.domain.GetChartDataUseCase
 import dev.kbwallet.app.chart.domain.model.TimeRange
 import dev.kbwallet.app.core.domain.Result
+import dev.kbwallet.app.core.util.toUiText
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,6 +20,11 @@ class ChartViewModel(
     val state: StateFlow<ChartState> = _state.asStateFlow()
 
     private var currentCoinId: String = ""
+    private var currentRange: TimeRange = TimeRange.ONE_DAY
+
+    fun retry() {
+        loadData(currentRange)
+    }
 
     fun init(coinId: String, coinName: String) {
         currentCoinId = coinId
@@ -40,6 +46,7 @@ class ChartViewModel(
     }
 
     private fun loadData(range: TimeRange) {
+        currentRange = range
         _state.update { it.copy(isLoading = true, error = null) }
         viewModelScope.launch {
             when (val result = getChartDataUseCase.execute(currentCoinId, range)) {
@@ -61,7 +68,7 @@ class ChartViewModel(
                     }
                 }
                 is Result.Error -> {
-                    _state.update { it.copy(isLoading = false, error = "No data") }
+                    _state.update { it.copy(isLoading = false, error = result.error.toUiText()) }
                 }
             }
         }
