@@ -50,11 +50,16 @@ class SimulatorViewModel(
     }
 
     fun selectCoin(coin: Coin) {
-        _state.update { it.copy(selectedCoin = coin, isLoading = true, error = null) }
+        _state.update { it.copy(selectedCoin = coin, isLoading = true) }
         loadHistoryData(coin)
     }
 
     private fun loadHistoryData(coin: Coin) {
+        // Clear the previous candles up front, not just isLoading/error — otherwise a
+        // failed fetch (new coin, or a time-range switch) leaves the last-loaded data
+        // on screen (SimulatorScreen's error branch only fires when candles is empty),
+        // silently showing stale/mismatched data instead of the error+retry state.
+        _state.update { it.copy(candles = emptyList(), isLoading = true, error = null) }
         viewModelScope.launch {
             val timeRange = TimeRange.ONE_DAY
             val klineSource = CoinGeckoKlineDataSource(coinsRemoteDataSource)

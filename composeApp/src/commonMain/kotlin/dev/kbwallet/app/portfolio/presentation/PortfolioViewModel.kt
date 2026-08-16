@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.kbwallet.app.core.domain.DataError
 import dev.kbwallet.app.core.domain.Result
+import dev.kbwallet.app.core.util.RetryTrigger
 import dev.kbwallet.app.core.util.formatCoinUnit
 import dev.kbwallet.app.core.util.formatFiat
 import dev.kbwallet.app.core.util.formatPercentage
@@ -13,16 +14,13 @@ import dev.kbwallet.app.portfolio.domain.PortfolioCoinModel
 import dev.kbwallet.app.portfolio.domain.PortfolioRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 
 class PortfolioViewModel(
     private val portfolioRepository: PortfolioRepository,
@@ -31,18 +29,9 @@ class PortfolioViewModel(
 
     private val _state = MutableStateFlow(PortfolioState(isLoading = true))
 
-    // Bumping this forces a fresh subscription to the repository's flows below
-    // (via flatMapLatest), which is what actually re-runs their underlying
-    // network call — WhileSubscribed(5000) alone only restarts them if the
-    // screen was left for 5+ seconds, not on an explicit user-triggered
-    // "Retry" tap. See retry().
-    private val retrySignal = MutableStateFlow(0)
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private val portfolioCoinsFlow = retrySignal.flatMapLatest { portfolioRepository.allPortfolioCoinsFlow() }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private val totalBalanceFlowRetryable = retrySignal.flatMapLatest { portfolioRepository.totalBalanceFlow() }
+    private val retryTrigger = RetryTrigger()
+    private val portfolioCoinsFlow = retryTrigger.retryable { portfolioRepository.allPortfolioCoinsFlow() }
+    private val totalBalanceFlowRetryable = retryTrigger.retryable { portfolioRepository.totalBalanceFlow() }
 
     val state: StateFlow<PortfolioState> = combine(
         _state,
@@ -76,7 +65,7 @@ class PortfolioViewModel(
 
     /** Re-triggers both the portfolio-coins and total-balance fetches after an error. */
     fun retry() {
-        retrySignal.update { it + 1 }
+        retryTrigger.retry()
     }
 
     private fun handleSuccessState(

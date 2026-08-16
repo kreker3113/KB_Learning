@@ -47,7 +47,11 @@ class ChartViewModel(
 
     private fun loadData(range: TimeRange) {
         currentRange = range
-        _state.update { it.copy(isLoading = true, error = null) }
+        // Clear the previous range's candles too — otherwise a failed fetch (e.g.
+        // switching time ranges) leaves the old range's chart on screen instead of
+        // the error+retry state, since the "has data" branch below only checks
+        // candles.isNotEmpty(), not whether this fetch actually succeeded.
+        _state.update { it.copy(candles = emptyList(), isLoading = true, error = null) }
         viewModelScope.launch {
             when (val result = getChartDataUseCase.execute(currentCoinId, range)) {
                 is Result.Success -> {

@@ -12,6 +12,7 @@ import dev.kbwallet.app.core.domain.Result
 import dev.kbwallet.app.core.util.formatFiat
 import dev.kbwallet.app.core.util.formatPercentage
 import dev.kbwallet.app.core.util.toUiText
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -21,6 +22,7 @@ class CoinsListViewModel(
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(CoinsState())
+    private var retryJob: Job? = null
     val state = _state
         .onStart {
             getAllCoins()
@@ -61,7 +63,8 @@ class CoinsListViewModel(
         }
     }
     fun retry() {
-        viewModelScope.launch { getAllCoins() }
+        retryJob?.cancel()
+        retryJob = viewModelScope.launch { getAllCoins() }
     }
 
     fun onCoinLongPressed(coinId: String) {
