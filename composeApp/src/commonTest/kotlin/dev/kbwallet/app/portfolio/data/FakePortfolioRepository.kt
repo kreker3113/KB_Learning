@@ -24,6 +24,7 @@ class FakePortfolioRepository : PortfolioRepository {
 
     private val _cashBalance = MutableStateFlow(cashBalance)
     private val _portfolioValue = MutableStateFlow(portfolioValue)
+    private val _totalBalanceError = MutableStateFlow<DataError.Remote?>(null)
 
     private val listOfCoins = mutableListOf<PortfolioCoinModel>()
 
@@ -55,9 +56,9 @@ class FakePortfolioRepository : PortfolioRepository {
     }
 
     override fun totalBalanceFlow(): Flow<Result<Double, DataError.Remote>> {
-        return _cashBalance.combine(_portfolioValue) { cashBalance, portfolioValue ->
-            cashBalance + portfolioValue
-        }.map { Result.Success(it) }
+        return combine(_cashBalance, _portfolioValue, _totalBalanceError) { cashBalance, portfolioValue, error ->
+            if (error != null) Result.Error(error) else Result.Success(cashBalance + portfolioValue)
+        }
     }
 
     override fun cashBalanceFlow(): Flow<Double> {
@@ -119,6 +120,15 @@ class FakePortfolioRepository : PortfolioRepository {
 
     fun simulateError() {
         _data.value = Result.Error(DataError.Remote.SERVER)
+    }
+
+    /** Independently controllable from [simulateError] — see DashboardViewModelTest. */
+    fun simulateTotalBalanceError(error: DataError.Remote = DataError.Remote.SERVER) {
+        _totalBalanceError.value = error
+    }
+
+    fun clearTotalBalanceError() {
+        _totalBalanceError.value = null
     }
 
     companion object {

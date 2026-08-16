@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dev.kbwallet.app.chart.data.remote.impl.CoinGeckoKlineDataSource
 import dev.kbwallet.app.chart.domain.model.CandleModel
 import dev.kbwallet.app.chart.domain.model.TimeRange
-import dev.kbwallet.app.coins.data.remote.impl.KtorCoinsRemoteDataSource
+import dev.kbwallet.app.coins.domain.api.CoinsRemoteDataSource
 import dev.kbwallet.app.core.domain.DataError
 import dev.kbwallet.app.core.domain.Result
 import dev.kbwallet.app.core.domain.coin.Coin
@@ -20,7 +20,7 @@ import kotlin.math.abs
 import kotlin.math.sqrt
 
 class SimulatorViewModel(
-    private val coinsRemoteDataSource: KtorCoinsRemoteDataSource,
+    private val coinsRemoteDataSource: CoinsRemoteDataSource,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SimulatorState())
