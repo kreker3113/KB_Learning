@@ -228,6 +228,16 @@ compose.desktop {
             packageVersion = "1.0.0"
             description = "KB Wallet — crypto portfolio & trading simulator"
             vendor = "KB Wallet"
+
+            macOS {
+                iconFile.set(project.file("src/desktopMain/resources/icon.icns"))
+            }
+            windows {
+                iconFile.set(project.file("src/desktopMain/resources/icon.ico"))
+            }
+            linux {
+                iconFile.set(project.file("src/desktopMain/resources/icon.png"))
+            }
         }
     }
 }
