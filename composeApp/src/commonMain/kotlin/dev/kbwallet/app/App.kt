@@ -31,6 +31,8 @@ import androidx.navigation.toRoute
 import dev.kbwallet.app.analytics.presentation.PnLScreen
 import dev.kbwallet.app.chart.presentation.CryptoChartScreen
 import dev.kbwallet.app.coins.presentation.CoinListScreen
+import dev.kbwallet.app.core.auth.presentation.LoginScreen
+import dev.kbwallet.app.core.auth.presentation.RegisterScreen
 import dev.kbwallet.app.core.biometric.BiometricScreen
 import dev.kbwallet.app.core.navigation.ActiveOrders
 import dev.kbwallet.app.core.navigation.Biometric
@@ -41,10 +43,12 @@ import dev.kbwallet.app.core.navigation.EditProfile
 import dev.kbwallet.app.core.navigation.HelpSupport
 import dev.kbwallet.app.core.navigation.History
 import dev.kbwallet.app.core.navigation.LanguageSettings
+import dev.kbwallet.app.core.navigation.Login
 import dev.kbwallet.app.core.navigation.NotificationSettings
 import dev.kbwallet.app.core.navigation.PnLAnalytics
 import dev.kbwallet.app.core.navigation.Portfolio
 import dev.kbwallet.app.core.navigation.Profile
+import dev.kbwallet.app.core.navigation.Register
 import dev.kbwallet.app.core.navigation.SecuritySettings
 import dev.kbwallet.app.core.navigation.Simulator
 import dev.kbwallet.app.core.navigation.Sponsorship
@@ -113,11 +117,43 @@ fun App() {
         ) {
             // ── Biometric entry ──
             composable<Biometric> {
-                BiometricScreen {
-                    navController.navigate(Portfolio) {
-                        popUpTo(Biometric) { inclusive = true }
-                    }
-                }
+                BiometricScreen(
+                    onSuccess = {
+                        navController.navigate(Portfolio) {
+                            popUpTo(Biometric) { inclusive = true }
+                        }
+                    },
+                    onCreateAccountClicked = { navController.navigate(Register) },
+                    onLoginWithAccountClicked = { navController.navigate(Login) },
+                )
+            }
+
+            // ── Register / Login (email+password account, no biometrics needed) ──
+            composable<Register> {
+                RegisterScreen(
+                    onSuccess = {
+                        navController.navigate(Portfolio) {
+                            popUpTo(Biometric) { inclusive = true }
+                        }
+                    },
+                    onSwitchToLogin = {
+                        navController.navigate(Login) { popUpTo(Register) { inclusive = true } }
+                    },
+                    onBack = { navController.popBackStack() },
+                )
+            }
+            composable<Login> {
+                LoginScreen(
+                    onSuccess = {
+                        navController.navigate(Portfolio) {
+                            popUpTo(Biometric) { inclusive = true }
+                        }
+                    },
+                    onSwitchToRegister = {
+                        navController.navigate(Register) { popUpTo(Login) { inclusive = true } }
+                    },
+                    onBack = { navController.popBackStack() },
+                )
             }
 
             // ── Main scaffold with tabs ──

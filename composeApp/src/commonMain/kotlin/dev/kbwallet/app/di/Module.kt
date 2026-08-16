@@ -7,6 +7,8 @@ import dev.kbwallet.app.coins.domain.GetCoinPriceHistoryUseCase
 import dev.kbwallet.app.coins.domain.GetCoinsListUseCase
 import dev.kbwallet.app.coins.domain.api.CoinsRemoteDataSource
 import dev.kbwallet.app.coins.presentation.CoinsListViewModel
+import dev.kbwallet.app.core.auth.presentation.LoginViewModel
+import dev.kbwallet.app.core.auth.presentation.RegisterViewModel
 import dev.kbwallet.app.core.network.HttpClientFactory
 import dev.kbwallet.app.core.network.auth.AuthApiClient
 import dev.kbwallet.app.core.security.TokenStorage
@@ -62,7 +64,9 @@ val sharedModule = module {
     single { AuthApiClient(get()) }
     single { TokenStorage() }
     single { SecureTokenStorage() }
-    
+    viewModel { RegisterViewModel(get(), get()) }
+    viewModel { LoginViewModel(get(), get()) }
+
     // Repositories
     single<UserRepository> { UserRepositoryImpl(get()) }
 
