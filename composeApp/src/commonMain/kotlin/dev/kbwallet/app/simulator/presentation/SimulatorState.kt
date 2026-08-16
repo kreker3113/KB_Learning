@@ -3,6 +3,7 @@ package dev.kbwallet.app.simulator.presentation
 import dev.kbwallet.app.chart.domain.model.CandleModel
 import dev.kbwallet.app.chart.domain.model.TimeRange
 import dev.kbwallet.app.core.domain.coin.Coin
+import dev.kbwallet.app.core.i18n.AppStrings
 import dev.kbwallet.app.simulator.domain.ClosedTrade
 import dev.kbwallet.app.simulator.domain.SimPosition
 import dev.kbwallet.app.simulator.domain.SimulatorMetrics
@@ -44,10 +45,28 @@ data class SimulatorState(
 
     // ── UI state ──
     val isLoading: Boolean = true,
-    val error: String? = null,
+    val error: SimulatorErrorType? = null,
     val activeHint: String? = null,
     val showHeatmap: Boolean = false,
 )
+
+/**
+ * Kept as an enum (previously a hardcoded, English-only literal `String?`)
+ * so the message can be localized like everything else — the ViewModel layer
+ * has no [AppStrings]/composition access, so it can only report *which*
+ * error happened, not the final display text (see [label]).
+ */
+enum class SimulatorErrorType {
+    FAILED_TO_LOAD_COINS,
+    NOT_ENOUGH_DATA,
+    FAILED_TO_LOAD_DATA,
+}
+
+fun SimulatorErrorType.label(strings: AppStrings): String = when (this) {
+    SimulatorErrorType.FAILED_TO_LOAD_COINS -> strings.simulatorErrorFailedToLoadCoins
+    SimulatorErrorType.NOT_ENOUGH_DATA -> strings.simulatorErrorNotEnoughData
+    SimulatorErrorType.FAILED_TO_LOAD_DATA -> strings.simulatorErrorFailedToLoadData
+}
 
 enum class PlaySpeed(val label: String, val delayMs: Long) {
     SLOW("0.5x", 2000L),

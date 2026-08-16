@@ -1,7 +1,10 @@
 package dev.kbwallet.app.dashboard.presentation
 
+import org.jetbrains.compose.resources.StringResource
+
 data class DashboardState(
     val isLoading: Boolean = false,
+    val error: StringResource? = null,
     val portfolioValue: String = "$0",
     val coinCount: Int = 0,
     val recentPerformance: String = "+0%",

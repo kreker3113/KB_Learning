@@ -14,6 +14,7 @@ interface AppStrings {
     val actionBack: String
     val actionConfirm: String
     val actionCancel: String
+    val actionRetry: String
 
     // ── Profile screen ──
     val profileTitle: String
@@ -185,6 +186,9 @@ interface AppStrings {
     val simulatorTitle: String
     val simulatorHintContentDesc: String
     val simulatorSelectCoinPrompt: String
+    val simulatorErrorFailedToLoadCoins: String
+    val simulatorErrorNotEnoughData: String
+    val simulatorErrorFailedToLoadData: String
     fun simulatorCandleCounter(current: Int, total: Int): String
     val simulatorPrevContentDesc: String
     val simulatorPauseContentDesc: String
@@ -243,6 +247,7 @@ private object EnStrings : AppStrings {
     override val actionBack = "Back"
     override val actionConfirm = "Confirm"
     override val actionCancel = "Cancel"
+    override val actionRetry = "Retry"
 
     override val profileTitle = "Profile"
     override val profileEditButton = "Edit Profile"
@@ -399,6 +404,9 @@ private object EnStrings : AppStrings {
     override val simulatorTitle = "Trading Simulator"
     override val simulatorHintContentDesc = "Hint"
     override val simulatorSelectCoinPrompt = "Select a coin to simulate:"
+    override val simulatorErrorFailedToLoadCoins = "Failed to load coins"
+    override val simulatorErrorNotEnoughData = "Not enough price history for this coin"
+    override val simulatorErrorFailedToLoadData = "Failed to load price data"
     override fun simulatorCandleCounter(current: Int, total: Int) = "Candle $current/$total"
     override val simulatorPrevContentDesc = "Prev"
     override val simulatorPauseContentDesc = "Pause"
@@ -454,6 +462,7 @@ private object RuStrings : AppStrings {
     override val actionBack = "Назад"
     override val actionConfirm = "Подтвердить"
     override val actionCancel = "Отмена"
+    override val actionRetry = "Повторить"
 
     override val profileTitle = "Профиль"
     override val profileEditButton = "Редактировать профиль"
@@ -610,6 +619,9 @@ private object RuStrings : AppStrings {
     override val simulatorTitle = "Торговый симулятор"
     override val simulatorHintContentDesc = "Подсказка"
     override val simulatorSelectCoinPrompt = "Выберите монету для симуляции:"
+    override val simulatorErrorFailedToLoadCoins = "Не удалось загрузить список монет"
+    override val simulatorErrorNotEnoughData = "Недостаточно истории цен для этой монеты"
+    override val simulatorErrorFailedToLoadData = "Не удалось загрузить данные о цене"
     override fun simulatorCandleCounter(current: Int, total: Int) = "Свеча $current/$total"
     override val simulatorPrevContentDesc = "Назад"
     override val simulatorPauseContentDesc = "Пауза"

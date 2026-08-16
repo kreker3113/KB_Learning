@@ -37,6 +37,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import dev.kbwallet.app.core.i18n.appStrings
 import dev.kbwallet.app.theme.LocalKBLearningColorsPalette
+import dev.kbwallet.app.theme.component.ErrorRetryCard
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -76,14 +78,24 @@ fun CoinListScreen(
             }
         }
 
-        items(state.coins) { coin ->
-            CoinListItem(
-                coin = coin,
-                onCoinLongPressed = { coinId ->
-                    onChartRequested(coinId, coin.name)
-                },
-                onCoinClicked = onCoinClicked,
-            )
+        if (state.error != null && state.coins.isEmpty()) {
+            item {
+                ErrorRetryCard(
+                    message = stringResource(state.error!!),
+                    onRetry = { coinsListViewModel.retry() },
+                    modifier = Modifier.padding(top = 40.dp),
+                )
+            }
+        } else {
+            items(state.coins) { coin ->
+                CoinListItem(
+                    coin = coin,
+                    onCoinLongPressed = { coinId ->
+                        onChartRequested(coinId, coin.name)
+                    },
+                    onCoinClicked = onCoinClicked,
+                )
+            }
         }
     }
 }

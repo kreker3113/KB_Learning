@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.kbwallet.app.core.domain.DataError
 import dev.kbwallet.app.core.domain.Result
+import dev.kbwallet.app.core.util.RetryTrigger
 import dev.kbwallet.app.core.util.formatCoinUnit
 import dev.kbwallet.app.core.util.formatFiat
 import dev.kbwallet.app.core.util.formatPercentage
@@ -27,10 +28,15 @@ class PortfolioViewModel(
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(PortfolioState(isLoading = true))
+
+    private val retryTrigger = RetryTrigger()
+    private val portfolioCoinsFlow = retryTrigger.retryable { portfolioRepository.allPortfolioCoinsFlow() }
+    private val totalBalanceFlowRetryable = retryTrigger.retryable { portfolioRepository.totalBalanceFlow() }
+
     val state: StateFlow<PortfolioState> = combine(
         _state,
-        portfolioRepository.allPortfolioCoinsFlow(),
-        portfolioRepository.totalBalanceFlow(),
+        portfolioCoinsFlow,
+        totalBalanceFlowRetryable,
         portfolioRepository.cashBalanceFlow(),
     ) { currentState, portfolioCoinsResponse, totalBalanceResult, cashBalance ->
         when (portfolioCoinsResponse) {
@@ -57,15 +63,23 @@ class PortfolioViewModel(
         initialValue = PortfolioState(isLoading = true)
     )
 
+    /** Re-triggers both the portfolio-coins and total-balance fetches after an error. */
+    fun retry() {
+        retryTrigger.retry()
+    }
+
     private fun handleSuccessState(
         currentState: PortfolioState,
         portfolioCoins: List<PortfolioCoinModel>,
         totalBalanceResult: Result<Double, DataError>,
         cashBalance: Double
     ): PortfolioState {
+        // The coin list itself loaded fine, so it's still shown — only the total
+        // balance figure and the error banner reflect this failure, rather than
+        // silently showing "$0" as if the user's balance really were zero.
         val portfolioValue = when (totalBalanceResult) {
             is Result.Success -> formatFiat(totalBalanceResult.data)
-            is Result.Error -> formatFiat(0.0)
+            is Result.Error -> currentState.portfolioValue
         }
 
         return currentState.copy(
@@ -74,6 +88,7 @@ class PortfolioViewModel(
             cashBalance = formatFiat(cashBalance),
             showBuyButton = portfolioCoins.isNotEmpty(),
             isLoading = false,
+            error = (totalBalanceResult as? Result.Error)?.error?.toUiText(),
         )
     }
 

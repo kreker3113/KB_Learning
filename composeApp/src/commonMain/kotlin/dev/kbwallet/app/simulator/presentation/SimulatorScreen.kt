@@ -38,6 +38,7 @@ import dev.kbwallet.app.simulator.domain.*
 import dev.kbwallet.app.theme.DarkLossRedColor
 import dev.kbwallet.app.theme.DarkProfitGreenColor
 import dev.kbwallet.app.theme.LocalKBLearningColorsPalette
+import dev.kbwallet.app.theme.component.ErrorRetryCard
 import dev.kbwallet.app.theme.component.StatCard
 import dev.kbwallet.app.theme.component.StatCardSize
 import org.koin.compose.viewmodel.koinViewModel
@@ -104,6 +105,17 @@ fun SimulatorScreen(
             return
         }
 
+        if (state.error != null && state.availableCoins.isEmpty() && state.selectedCoin == null) {
+            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                ErrorRetryCard(
+                    message = state.error!!.label(strings),
+                    onRetry = { viewModel.loadCoins() },
+                    modifier = Modifier.padding(24.dp),
+                )
+            }
+            return
+        }
+
         LazyColumn(
             modifier = Modifier.fillMaxSize().padding(horizontal = 12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -123,6 +135,16 @@ fun SimulatorScreen(
                             }
                         },
                         modifier = Modifier.fillMaxWidth(),
+                    )
+                }
+            }
+
+            if (state.selectedCoin != null && state.candles.isEmpty() && state.error != null && !state.isLoading) {
+                item {
+                    ErrorRetryCard(
+                        message = state.error!!.label(strings),
+                        onRetry = { viewModel.selectCoin(state.selectedCoin!!) },
+                        modifier = Modifier.padding(top = 24.dp),
                     )
                 }
             }

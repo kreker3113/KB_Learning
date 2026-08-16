@@ -36,7 +36,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import dev.kbwallet.app.core.i18n.appStrings
 import dev.kbwallet.app.theme.LocalKBLearningColorsPalette
+import dev.kbwallet.app.theme.component.ErrorRetryCard
 import dev.kbwallet.app.theme.component.StatCard
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -62,6 +64,7 @@ fun DashboardScreen(
     } else {
         DashboardContent(
             state = state,
+            onRetry = { viewModel.retry() },
             onDiscoverCoinsClicked = onDiscoverCoinsClicked,
             onCoinItemClicked = onCoinItemClicked,
             onSimulatorClicked = onSimulatorClicked,
@@ -73,6 +76,7 @@ fun DashboardScreen(
 @Composable
 private fun DashboardContent(
     state: DashboardState,
+    onRetry: () -> Unit,
     onDiscoverCoinsClicked: () -> Unit,
     onCoinItemClicked: (String) -> Unit,
     onSimulatorClicked: () -> Unit = {},
@@ -87,6 +91,16 @@ private fun DashboardContent(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
+        // ── Error banner (data partially failed to load) ──
+        if (state.error != null) {
+            item {
+                ErrorRetryCard(
+                    message = stringResource(state.error!!),
+                    onRetry = onRetry,
+                )
+            }
+        }
+
         // ── Header ──
         item {
             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
