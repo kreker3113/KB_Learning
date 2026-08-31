@@ -35,6 +35,7 @@ import dev.kbwallet.app.profile.domain.UserRepository
 import dev.kbwallet.app.profile.data.UserRepositoryImpl
 import dev.kbwallet.app.profile.presentation.ProfileViewModel
 import dev.kbwallet.app.chart.di.chartModule
+import dev.kbwallet.app.notifications.di.notificationModule
 import dev.kbwallet.app.trade.domain.BuyCoinUseCase
 import dev.kbwallet.app.trade.domain.SellCoinUseCase
 import dev.kbwallet.app.simulator.presentation.SimulatorViewModel
@@ -72,7 +73,7 @@ val sharedModule = module {
     // trade
     singleOf(::BuyCoinUseCase)
     singleOf(::SellCoinUseCase)
-    viewModel { (coinId: String) -> BuyViewModel(get(), get(), get(), coinId) }
+    viewModel { (coinId: String) -> BuyViewModel(get(), get(), get(), get(), coinId) }
     viewModel { (coinId: String) -> SellViewModel(get(), get(), get(), coinId) }
 
     // portfolio
@@ -105,6 +106,9 @@ val sharedModule = module {
 
     // chart
     includes(chartModule)
+
+    // notifications
+    includes(notificationModule)
 
     // ── Trading Simulator additions ──
 

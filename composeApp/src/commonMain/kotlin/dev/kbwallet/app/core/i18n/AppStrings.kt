@@ -66,6 +66,19 @@ interface AppStrings {
     val notifNewsTitle: String
     val notifNewsSubtitle: String
 
+    // ── Notification centre & trade feedback ──
+    val profileMenuNotificationCenterTitle: String
+    val profileMenuNotificationCenterSubtitle: String
+    val notifCenterEmptyTitle: String
+    val notifCenterEmptySubtitle: String
+    val notifCenterMarkAllRead: String
+    val notifCenterClearAll: String
+    val notifSystemBlockedTitle: String
+    val notifSystemBlockedAction: String
+    val notifPurchaseTitle: String
+    fun notifPurchaseBody(amount: String, total: String): String
+    fun tradeSuccessSubtitle(amount: String): String
+
     // ── Security settings screen ──
     val securityTitle: String
     val sectionAuthentication: String
@@ -297,6 +310,18 @@ private object EnStrings : AppStrings {
     override val notifNewsTitle = "News & Updates"
     override val notifNewsSubtitle = "Stay informed with latest news"
 
+    override val profileMenuNotificationCenterTitle = "Notification Centre"
+    override val profileMenuNotificationCenterSubtitle = "Trade confirmations and alerts"
+    override val notifCenterEmptyTitle = "No notifications yet"
+    override val notifCenterEmptySubtitle = "Trade confirmations and alerts will show up here"
+    override val notifCenterMarkAllRead = "Mark all read"
+    override val notifCenterClearAll = "Clear all"
+    override val notifSystemBlockedTitle = "System notifications are turned off"
+    override val notifSystemBlockedAction = "Enable"
+    override val notifPurchaseTitle = "Purchase complete"
+    override fun notifPurchaseBody(amount: String, total: String) = "Bought $amount for $total"
+    override fun tradeSuccessSubtitle(amount: String) = "$amount added to your portfolio"
+
     override val securityTitle = "Security"
     override val sectionAuthentication = "Authentication"
     override val securityBiometricTitle = "Biometric Authentication"
@@ -513,6 +538,18 @@ private object RuStrings : AppStrings {
     override val notifNewsTitle = "Новости и обновления"
     override val notifNewsSubtitle = "Быть в курсе последних новостей"
 
+    override val profileMenuNotificationCenterTitle = "Центр уведомлений"
+    override val profileMenuNotificationCenterSubtitle = "Подтверждения сделок и оповещения"
+    override val notifCenterEmptyTitle = "Уведомлений пока нет"
+    override val notifCenterEmptySubtitle = "Здесь появятся подтверждения сделок и оповещения"
+    override val notifCenterMarkAllRead = "Отметить прочитанными"
+    override val notifCenterClearAll = "Очистить"
+    override val notifSystemBlockedTitle = "Системные уведомления отключены"
+    override val notifSystemBlockedAction = "Включить"
+    override val notifPurchaseTitle = "Покупка совершена"
+    override fun notifPurchaseBody(amount: String, total: String) = "Куплено $amount на $total"
+    override fun tradeSuccessSubtitle(amount: String) = "$amount добавлено в портфель"
+
     override val securityTitle = "Безопасность"
     override val sectionAuthentication = "Аутентификация"
     override val securityBiometricTitle = "Биометрическая аутентификация"
@@ -676,11 +713,16 @@ private object RuStrings : AppStrings {
     override val libraryLevelAdvanced = "Продвинутый"
 }
 
-@Composable
-fun appStrings(): AppStrings {
-    val language = LocalAppLanguage.current
-    return when (language) {
-        AppLanguage.RUSSIAN -> RuStrings
-        AppLanguage.ENGLISH -> EnStrings
-    }
+/**
+ * Catalog lookup outside the composition — for layers that have to produce user
+ * copy without a Composable scope (notifications posted from a ViewModel or the
+ * OS notifier). Inside the UI use [appStrings] instead, so the text recomposes
+ * when the language changes.
+ */
+fun stringsFor(language: AppLanguage): AppStrings = when (language) {
+    AppLanguage.RUSSIAN -> RuStrings
+    AppLanguage.ENGLISH -> EnStrings
 }
+
+@Composable
+fun appStrings(): AppStrings = stringsFor(LocalAppLanguage.current)
