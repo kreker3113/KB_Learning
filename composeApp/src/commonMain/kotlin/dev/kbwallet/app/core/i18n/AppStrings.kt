@@ -122,6 +122,8 @@ interface AppStrings {
     // ── Dashboard screen ──
     val dashboardTitle: String
     val dashboardSimulatorButton: String
+    val dashboardStatTotalBalance: String
+    val dashboardStatCash: String
     val dashboardStatPortfolioValue: String
     val dashboardStatAssets: String
     val dashboardStat24hChange: String
@@ -138,6 +140,8 @@ interface AppStrings {
     // ── Portfolio screen ──
     val portfolioTitle: String
     val portfolioBalanceLabel: String
+    val portfolioCashLabel: String
+    val portfolioHoldingsLabel: String
     val portfolioDiscoverCoinsButton: String
     val portfolioSearchPlaceholder: String
     val portfolioDistributionTitle: String
@@ -361,7 +365,9 @@ private object EnStrings : AppStrings {
 
     override val dashboardTitle = "Dashboard"
     override val dashboardSimulatorButton = "Simulator"
-    override val dashboardStatPortfolioValue = "Portfolio Value"
+    override val dashboardStatTotalBalance = "Total Balance"
+    override val dashboardStatCash = "Cash"
+    override val dashboardStatPortfolioValue = "In Assets"
     override val dashboardStatAssets = "Assets"
     override val dashboardStat24hChange = "24h Change"
     override val dashboardMarketOverview = "Market Overview"
@@ -375,7 +381,9 @@ private object EnStrings : AppStrings {
     override fun dashboardAssetsCount(count: Int) = "$count asset(s) in portfolio"
 
     override val portfolioTitle = "Portfolio"
-    override val portfolioBalanceLabel = "Your Portfolio Balance"
+    override val portfolioBalanceLabel = "Total Balance"
+    override val portfolioCashLabel = "Cash"
+    override val portfolioHoldingsLabel = "In assets"
     override val portfolioDiscoverCoinsButton = "Discover Coins"
     override val portfolioSearchPlaceholder = "Search coins..."
     override val portfolioDistributionTitle = "Portfolio Distribution"
@@ -589,7 +597,9 @@ private object RuStrings : AppStrings {
 
     override val dashboardTitle = "Главная"
     override val dashboardSimulatorButton = "Симулятор"
-    override val dashboardStatPortfolioValue = "Стоимость портфеля"
+    override val dashboardStatTotalBalance = "Общий баланс"
+    override val dashboardStatCash = "Свободные средства"
+    override val dashboardStatPortfolioValue = "В активах"
     override val dashboardStatAssets = "Активы"
     override val dashboardStat24hChange = "Изменение за 24ч"
     override val dashboardMarketOverview = "Обзор рынка"
@@ -603,7 +613,9 @@ private object RuStrings : AppStrings {
     override fun dashboardAssetsCount(count: Int) = "Активов в портфеле: $count"
 
     override val portfolioTitle = "Портфель"
-    override val portfolioBalanceLabel = "Баланс вашего портфеля"
+    override val portfolioBalanceLabel = "Общий баланс"
+    override val portfolioCashLabel = "Свободные средства"
+    override val portfolioHoldingsLabel = "В активах"
     override val portfolioDiscoverCoinsButton = "Найти монеты"
     override val portfolioSearchPlaceholder = "Поиск монет..."
     override val portfolioDistributionTitle = "Распределение портфеля"
